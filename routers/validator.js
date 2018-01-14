@@ -29,6 +29,9 @@ module.exports = expressValidator({
     },
     isValidFile: function(param) {
       // TODO: ...
+      console.log(param);
+      console.log(typeof(param));
+      process.exit(0);
       return true;
     },
     canSignUp: function(param) {
