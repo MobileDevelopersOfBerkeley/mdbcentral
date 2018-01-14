@@ -29,17 +29,17 @@ function _get(route) {
   return _request("GET", route);
 }
 
-function _getWelcomeUid(user) {
-  return _get("/anonUsers?email=" + user.email).catch(function(error) {
-    return _get("/users?fullName=" + user.fullName)
+function _getWelcomeUid(member) {
+  return _get("/anonUsers?email=" + member.email).catch(function(error) {
+    return _get("/users?fullName=" + member.fullName)
       .then(function(users) {
         if (users.length == 0)
           return Promise.reject(new Error(
             "You do not exist on welcome yet."));
         return users[0];
       });
-  }).then(function(user) {
-    return user._key;
+  }).then(function(member) {
+    return member._key;
   });
 }
 
@@ -55,12 +55,14 @@ function _getEventDate(event) {
 // METHODS
 function listAbsences(params) {
   var events, welcomeUid;
-  return _getWelcomeUid(params.user).then(function(x) {
+  return _getWelcomeUid(params.member).then(function(x) {
     welcomeUid = x;
     return getEvents();
   }).then(function(x) {
     events = x;
-    return listSignIns(member);
+    return listSignIns({
+      member: params.member
+    });
   }).then(function(signIns) {
     var eventIdsBeenTo = signIns.map(function(signIn) {
       return signIn.eventId;
@@ -73,7 +75,7 @@ function listAbsences(params) {
 
 function listSignIns(params) {
   var events, welcomeUid;
-  return _getWelcomeUid(params.user).then(function(x) {
+  return _getWelcomeUid(params.member).then(function(x) {
     welcomeUid = x;
     return getEvents()
   }).then(function(x) {

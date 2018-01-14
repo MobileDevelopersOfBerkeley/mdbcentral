@@ -1,11 +1,13 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const routerUtil = require("../util/router.js");
+const dateToString = require("../util/util.js").dateToString;
 const dbUtil = require("../util/firebase/db.js");
 const memberLogic = require("../logic/Members.js");
 const rolesLogic = require("../logic/Roles.js");
 const welcomeLogic = require("../logic/Welcome.js");
 const assignmentsLogic = require("../logic/Assignments.js");
+const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
 const config = require("../conf/config.json");
 
 // HELPERS
@@ -71,96 +73,103 @@ router.get("/home", function(req, res) {
     res.redirect("/login");
     return;
   }
-  return memberLogic.
-    /*
-    return Member.getMember(currentUser.uid).then(function(member) {
-      var plist = [];
-      var num_absences = 0;
-      var num_expected = 0;
-      plist.push(Attendance.listExpectedAbsences(currentUser.uid).then(
-        function(expectedAbsences) {
-          $scope.$apply(function() {
-            $scope.expectedAbsences = expectedAbsences;
-            num_expected = expectedAbsences.length;
-          });
-        }));
-      plist.push(Welcome.listAbsences(member).then(function(
-        absences) {
-        $scope.$apply(function() {
-          $scope.absences = absences;
-          num_absences = absences.length;
-        });
-        return Welcome.listSignIns(member);
-      }).then(function(signins) {
-        $scope.$apply(function() {
-          $scope.signins = signins;
-        });
-        return Attendance.getMaxAbsences(currentUser.uid);
-      }).then(function(max_absences) {
-        var absencesLeft = undefined;
-        if (max_absences >= num_absences) {
-          absencesLeft = "Left: " + (max_absences - num_absences);
-        } else {
-          absencesLeft = "Over: " + ((max_absences - num_absences) * -1);
-        }
-        graphBar("#attendance_overview_bar", ['Absences',
+  var id = req.cookies.member;
+  var data;
+  _genData("home", id).then(function(d) {
+    data = d;
+    return memberLogic.getById({
+      id: id
+    });
+  }).then(function(member) {
+    var plist = [];
+    var num_absences = 0;
+    var num_expected = 0;
+
+    plist.push(expectedAbsencesLogic.getByUid({
+      member: id
+    }).then(function(expectedAbsences) {
+      data.expectedAbsences = expectedAbsences;
+      num_expected = expectedAbsences.length;
+    }));
+
+    plist.push(memberLogic.getRole({
+      id: id
+    }).then(function(role) {
+      data.role = role;
+    }));
+
+    plist.push(welcomeLogic.getEvent().then(function(event) {
+      data.event = event.title || event.summary;
+      data.eventId = event.id;
+    }));
+
+    plist.push(welcomeLogic.listAbsences({
+      member: member
+    }).then(function(absences) {
+      console.log(1);
+      data.absences = absences.length;
+      num_absences = absences.length;
+      return welcomeLogic.listSignIns({
+        member: member
+      });
+    }).then(function(signins) {
+      data.signins = signins;
+      return memberLogic.getMaxAbsences({
+        id: id
+      });
+    }).then(function(max_absences) {
+      var absencesLeft = undefined;
+      if (max_absences >= num_absences) {
+        absencesLeft = "Left: " + (max_absences - num_absences);
+      } else {
+        absencesLeft = "Over: " + ((max_absences - num_absences) *
+          -1);
+      }
+      data.graphs.push({
+        elementId: "attendance_overview_bar",
+        type: "bar",
+        xData: ['Absences',
           'Inluding Expected', 'Max Absences'
-        ], [
-          [num_absences, num_absences + num_expected, max_absences]
-        ]);
-        var attendances = [];
-        for (var i = 0; i < $scope.signins.length; i++) {
-          var signin = $scope.signins[i];
-          signin.type = "Attended";
-          var date = new Date();
-          date.setTime(signin.timestamp);
-          signin.date = dateToString(date);
-          attendances.push(signin);
-        }
-        for (var i = 0; i < $scope.absences.length; i++) {
-          var absence = $scope.absences[i];
-          absence.type = "Absent";
-          var date = new Date();
-          date.setTime(absence.timestamp);
-          absence.date = dateToString(date);
-          attendances.push(absence);
-        }
-        for (var i = 0; i < $scope.expectedAbsences.length; i++) {
-          var expectedAbsence = $scope.expectedAbsences[i];
-          expectedAbsence.type = "Expected Absent";
-          var date = new Date();
-          date.setTime(expectedAbsence.timestamp);
-          expectedAbsence.date = dateToString(date);
-          attendances.push(expectedAbsence);
-        }
-        $scope.$apply(function() {
-          $scope.absencesLeft = absencesLeft;
-          $scope.attendances = attendances;
-        });
-      }));
-      plist.push(Member.getRole(currentUser.uid).then(function(role) {
-        $scope.$apply(function() {
-          $scope.role = role;
-        });
-      }));
-      plist.push(Welcome.getEvent().then(function(event) {
-        $scope.$apply(function() {
-          $scope.event = event.title || event.summary;
-          $scope.eventId = event.id;
-        });
-      }));
-    */
-  res.render("index", {
-    absencesLeft: 3,
-    attendances: [].sort(function(a, b) {
+        ],
+        yData: [num_absences, num_absences + num_expected,
+          max_absences
+        ]
+      })
+      var attendances = [];
+      for (var i = 0; i < data.signins.length; i++) {
+        var signin = data.signins[i];
+        signin.type = "Attended";
+        var date = new Date();
+        date.setTime(signin.timestamp);
+        signin.date = dateToString(date);
+        attendances.push(signin);
+      }
+      for (var i = 0; i < data.absences.length; i++) {
+        var absence = data.absences[i];
+        absence.type = "Absent";
+        var date = new Date();
+        date.setTime(absence.timestamp);
+        absence.date = dateToString(date);
+        attendances.push(absence);
+      }
+      for (var i = 0; i < data.expectedAbsences.length; i++) {
+        var expectedAbsence = data.expectedAbsences[i];
+        expectedAbsence.type = "Expected Absent";
+        var date = new Date();
+        date.setTime(expectedAbsence.timestamp);
+        expectedAbsence.date = dateToString(date);
+        attendances.push(expectedAbsence);
+      }
+      data.absencesLeft = absencesLeft;
+      data.attendances = attendances;
+    }));
+
+    return Promise.all(plist);
+  }).then(function() {
+    data.attendances = data.attendances.sort(function(a, b) {
       return a.timestamp - b.timestamp;
-    }),
-    firstname: "Krishnan",
-    notifications: [],
-    currPage: "home",
-    leadership: true,
-    getLiTag: _getLiTag("home"),
-    graphs: []
+    });
+    res.render("index", data);
   });
 });
 

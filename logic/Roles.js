@@ -6,7 +6,7 @@ const ref = dbUtil.refs.roleRef;
 
 // METHODS
 function getByUid(params) {
-  return roleRef.child(params.roleId).child("title").once("value")
+  return ref.child(params.roleId).child("title").once("value")
     .then(function(snapshot) {
       if (!snapshot.exists()) return "NULL";
       return snapshot.val();
