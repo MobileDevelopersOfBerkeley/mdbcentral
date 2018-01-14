@@ -1,6 +1,6 @@
 {
-  "firebaseDBUrl": "https://mdbcentral.firebaseio.com/",
-  "firebaseStorageUrl": "mdbcentral.appspot.com",
+  "firebaseDBUrl": "https://mobiledevsberkeley-89d21.firebaseio.com",
+  "firebaseStorageUrl": "mobiledevsberkeley-89d21.appspot.com",
 
   "jwtSecret": "mdbotIsPresident",
   "jwtExpireTime": 86400,
