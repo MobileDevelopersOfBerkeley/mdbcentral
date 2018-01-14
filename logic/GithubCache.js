@@ -70,4 +70,4 @@ function getProjectPercentages() {
 module.exports.get = get;
 module.exports.update = update;
 module.exports.getUserLines = getUserLines;
-module.exporst.getProjectPercentages = getProjectPercentages;
+module.exports.getProjectPercentages = getProjectPercentages;
