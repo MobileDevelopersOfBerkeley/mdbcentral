@@ -56,5 +56,13 @@ router.patch("/users", function(req, res) {
   res.redirect("/profile");
 });
 
+router.patch("/scores", function(req, res) {
+  res.redirect("/leadership");
+});
+
+router.post("/assignments", function(req, res) {
+  res.redirect("/leadership");
+});
+
 // EXPORTS
 module.exports = router;
