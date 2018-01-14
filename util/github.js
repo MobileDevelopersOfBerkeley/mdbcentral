@@ -202,8 +202,13 @@ function listEffortRatings(cache) {
 }
 
 function isValidUsername(username) {
-  // TODO: ...
-  return Promise.resolve(true);
+  return github.user.get({
+    user: username
+  }).then(function(user) {
+    return user != null;
+  }).catch(function(error) {
+    return false;
+  });
 }
 
 // EXPORTS

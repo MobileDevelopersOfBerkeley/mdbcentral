@@ -24,6 +24,18 @@ function login() {
     });
 }
 
+function _hideCard(elementId) {
+  $("#" + elementId + "Toggle").val("Show");
+  $("#" + elementId).css("visibility", "hidden");
+}
+
+function _showCard(elementId) {
+  $("#" + elementId + "Toggle").val("Hide");
+  $("#" + elementId).css("visibility", "visible");
+}
+
 function toggleCard(elementId) {
-  // TODO: ...
+  var value = $("#" + elementId + "Toggle").val();
+  if (value == "Hide") _hideCard(elementId);
+  else _showCard(elementId);
 }

@@ -23,8 +23,14 @@ router.post("/users", function(req, res) {
   req.checkBody("roleId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("isNew", routerUtil.errors.missingErrorMessage).notEmpty();
-  // TODO: figure out how to login automatically after signup
-  return routerUtil.completeRequest(req, res, userLogic.create, "/home");
+  return routerUtil.completeRequest(req, res, function(params) {
+    return usersLogic.create(params).then(function(user) {
+      res.cookie('userId', user._key, {
+        maxAge: 900000,
+        httpOnly: false
+      });
+    });
+  }, "/home");
 });
 
 router.patch("/users", function(req, res) {
