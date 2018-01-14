@@ -50,7 +50,7 @@ function create(params) {
         major: params.major,
         year: params.year,
         roleId: params.roleId,
-        newMember: params.isNew,
+        newMember: params.newMember,
         githubUsername: githubUsername.toLowerCase()
       }, authData.uid);
     }).catch(function(error) {
@@ -109,7 +109,7 @@ function update(params) {
     name: params.name,
     email: params.email,
     major: params.major,
-    isNew: params.isNew,
+    newMember: params.newMember,
     roleId: params.roleId,
     year: params.year,
     githubUsername: params.githubUsername

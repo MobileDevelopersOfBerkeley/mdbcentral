@@ -28,8 +28,8 @@ router.post("/users", upload.single('profileImage'), function(req, res) {
   req.checkBody("year", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("roleId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
-  req.checkBody("isNew", routerUtil.errors.formatErrorMessage).isValidBool();
-  req.body.isNew = util.parseBool(req.body.isNew);
+  req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
+  req.body.newMember = util.parseBool(req.body.newMember);
   return routerUtil.completeRequest(req, res, function(params) {
     return usersLogic.create(params).then(function(user) {
       res.cookie('userId', user._key, {
@@ -56,8 +56,8 @@ router.patch("/users", upload.single('profileImage'), function(req, res) {
   req.checkBody("year", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("roleId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
-  req.checkBody("isNew", routerUtil.errors.formatErrorMessage).isValidBool();
-  req.body.isNew = util.parseBool(req.body.isNew);
+  req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
+  req.body.newMember = util.parseBool(req.body.newMember);
   return routerUtil.completeRequest(req, res, userLogic.update,
     "/profile");
 });
