@@ -1,4 +1,4 @@
-<div class="content page" ng-controller="PolicyCtrl">
+<div class="content page">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -7,55 +7,20 @@
                         <h4 class="title">MDB Handbook</h4>
                         <p class="category">PDF views of the MDB Handbook documents</p>
                     </div>
-                    <div class="content" ng-init="tab = 1; showPDF();">
-                        <div class="tab_button btn btn-info btn-fill" ng-click="tab = 1; showPDF();">Attendance Policy</div>
-                        <div class="tab_button btn btn-warning btn-fill" ng-click="tab = 2; showPDF();">Membership Expectations</div>
-                        <div class="tab_button btn btn-danger btn-fill" ng-click="tab = 3; showPDF();">Role Responsibilities</div>
-                        <div class="tab_button btn btn-info btn-fill" ng-click="tab = 4; showPDF();">Membership Program Overview</div>
-                        <div class="tab_button btn btn-warning btn-fill" ng-click="tab = 5; showPDF();">Dev Cycle Information</div>
-                        <div class="tab_button btn btn-danger btn-fill" ng-click="tab = 6; showPDF();">GitHub Workflow</div>
-                        <div class="tab_button btn btn-info btn-fill" ng-click="tab = 7; showPDF();">Android Handbook</div>
-                        <div class="tab_button btn btn-warning btn-fill" ng-click="tab = 8; showPDF();">iOS Handbook</div>
-                        <div class="tab_button btn btn-danger btn-fill" ng-click="tab = 9; showPDF();">Reimbursement Policy</div>
-                        <div class="tab_button btn btn-info btn-fill" ng-click="tab = 10; showPDF();">Big Little Program</div>
-                        <div class="tab_button btn btn-warning btn-fill" ng-click="tab = 11; showPDF();">WTGT</div>
-                        <div class="tab_button btn btn-danger btn-fill" ng-click="tab = 12; showPDF();">Inactive Policy</div>
-                        <div ng-show="tab == 1">
-                            <a class="pdf" href="assets/docs/AttendancePolicy.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 2">
-                            <a class="pdf" href="assets/docs/MembershipExpectations.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 3">
-                            <a class="pdf" href="assets/docs/RoleResponsibilities.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 4">
-                            <a class="pdf" href="assets/docs/MembershipProgramOverview.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 5">
-                            <a class="pdf" href="assets/docs/DevCycleInformation.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 6">
-                            <a class="pdf" href="assets/docs/GithubWorkflow.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 7">
-                            <a class="pdf" href="assets/docs/AndroidHandbook.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 8">
-                            <a class="pdf" href="assets/docs/iOSHandbook.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 9">
-                            <a class="pdf" href="assets/docs/ReimbursementPolicy.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 10">
-                            <a class="pdf" href="assets/docs/BigLittleProgram.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 11">
-                            <a class="pdf" href="assets/docs/WTGT.pdf"></a>
-                        </div>
-                        <div ng-show="tab == 12">
-                            <a class="pdf" href="assets/docs/InactivePolicy.pdf"></a>
-                        </div>
+                    <div class="content">
+                        <a class="tab_button btn btn-info btn-fill" href="/policies/1">Attendance Policy</a>
+                        <a class="tab_button btn btn-warning btn-fill" href="/policies/2">Membership Expectations</a>
+                        <a class="tab_button btn btn-danger btn-fill" href="/policies/3">Role Responsibilities</a>
+                        <a class="tab_button btn btn-info btn-fill" href="/policies/4">Membership Program Overview</a>
+                        <a class="tab_button btn btn-warning btn-fill" href="/policies/5">Dev Cycle Information</a>
+                        <a class="tab_button btn btn-danger btn-fill" href="/policies/6">GitHub Workflow</a>
+                        <a class="tab_button btn btn-info btn-fill" href="/policies/7">Android Handbook</a>
+                        <a class="tab_button btn btn-warning btn-fill" href="/policies/8">iOS Handbook</a>
+                        <a class="tab_button btn btn-danger btn-fill" href="/policies/9">Reimbursement Policy</a>
+                        <a class="tab_button btn btn-info btn-fill" href="/policies/10">Big Little Program</a>
+                        <a class="tab_button btn btn-warning btn-fill" href="/policies/11">WTGT</a>
+                        <a class="tab_button btn btn-danger btn-fill" href="/policies/12">Inactive Policy</a>
+                        <a class="pdf" href="<%- docPath %>"></a>
                     </div>
                 </div>
             </div>

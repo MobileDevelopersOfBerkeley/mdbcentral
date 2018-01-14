@@ -1,11 +1,11 @@
-<div class="content page" ng-controller="HomeCtrl">
+<div class="content page">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-4">
                 <div class="card">
                     <div class="header">
                         <h4 class="title">Attendance Overview</h4>
-                        <p class="category">Absences {{absencesLeft}}</p>
+                        <p class="category">Absences <%- absencesLeft %></p>
                     </div>
                     <div class="content">
                         <div id="attendance_overview_bar" class="ct-chart"></div>
@@ -24,18 +24,16 @@
                         <h4 class="title">Sign In</h4>
                     </div>
                     <div class="content">
-                        <form ng-submit="signin(code)">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Code</label>
-                                        <input type="text" class="form-control" placeholder="Code" ng-model="code">
-                                    </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Code</label>
+                                    <input type="text" class="form-control" placeholder="Code" id="code">
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-info btn-fill pull-right">Welcome Sign In</button>
-                            <div class="clearfix"></div>
-                        </form>
+                        </div>
+                        <button type="button" onclick="signin()" class="btn btn-info btn-fill pull-right">Welcome Sign In</button>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
@@ -55,11 +53,31 @@
                                 <th>Date</th>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="attendance in attendances | orderBy:'-timestamp'">
-                                    <td>{{attendance.title}}</td>
-                                    <td ng-class="{'text-success': attendance.type === 'Attended', 'text-danger': attendance.type === 'Absent', 'text-warning': attendance.type === 'Expected Absent'}">{{attendance.type}}</td>
-                                    <td>{{attendance.date}} <button style="margin-left: 10px" ng-if="attendance.type === 'Expected Absent'" ng-click="deleteExpectedAbsence(attendance);"><i class="fa fa-trash"></i></button></td>
-                                </tr>
+                                <% for (var i = 0; i < attendances.length; i++) { %>
+                                  <% var attendance = attendances[i]; %>
+                                  <tr>
+                                      <td><%- attendance.title %></td>
+                                      <% if (attendance.type == 'Attended') { %>
+                                        <td class="text-success">
+                                      <% } else if (attendance.type == 'Absent') { %>
+                                        <td class="text-danger">
+                                      <% } else if (attendance.type == 'Expected Absent') { %>
+                                        <td class="text-warning">
+                                      <% } %>
+                                      <%- attendance.type %>
+                                      </td>
+                                      <td>
+                                        <%- attendance.date %>
+                                        <% if (attendance.type == 'Expected Absent') { %>
+                                          <form action="/expectedAbsences" method="delete">
+                                            <button style="margin-left: 10px" type="submit">
+                                              <i class="fa fa-trash"></i>
+                                            </button>
+                                          </form>
+                                        <% } %>
+                                      </td>
+                                  </tr>
+                                <% } %>
                             </tbody>
                         </table>
                     </div>

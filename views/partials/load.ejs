@@ -1,0 +1,17 @@
+<script>
+  window.onload = function() {
+    <% for (var i = 0; i < graphs.length; i++) { %>
+      <% var graph = graphs[i]; %>
+      <% if (graph.type == "bar") { %>
+        graphBar(
+          <%- "#" + graph.elementId %>,
+          <%- JSON.stringify(graph.xData) %>,
+          <%- JSON.stringify(graph.yData) %>
+        );
+      <% } %>
+    <% } %>
+    loadGCal();
+    showPDF('.pdf');
+    $(".loading-icon").css("visibility", "hidden");
+  }
+</script>

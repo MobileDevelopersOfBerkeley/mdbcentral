@@ -1,3 +1,7 @@
+.clickable:hover {
+	cursor: pointer;
+}
+
 .helpful-link {
 	width: 20px;
 	margin-right: 5px;

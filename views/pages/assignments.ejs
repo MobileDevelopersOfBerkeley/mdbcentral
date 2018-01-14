@@ -1,4 +1,4 @@
-<div class="content page" ng-controller="AssignmentCtrl">
+<div class="content page">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -15,11 +15,16 @@
                                 <th>Due</th>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="assignment in assignments">
-                                    <td><a href="{{assignment.link}}" target="_blank">{{assignment.name}}</a></td>
-                                    <td>{{assignment.score}}</td>
-                                    <td>{{assignment.due}}</td>
-                                </tr>
+                                <% for (var i = 0; i < assignments.length; i++) { %>
+                                  <% var assignment = assignments[i]; %>
+                                  <tr>
+                                      <td><a href="<%- assignment.link %>" target="_blank">
+                                        <%- assignment.name %>
+                                      </a></td>
+                                      <td><%- assignment.score %></td>
+                                      <td><%- assignment.due %></td>
+                                  </tr>
+                                <% } %>
                             </tbody>
                         </table>
                     </div>
