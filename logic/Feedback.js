@@ -11,15 +11,15 @@ function getAll() {
   var result = [];
   return userLogic.getAll().then(function(users) {
     return Promise.all(users.map(function(user) {
-        return dbUtil.getObjectsByFields(ref, {
-          userId: user._key
-        }).then(function(feedbacks) {
-          feedbacks.forEach(function(feedback) {
-            feedback.name = user.name;
-            result.push(feedback);
-          });
-        }));
-    });
+      return dbUtil.getObjectsByFields(ref, {
+        userId: user._key
+      }).then(function(feedbacks) {
+        feedbacks.forEach(function(feedback) {
+          feedback.name = user.name;
+          result.push(feedback);
+        });
+      })
+    }));
   }).then(function() {
     return result;
   });
