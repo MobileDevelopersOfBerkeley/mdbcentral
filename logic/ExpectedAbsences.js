@@ -12,16 +12,15 @@ function getAll() {
   var result = [];
   return userLogic.getAll().then(function(users) {
     return Promise.all(users.map(function(user) {
-        return getByUid({
-            userId: user._key
-          })
-          .then(function(expectedAbsences) {
-            expectedAbsences.forEach(function(expectedAbsence) {
-              expectedAbsence.name = user.name;
-              result.push(expectedAbsence);
-            });
-          }));
-    });
+      return getByUid({
+        userId: user._key
+      }).then(function(expectedAbsences) {
+        expectedAbsences.forEach(function(expectedAbsence) {
+          expectedAbsence.name = user.name;
+          result.push(expectedAbsence);
+        });
+      })
+    }));
   }).then(function() {
     return result;
   });
