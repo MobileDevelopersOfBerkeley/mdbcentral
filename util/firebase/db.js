@@ -8,6 +8,8 @@ const refs = {};
 refs.userRef = rootRef.child("Users");
 refs.githubCacheRef = rootRef.child("GithubCache");
 refs.bigLittleRef = rootRef.child("BigLittle");
+refs.assignmentRef = rootRef.child("Assignments");
+refs.scoreRef = rootRef.child("Scores");
 
 // HELPER
 function _multipleCallback(snapshot) {
