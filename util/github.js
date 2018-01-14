@@ -202,8 +202,8 @@ function listEffortRatings(cache) {
 }
 
 function isValidUsername(username) {
-  return github.user.get({
-    user: username
+  return github.users.getForUser({
+    username: username
   }).then(function(user) {
     return user != null;
   }).catch(function(error) {

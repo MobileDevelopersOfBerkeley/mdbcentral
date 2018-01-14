@@ -37,7 +37,10 @@ router.get("/login", function(req, res) {
 });
 
 router.get("/home", function(req, res) {
-  if (!req.cookies.userId) res.redirect("/login");
+  if (!req.cookies.userId) {
+    res.redirect("/login");
+    return;
+  }
   /*
   return Member.getMember(currentUser.uid).then(function(member) {
     var plist = [];
@@ -131,7 +134,10 @@ router.get("/home", function(req, res) {
 });
 
 router.get("/assignments", function(req, res) {
-  if (!req.cookies.userId) res.redirect("/login");
+  if (!req.cookies.userId) {
+    res.redirect("/login");
+    return;
+  }
   /*
   return Member.getMember(currentUser.uid).then(function(member) {
     return Assignments.getAssignmentScores(currentUser.uid, member.roleId);
@@ -153,7 +159,10 @@ router.get("/assignments", function(req, res) {
 });
 
 router.get("/calendar", function(req, res) {
-  if (!req.cookies.userId) res.redirect("/login");
+  if (!req.cookies.userId) {
+    res.redirect("/login");
+    return;
+  }
   /*
   Attendance.getEventsSoFar().then(function(events) {
     $scope.$apply(function() {
@@ -182,11 +191,17 @@ function roleIdsToString(roleIds) {
 }
 
 router.get("/leadership", function(req, res) {
-  if (!req.cookies.userId) res.redirect("/login");
+  if (!req.cookies.userId) {
+    res.redirect("/login");
+    return;
+  }
   userLogic.isLeadership({
     id: req.cookies.userId
   }).then(function(bool) {
-    if (!bool) res.redirect("/home");
+    if (!bool) {
+      res.redirect("/home");
+      return;
+    }
     /*
     var plist = [];
 
@@ -390,8 +405,6 @@ router.get("/leadership", function(req, res) {
       scores: [],
       feedbacks: []
     });
-  }).catch(function(error) {
-    res.redirect("/home");
   });
 });
 
@@ -417,7 +430,10 @@ router.get("/policies", function(req, res) {
 });
 
 router.get("/policies/:id", function(req, res) {
-  if (!req.cookies.userId) res.redirect("/login");
+  if (!req.cookies.userId) {
+    res.redirect("/login");
+    return;
+  }
   res.render("index", {
     docPath: getDocById(req.params.id),
     firstname: "Krishnan",
@@ -430,7 +446,10 @@ router.get("/policies/:id", function(req, res) {
 });
 
 router.get("/profile", function(req, res) {
-  if (!req.cookies.userId) res.redirect("/login");
+  if (!req.cookies.userId) {
+    res.redirect("/login");
+    return;
+  }
   res.render("index", {
     firstname: "Krishnan",
     notifications: [],
