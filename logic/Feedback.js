@@ -26,17 +26,6 @@ function getAll() {
 }
 
 function create(params) {
-  // TODO: make sure this is validated
-  // if (uid == null || uid == "") {
-  //   return firebase.Promise.reject(new Error("please fill in uid"));
-  // }
-  // if (eventId == null || eventId == "") {
-  //   return firebase.Promise.reject(new Error("please select event"));
-  // }
-  // if (response == null || response.trim() == "") {
-  //   return firebase.Promise.reject(new Error("please fill in response"));
-  // }
-  // response = response.trim();
   return getEventById({
     id: params.eventId
   }).then(function(event) {
