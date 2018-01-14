@@ -1,33 +1,12 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
+const getUserById = require("./Users.js").getById;
 const scoresUtil = require("./Scores.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.assignmentRef;
 
-// METHODS
-function getAssignmentsByUid(uid) {
-  return member_ref.child(uid).once("value").then(function(snapshot) {
-    if (!snapshot.exists()) return [];
-    var member = snapshot.val();
-    return _getAssignments(member.roleId);
-  });
-}
-
-function getAllAssignments() {
-  return assignment_ref.once("value").then(function(snapshot) {
-    if (!snapshot.exists()) return [];
-    var dict = snapshot.val();
-    var result = [];
-    for (var key in dict) {
-      var obj = dict[key];
-      obj.key = key;
-      result.push(obj);
-    }
-    return result;
-  });
-}
-
+// HELPERS
 function _getAssignments(roleId) {
   var assignments = [];
   return assignment_ref.once("value").then(function(snapshot) {
@@ -44,7 +23,7 @@ function _getAssignments(roleId) {
   });
 }
 
-function getAssignmentScores(uid, roleId) {
+function _getAssignmentScores(uid, roleId) {
   var result = [];
   return _getAssignments(roleId).then(function(assignments) {
     var plist = [];
@@ -61,82 +40,70 @@ function getAssignmentScores(uid, roleId) {
   });
 }
 
-function createAssignment(due, link, name, roleIds) {
-  if (due == null || due.trim() == "")
-    return firebase.Promise.reject(new Error("please fill in due date"));
-  if (link == null || link.trim() == "")
-    return firebase.Promise.reject(new Error("please fill in link"));
-  if (name == null || name.trim() == "")
-    return firebase.Promise.reject(new Error("please fill in name"));
-  if (roleIds == null || roleIds.length == 0)
-    return firebase.Promise.reject(new Error("please assign to at least 1 role"));
-  for (var i = 0; i < roleIds.length; i++) {
-    roleIds[i] = parseInt(roleIds[i]);
-  }
-  return assignment_ref.push().set({
-    due: due,
-    link: link,
-    name: name,
-    roleIds: roleIds
+
+// METHODS
+function create(params) {
+  // TODO: make sure this is validated
+  // if (due == null || due.trim() == "")
+  //   return firebase.Promise.reject(new Error("please fill in due date"));
+  // if (link == null || link.trim() == "")
+  //   return firebase.Promise.reject(new Error("please fill in link"));
+  // if (name == null || name.trim() == "")
+  //   return firebase.Promise.reject(new Error("please fill in name"));
+  // if (roleIds == null || roleIds.length == 0)
+  //   return firebase.Promise.reject(new Error("please assign to at least 1 role"));
+  // for (var i = 0; i < roleIds.length; i++) {
+  //   roleIds[i] = parseInt(roleIds[i]);
+  // }
+  return dbUtil.createNewObjectByAutoId(ref, {
+    due: params.due,
+    link: params.link,
+    name: params.name,
+    roleIds: params.roleIds
   });
 }
 
-function getProjectPercentages() {
-  return github_cache_ref.once("value").then(function(snapshot) {
-    var projectPercentages = [];
-    var repoNameToUsernameToLines = JSON.parse(snapshot.val());
-    for (var repoName in repoNameToUsernameToLines) {
-      var projectPercentage = {
-        id: repoName,
-        name: repoName,
-        percentages: [
-          [],
-          []
-        ]
-      };
-      var userToLinesMap = repoNameToUsernameToLines[repoName];
-      var totalLines = 0;
-      for (var user in userToLinesMap) {
-        totalLines += userToLinesMap[user];
-      }
-      for (var user in userToLinesMap) {
-        var x = Math.ceil((userToLinesMap[user] / totalLines) * 100);
-        if (x == 0) x = 1;
-        projectPercentage.percentages[0].push(user + "(" + x + "%)");
-        projectPercentage.percentages[1].push(x);
-      }
-      projectPercentages.push(projectPercentage);
-    }
-    return projectPercentages;
+function getAll() {
+  return dbUtil.getAll(ref);
+}
+
+function getByUid(params) {
+  return getUserById(params.uid).then(function(user) {
+    return _getAssignments(user.roleId);
+  }).catch(function(error) {
+    return [];
   });
 }
 
-function getUserLines() {
-  return github_cache_ref.once("value").then(function(snapshot) {
-    var repoNameToUsernameToLines = JSON.parse(snapshot.val());
-    var result = {}
-    for (var repoName in repoNameToUsernameToLines) {
-      var usernameToLines = repoNameToUsernameToLines[repoName];
-      for (var username in usernameToLines) {
-        var lines = usernameToLines[username];
-        if (username in result) {
-          result[username] += lines;
-        } else {
-          result[username] = lines;
-        }
-      }
-    }
-    return result;
+function getAllScores(params) {
+  var result = [];
+  var num_scores = 0;
+  return getAllUsers().then(function(users) {
+    return Promise.all(users.map(function(user) {
+      return _getAssignmentScores(member.uid, member.roleId)
+        .then(function(assignments) {
+          for (var i = 0; i < assignments.length; i++) {
+            var assignment = assignments[i];
+            if (assignment.key == params.assignmentId) {
+              assignment.assignment_name = assignment.name;
+              assignment.member_name = member.name;
+              result.push(assignment);
+              if (assignment.score != nullScoreStr)
+                num_scores += 1;
+            }
+          }
+        })
+    }));
+  }).then(function() {
+    return {
+      scores: result,
+      num_scores: num_scores
+    };
   });
 }
 
-return {
-  getUserLines: getUserLines,
-  getProjectPercentages: getProjectPercentages,
-  createAssignment: createAssignment,
-  getAllAssignments: getAllAssignments,
-  getAssignmentsByUid: getAssignmentsByUid,
-  getAssignmentScores: getAssignmentScores,
-  setScore: setScore,
-  getAllScores: getAllScores
-}
+// EXPORTS
+module.exports.create = create;
+module.exports.getAll = getAll;
+module.exports.getByUid = getByUid;
+module.exports.getAllScores = getAllScores;
