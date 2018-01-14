@@ -5,7 +5,7 @@ const dbUtil = require("../util/firebase/db.js");
 const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
 
 // CONSTANTS
-const ref = dbUtil.refs.expectedAbsencesRef;
+const ref = dbUtil.refs.expectedAbsenceRef;
 
 // METHODS
 // NOTE: should be delete but HTML form tag only allows GET and POST

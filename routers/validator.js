@@ -60,13 +60,6 @@ module.exports = expressValidator({
         return dbUtil.checkIfAllKeysExist(ref, [param]);
       });
     },
-    validmember: function(param) {
-      return _promiseBoolTrue(function() {
-        return getUserById({
-          id: param
-        });
-      });
-    },
     isTrue: function(param) {
       return param == "true";
     },
@@ -75,7 +68,11 @@ module.exports = expressValidator({
       return !isNaN(num);
     },
     isValidNumberArr: function(param) {
-      if (!isNonEmptyArray(param)) return false;
+      var isValidNumber = function(param) {
+        var num = +param;
+        return !isNaN(num);
+      }
+      if (!Array.isArray(param) || param.length == 0) return false;
       for (var i = 0; i < param.length; i++) {
         var value = param[i];
         if (!isValidNumber(value)) return false;
