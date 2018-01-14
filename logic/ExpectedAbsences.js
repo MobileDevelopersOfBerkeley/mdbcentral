@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
 const util = require("../util/util.js");
-const eventsLogic = require("./Events.js");
+const welcomeLogic = require("./Welcome.js");
 const userLogic = require("./Members.js");
 
 // CONSTANTS
@@ -45,7 +45,7 @@ function create(params) {
         "you have already submitted an expected absence for this event"
       ))
     }
-    return eventsLogic.getById({
+    return welcomeLogic.getById({
       id: params.eventId
     }).then(function(event) {
       return dbUtil.createNewObjectByAutoId(ref, {

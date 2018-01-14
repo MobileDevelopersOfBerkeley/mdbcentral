@@ -1,13 +1,11 @@
 // DEPENDENCIES
 const request = require("request");
-
-// CONSTANTS
-const host_api = require("../conf/config.json").welcomeEndpoint;
+const config = require("../conf/config.json");
 
 // HELPERS
 function _request(type, route, params) {
   var options = {
-    url: host_api + route,
+    url: config.welcomeEndpoint + route,
     method: type
   };
   if (params) {
@@ -19,8 +17,9 @@ function _request(type, route, params) {
       if (error) reject(error);
       else if (response.error) reject(response.error);
       else if (body.error) reject(body.error);
-      else if (response.statusCode && String(response.statusCode).charAt(
-          0) != "2") reject(body);
+      else if (response.statusCode &&
+        String(response.statusCode)[0] != "2") reject(body);
+      else if (typeof(body) == "string") resolve(JSON.parse(body).result);
       else resolve(body.result);
     });
   });
@@ -42,6 +41,15 @@ function _getWelcomeUid(user) {
   }).then(function(user) {
     return user._key;
   });
+}
+
+function _getEventDate(event) {
+  if (event && event.timestamp) {
+    var d = new Date();
+    d.setTime(event.timestamp);
+    return d;
+  }
+  throw new Error("Cant parse event to time");
 }
 
 // METHODS
@@ -89,20 +97,21 @@ function listSignIns(params) {
 }
 
 function getEvent() {
-  var today = Math.floor(new Date().getTime() / 1000);
+  var today = new Date().getTime();
   return getEvents().then(function(events) {
     var defaultEvent = null;
     var minDiff = Number.MAX_VALUE;
     for (var i = 0; i < events.length; i++) {
       var event = events[i];
-      var event_start = event.startTime;
+      var event_start = event.timestamp;
       var currDiff = Math.abs(event_start - today);
       if (currDiff < minDiff) {
         defaultEvent = event;
         minDiff = currDiff;
       }
     }
-    return defaultEvent;
+    if (defaultEvent != null) return defaultEvent;
+    return Promise.reject(new Error("There are no events to chose from"));
   });
 }
 
@@ -120,8 +129,35 @@ function getEvents() {
     });
 }
 
+function getEventsSoFar() {
+  var start = new Date(config.semesterStart);
+  return getEvents().then(function(events) {
+    events = events || [];
+    return events.filter(function(event) {
+      return start.getTime() <= _getEventDate(event).getTime();
+    });
+  });
+}
+
+function getById(params) {
+  return getEvents().then(function(events) {
+    for (var i = 0; i < events.length; i++) {
+      var event = events[i];
+      if (event.id == params.id) {
+        return event;
+      }
+    }
+    return Promise.reject("no event exists w/ id: " + params.id);
+  });
+}
+
 // EXPORTS
 module.exports.listAbsences = listAbsences;
-module.exports.listSignIns = listSignIns;
+module.exports.listSignIns =
+  listSignIns;
 module.exports.getEvent = getEvent;
-module.exports.getEvents = getEvents;
+module.exports.getEvents =
+  getEvents;
+module.exports.getEventsSoFar = getEventsSoFar;
+module.exports.getById =
+  getById;

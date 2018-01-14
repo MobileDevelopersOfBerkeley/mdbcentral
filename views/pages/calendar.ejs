@@ -28,11 +28,15 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Event</label>
-                                        <select form="expectedAbsenceForm" name="eventId" class="form-control" value="<%- closestEventId %>" required>
+                                        <select form="expectedAbsenceForm" name="eventId" class="form-control" required>
                                           <% for(var i = 0; i < events.length; i++) { %>
                                             <% var event = events[i]; %>
-                                            <option value="<%- event.id %>">
-                                              <%- event.title || event.summary %>
+                                            <% if (event.id == closestEventId) { %>
+                                                <option value="<%- event.id %>" selected="1">
+                                            <% } else { %>
+                                                <option value="<%- event.id %>">
+                                            <% } %>
+                                            <%- event.title || event.summary %>
                                             </option>
                                           <% } %>
                                         </select>
@@ -61,11 +65,15 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Event</label>
-                                        <select form="feedbackForm" name="eventId" class="form-control" value="<%- closestEventId %>" required>
+                                        <select form="feedbackForm" name="eventId" class="form-control" required>
                                           <% for(var i = 0; i < events.length; i++) { %>
                                             <% var event = events[i]; %>
-                                            <option value="<%- event.id %>">
-                                              <%- event.title || event.summary %>
+                                            <% if (event.id == closestEventId) { %>
+                                                <option value="<%- event.id %>" selected="1">
+                                            <% } else { %>
+                                                <option value="<%- event.id %>">
+                                            <% } %>
+                                            <%- event.title || event.summary %>
                                             </option>
                                           <% } %>
                                         </select>

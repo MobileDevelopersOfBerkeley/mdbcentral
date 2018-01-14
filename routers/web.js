@@ -4,7 +4,7 @@ const routerUtil = require("../util/router.js");
 const dbUtil = require("../util/firebase/db.js");
 const userLogic = require("../logic/Members.js");
 const rolesLogic = require("../logic/Roles.js");
-const eventsLogic = require("../logic/Events.js");
+const welcomeLogic = require("../logic/Welcome.js");
 const assignmentsLogic = require("../logic/Assignments.js");
 const config = require("../conf/config.json");
 
@@ -187,9 +187,9 @@ router.get("/calendar", function(req, res) {
   }
   var userId = req.cookies.userId;
   _genData("calendar", userId).then(function(data) {
-    return eventsLogic.getEventsSoFar().then(function(events) {
+    return welcomeLogic.getEventsSoFar().then(function(events) {
       data.events = events;
-      return eventsLogic.getEvent().catch(function(error) {
+      return welcomeLogic.getEvent().catch(function(error) {
         return null;
       });
     }).then(function(event) {
