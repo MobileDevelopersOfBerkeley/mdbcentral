@@ -6,13 +6,14 @@ const storage = firebase.storage();
 
 // METHODS
 function upload(blob) {
-  return firebase.storage().bucket()
-    .file("uploads/" + blob.filename)
-    .upload(blob.path).then(function(data) {
-      // TODO: log and see which field is url?
-      console.log(data);
-      console.log(typeof(data));
-      process.exit(0);
+  var link;
+  return storage.bucket().upload(blob.path)
+    .then(function(data) {
+      var d = data[0];
+      link = d.metadata.mediaLink;
+      return d.makePublic();
+    }).then(function() {
+      return link;
     });
 }
 
