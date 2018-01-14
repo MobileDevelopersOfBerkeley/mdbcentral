@@ -9,17 +9,10 @@ const ref = dbUtil.refs.assignmentRef;
 // HELPERS
 function _getAssignments(roleId) {
   var assignments = [];
-  return assignment_ref.once("value").then(function(snapshot) {
-    var assignments = [];
-    if (!snapshot.exists()) return assignments;
-    snapshot.forEach(function(childSnapshot) {
-      var assignment = childSnapshot.val();
-      assignment.key = childSnapshot.key;
-      if (assignment.roleIds.indexOf(roleId) >= 0) {
-        assignments.push(assignment);
-      }
+  return dbUtil.getAll(ref).then(function(assignments) {
+    return assignments.filter(function(assignment) {
+      return assignment.roleIds.indexOf(roleId) >= 0;
     });
-    return assignments;
   });
 }
 
@@ -85,7 +78,7 @@ function getAssignmentScores(params) {
           result.push(assignment);
         }));
     });
-    return firebase.Promise.all(plist);
+    return Promise.all(plist);
   }).then(function() {
     return result;
   });
