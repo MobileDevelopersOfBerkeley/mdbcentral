@@ -1,0 +1,37 @@
+{
+  "firebaseDBUrl": "",
+  "firebaseStorageUrl": "",
+
+  "jwtSecret": "mdbotIsPresident",
+  "jwtExpireTime": 86400,
+
+  "apiaiKey": "52486c05cfdc4ec4b2ea4fc955633d5b",
+  "apiaiSessionID": "4c641d0f-1437-4758-ad9e-a2bcc8857889",
+
+  "cleverbotKey": "CC18eChsZdF4byR0F_RuwJ-gVGw",
+
+  "gcalKey": "AIzaSyD7xd52GNbB2crUi6olARJOXzyrd454PuU",
+  "gcalCalendar": "contact%40mobiledevsberkeley.org",
+
+  "githubClientSecret": "cc5e0d32d65e151abf2de75b31743e8f5a82591d",
+  "githubClientID": "c9d44a32a64721c26cf4",
+  "githubOrgID": "MobileDevelopersOfBerkeley",
+
+  "userAgent": "mdbcentral",
+
+  "effortRating3Lines": 1000,
+
+  "gmailPassword": "maliboat#dab",
+  "gmailEmail": "contact@mobiledevsberkeley.org",
+  "gmailFromStr": "\"MDB Leadership Bot\" <contact@mobiledevsberkeley.org>",
+  "gmailSubjectPrefix": "[MDB] ",
+
+  "slackBotToken": "PUT TOKEN HERE",
+  "slackBotName": "MDBot",
+  "slackBotChannel": "biglittlecontest",
+  "slackBotHello": "Hello! I'm MDBot!!! Prepare to get savaged :p",
+  "slackBotImage": "https://avatars.slack-edge.com/2017-03-16/154560287617_f5e4a785dda2912be9f9_72.jpg",
+  "slackBotErrorMessage": "Something went wrong, call up the VP of Dev.",
+
+  "ivpID": "U2CV94KUN"
+}
