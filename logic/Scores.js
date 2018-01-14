@@ -23,7 +23,7 @@ function set(params) {
     member: params.member,
     assignmentId: params.assignmentId
   }).then(function(score) {
-    if (score.key == null) {
+    if (score.score == nullScoreStr) {
       return dbUtil.createNewObjectByAutoId(ref, {
         assignmentId: params.assignmentId,
         score: params.score,
@@ -38,3 +38,4 @@ function set(params) {
 
 // EXPORTS
 module.exports.get = get;
+module.exports.set = set;

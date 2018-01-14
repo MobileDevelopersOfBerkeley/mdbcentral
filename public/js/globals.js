@@ -24,18 +24,21 @@ function login() {
     });
 }
 
+var cardCache = {};
+
 function _hideCard(elementId) {
-  $("#" + elementId + "Toggle").val("Show");
-  $("#" + elementId).css("visibility", "hidden");
+  $("#" + elementId + "Toggle").html("Show");
+  cardCache[elementId] = $("#" + elementId).html();
+  $("#" + elementId).html("");
 }
 
 function _showCard(elementId) {
-  $("#" + elementId + "Toggle").val("Hide");
-  $("#" + elementId).css("visibility", "visible");
+  $("#" + elementId + "Toggle").html("Hide");
+  $("#" + elementId).html(cardCache[elementId]);
 }
 
 function toggleCard(elementId) {
-  var value = $("#" + elementId + "Toggle").val();
+  var value = $("#" + elementId + "Toggle").html();
   if (value == "Hide") _hideCard(elementId);
   else _showCard(elementId);
 }

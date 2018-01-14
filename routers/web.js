@@ -273,9 +273,7 @@ router.get("/leadership", function(req, res) {
     plist.push(assignmentsLogic.getAll().then(function(assignments) {
       data.assignments = assignments;
       if (assignments.length == 0) return [];
-      return assignmentsLogic.getAllScores({
-        assignmentId: assignments[0].key
-      });
+      return assignmentsLogic.getAllScores();
     }).then(function(d) {
       data.scores = d.scores;
       data.num_scores = d.num_scores;

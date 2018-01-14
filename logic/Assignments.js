@@ -7,6 +7,7 @@ const scoresLogic = require("./Scores.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.assignmentRef;
+const nullScoreStr = " - ";
 
 // HELPERS
 function _getAssignments(roleId) {
@@ -51,13 +52,11 @@ function getAllScores(params) {
       }).then(function(assignments) {
         for (var i = 0; i < assignments.length; i++) {
           var assignment = assignments[i];
-          if (assignment._key == params.assignmentId) {
-            assignment.assignment_name = assignment.name;
-            assignment.member_name = user.name;
-            result.push(assignment);
-            if (assignment.score != nullScoreStr)
-              num_scores += 1;
-          }
+          assignment.assignment_name = assignment.name;
+          assignment.member_name = user.name;
+          result.push(assignment);
+          if (assignment.score != nullScoreStr)
+            num_scores += 1;
         }
       })
     }));
