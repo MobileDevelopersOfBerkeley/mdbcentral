@@ -5,9 +5,9 @@ const util = require("../util.js");
 // REFS
 const rootRef = firebase.database().ref();
 const refs = {};
-refs.userRef = rootRef.child("Users");
+refs.memberRef = rootRef.child("Members");
 refs.githubCacheRef = rootRef.child("GithubCache");
-refs.bigLittleRef = rootRef.child("BigLittle");
+refs.bigLittleRef = rootRef.child("BigLittleContest");
 refs.assignmentRef = rootRef.child("Assignments");
 refs.scoreRef = rootRef.child("Scores");
 refs.roleRef = rootRef.child("Roles");

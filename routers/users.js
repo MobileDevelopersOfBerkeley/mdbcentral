@@ -4,10 +4,10 @@ const router = require("express").Router();
 const routerUtil = require("../util/router.js");
 const dbUtil = require("../util/firebase/db.js");
 const util = require("../util/util.js");
-const usersLogic = require("../logic/Users.js");
+const usersLogic = require("../logic/Members.js");
 
 // CONSTANTS
-const ref = dbUtil.refs.userRef;
+const ref = dbUtil.refs.memberRef;
 const upload = multer({
   dest: '/tmp/'
 });

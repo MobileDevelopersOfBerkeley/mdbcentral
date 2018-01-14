@@ -8,7 +8,7 @@ const feedbackLogic = require("../logic/Feedback.js");
 router.post("/feedback", function(req, res) {
   req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
-    .keyExistsInDB(dbUtil.refs.userRef);
+    .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("eventId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkCookies("response", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, feedbackLogic.create,

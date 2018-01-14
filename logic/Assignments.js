@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
-const getUserById = require("./Users.js").getById;
+const getUserById = require("./Members.js").getById;
 const scoresUtil = require("./Scores.js");
 
 // CONSTANTS
@@ -22,24 +22,6 @@ function _getAssignments(roleId) {
     return assignments;
   });
 }
-
-function _getAssignmentScores(uid, roleId) {
-  var result = [];
-  return _getAssignments(roleId).then(function(assignments) {
-    var plist = [];
-    assignments.forEach(function(assignment) {
-      plist.push(scoresUtil.get(uid, assignment.key).then(function(
-        score) {
-        assignment.score = score.score;
-        result.push(assignment);
-      }));
-    });
-    return firebase.Promise.all(plist);
-  }).then(function() {
-    return result;
-  });
-}
-
 
 // METHODS
 function create(params) {
@@ -68,19 +50,21 @@ function getAllScores(params) {
   var num_scores = 0;
   return getAllUsers().then(function(users) {
     return Promise.all(users.map(function(user) {
-      return _getAssignmentScores(member.uid, member.roleId)
-        .then(function(assignments) {
-          for (var i = 0; i < assignments.length; i++) {
-            var assignment = assignments[i];
-            if (assignment.key == params.assignmentId) {
-              assignment.assignment_name = assignment.name;
-              assignment.member_name = member.name;
-              result.push(assignment);
-              if (assignment.score != nullScoreStr)
-                num_scores += 1;
-            }
+      return getAssignmentScores({
+        userId: member.uid,
+        roleId: member.roleId
+      }).then(function(assignments) {
+        for (var i = 0; i < assignments.length; i++) {
+          var assignment = assignments[i];
+          if (assignment.key == params.assignmentId) {
+            assignment.assignment_name = assignment.name;
+            assignment.member_name = member.name;
+            result.push(assignment);
+            if (assignment.score != nullScoreStr)
+              num_scores += 1;
           }
-        })
+        }
+      })
     }));
   }).then(function() {
     return {
@@ -90,8 +74,26 @@ function getAllScores(params) {
   });
 }
 
+function getAssignmentScores(params) {
+  var result = [];
+  return _getAssignments(params.roleId).then(function(assignments) {
+    var plist = [];
+    assignments.forEach(function(assignment) {
+      plist.push(scoresUtil.get(params.userId, assignment.key)
+        .then(function(score) {
+          assignment.score = score.score;
+          result.push(assignment);
+        }));
+    });
+    return firebase.Promise.all(plist);
+  }).then(function() {
+    return result;
+  });
+}
+
 // EXPORTS
 module.exports.create = create;
 module.exports.getAll = getAll;
 module.exports.getByUid = getByUid;
 module.exports.getAllScores = getAllScores;
+module.exports.getAssignmentScores = getAssignmentScores;

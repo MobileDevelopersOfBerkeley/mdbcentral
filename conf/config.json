@@ -36,5 +36,20 @@
 
   "welcomeEndpoint": "http://legacy-api.welcomeme.io",
   "semesterStart": "8-25-2017",
-  "canSignUp": true
+  "canSignUp": true,
+
+  "docs": [
+    "/docs/AttendancePolicy.pdf",
+    "/docs/MembershipExpectations.pdf",
+    "/docs/RoleResponsibilities.pdf",
+    "/docs/MembershipProgramOverview.pdf",
+    "/docs/DevCycleInformation.pdf",
+    "/docs/GithubWorkflow.pdf",
+    "/docs/AndroidHandbook.pdf",
+    "/docs/iOSHandbook.pdf",
+    "/docs/ReimbursementPolicy.pdf",
+    "/docs/BigLittleProgram.pdf",
+    "/docs/WTGT.pdf",
+    "/docs/InactivePolicy.pdf"
+  ]
 }

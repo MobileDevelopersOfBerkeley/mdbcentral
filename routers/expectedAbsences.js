@@ -11,7 +11,7 @@ const ref = dbUtil.refs.expectedAbsencesRef;
 router.delete("/expectedAbsences/:id", function(req, res) {
   req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
-    .keyExistsInDB(dbUtil.refs.userRef);
+    .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkParams("id", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkParams("id", routerUtil.errors.dbErrorMessage).keyExistsInDB(ref);
   return routerUtil.completeRequest(req, res, expectedAbsencesLogic.deleteById,
@@ -21,7 +21,7 @@ router.delete("/expectedAbsences/:id", function(req, res) {
 router.post("/expectedAbsences", function(req, res) {
   req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
-    .keyExistsInDB(dbUtil.refs.userRef);
+    .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("eventId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkCookies("reason", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, expectedAbsencesLogic.create,

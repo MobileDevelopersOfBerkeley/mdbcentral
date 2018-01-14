@@ -7,7 +7,7 @@ const getGithubCache = require("./GithubCache.js").get;
 const getRoleByUid = require("./Roles.js").getByUid;
 
 // CONSTANTS
-const ref = dbUtil.refs.userRef;
+const ref = dbUtil.refs.memberRef;
 
 // METHODS
 function isLeadership(params) {
@@ -20,7 +20,7 @@ function isLeadership(params) {
 
 function getById(params) {
   var id = params.id;
-  return dbutil.getByKey(ref, id);
+  return dbUtil.getByKey(ref, id);
 }
 
 function getAll() {

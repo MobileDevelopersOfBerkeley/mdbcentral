@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
-const userLogic = require("./Users.js");
+const userLogic = require("./Members.js");
 const getEventById = require("./Events.js").getById;
 
 // CONSTANTS

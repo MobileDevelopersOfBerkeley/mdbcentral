@@ -2,7 +2,7 @@
 const dbUtil = require("../util/firebase/db.js");
 const util = require("../util/util.js");
 const eventsLogic = require("./Events.js");
-const userLogic = require("./Users.js");
+const userLogic = require("./Members.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.expectedAbsenceRef;

@@ -8,7 +8,7 @@ const scoresLogic = require("../logic/Scores.js");
 router.patch("/scores", function(req, res) {
   req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
-    .keyExistsInDB(dbUtil.refs.userRef);
+    .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("assignmentId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("assignmentId", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.assignmentRef);

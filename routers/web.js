@@ -2,7 +2,9 @@
 const router = require("express").Router();
 const routerUtil = require("../util/router.js");
 const dbUtil = require("../util/firebase/db.js");
-const userLogic = require("../logic/Users.js");
+const userLogic = require("../logic/Members.js");
+const rolesLogic = require("../logic/Roles.js");
+const config = require("../conf/config.json");
 
 // HELPERS
 function _getLiTag(currPage) {
@@ -12,27 +14,46 @@ function _getLiTag(currPage) {
   }
 }
 
+function _roleIdsToString(roleIds) {
+  var roles = [];
+  return roleIds.map(function(roleId) {
+    return roles[roleId];
+  });
+}
+
+function _getDocById(id) {
+  return config.docs[id - 1];
+}
+
+function _genData(currPage, uid) {
+  var data = {
+    firstname: "Visitor",
+    notifications: [],
+    currPage: currPage,
+    graphs: [],
+    getLiTag: _getLiTag(currPage)
+  };
+  return rolesLogic.get().then(function(roles) {
+    data.roles = roles;
+    if (!uid) return Promise.resolve(true);
+    return userLogic.getById({
+      id: uid
+    }).then(function(user) {
+      data.leadership = user.leadership === true;
+      data.user = user;
+      return data;
+    });
+  });
+}
+
 // METHODS
 router.get("/", function(req, res) {
   res.redirect("/home");
 });
 
 router.get("/login", function(req, res) {
-  /*
-  plist.push(Member.getRoles().then(function(roles) {
-		$scope.$apply(function() {
-			$scope.roles = roles;
-		});
-	}));
-  */
-  res.render("index", {
-    currPage: "login",
-    roles: [],
-    graphs: [],
-    getLiTag: _getLiTag("login"),
-    leadership: true,
-    firstname: "Visitor",
-    notifications: []
+  _genData("login").then(function(data) {
+    res.render("index", data);
   });
 });
 
@@ -138,23 +159,15 @@ router.get("/assignments", function(req, res) {
     res.redirect("/login");
     return;
   }
-  /*
-  return Member.getMember(currentUser.uid).then(function(member) {
-    return Assignments.getAssignmentScores(currentUser.uid, member.roleId);
-  }).then(function(assignments) {
-    $scope.$apply(function() {
-      $scope.assignments = assignments;
+  var userId = req.cookies.userId;
+  _genData("assignments", userId).then(function(data) {
+    return assignmentsLogic.getAssignmentScores({
+      userId: userId,
+      roleId: data.user.roleId
+    }).then(function(assignments) {
+      data.assignments = assignments;
+      res.render("index", data);
     });
-  });
-  */
-  res.render("index", {
-    assignments: [],
-    firstname: "Krishnan",
-    notifications: [],
-    currPage: "assignments",
-    leadership: true,
-    getLiTag: _getLiTag("assignments"),
-    graphs: []
   });
 });
 
@@ -163,32 +176,17 @@ router.get("/calendar", function(req, res) {
     res.redirect("/login");
     return;
   }
-  /*
-  Attendance.getEventsSoFar().then(function(events) {
-    $scope.$apply(function() {
-      $scope.events = events;
-      changeSpinnerSync(false);
+  var userId = req.cookies.userId;
+  _genData("calendar", userId).then(function(data) {
+    return eventsLogic.getEventsSoFar().then(function(events) {
+      data.events = events;
+      return eventsLogic.getEvent().then(function(event) {
+        data.closestEventId = event.id;
+        res.render("index", data);
+      });
     });
   });
-  */
-  res.render("index", {
-    events: [],
-    closestEventId: "?",
-    firstname: "Krishnan",
-    notifications: [],
-    currPage: "calendar",
-    leadership: true,
-    getLiTag: _getLiTag("calendar"),
-    graphs: []
-  });
 });
-
-function roleIdsToString(roleIds) {
-  var roles = [];
-  return roleIds.map(function(roleId) {
-    return roles[roleId];
-  });
-}
 
 router.get("/leadership", function(req, res) {
   if (!req.cookies.userId) {
@@ -396,7 +394,7 @@ router.get("/leadership", function(req, res) {
       expectedAbsences: [].sort(function(a, b) {
         return a.title - b.title;
       }),
-      roleIdsToString: roleIdsToString,
+      _roleIdsToString: _roleIdsToString,
       assignments: [].sort(function(a, b) {
         return a.due - b.due;
       }),
@@ -408,23 +406,6 @@ router.get("/leadership", function(req, res) {
   });
 });
 
-function getDocById(id) {
-  return [
-    "/docs/AttendancePolicy.pdf",
-    "/docs/MembershipExpectations.pdf",
-    "/docs/RoleResponsibilities.pdf",
-    "/docs/MembershipProgramOverview.pdf",
-    "/docs/DevCycleInformation.pdf",
-    "/docs/GithubWorkflow.pdf",
-    "/docs/AndroidHandbook.pdf",
-    "/docs/iOSHandbook.pdf",
-    "/docs/ReimbursementPolicy.pdf",
-    "/docs/BigLittleProgram.pdf",
-    "/docs/WTGT.pdf",
-    "/docs/InactivePolicy.pdf"
-  ][id - 1];
-}
-
 router.get("/policies", function(req, res) {
   res.redirect("/policies/1");
 });
@@ -434,14 +415,10 @@ router.get("/policies/:id", function(req, res) {
     res.redirect("/login");
     return;
   }
-  res.render("index", {
-    docPath: getDocById(req.params.id),
-    firstname: "Krishnan",
-    notifications: [],
-    currPage: "policies",
-    leadership: true,
-    getLiTag: _getLiTag("policies"),
-    graphs: []
+  var userId = req.cookies.userId;
+  _genData("policies", userId).then(function(data) {
+    data.docPath = _getDocById(req.params.id);
+    res.render("index", data);
   });
 });
 
@@ -450,17 +427,9 @@ router.get("/profile", function(req, res) {
     res.redirect("/login");
     return;
   }
-  res.render("index", {
-    firstname: "Krishnan",
-    notifications: [],
-    currPage: "profile",
-    leadership: true,
-    getLiTag: _getLiTag("profile"),
-    graphs: [],
-    user: {
-      roleId: 0
-    },
-    roles: ["Da Boss"]
+  var userId = req.cookies.userId;
+  _genData("profile", userId).then(function(data) {
+    res.render("index", data);
   });
 });
 
