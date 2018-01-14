@@ -129,7 +129,7 @@
                                         <select form="assignmentsForm" required multiple class="form-control" name="roleIds">
                                           <% for (var i = 0; i < roles.length; i++) { %>
                                             <% var role = roles[i]; %>
-                                            <option value="<%- i %>"><%- role %></option>
+                                            <option value="<%- i %>"><%- role.title %></option>
                                           <% } %>
                                         </select>
                                     </div>
