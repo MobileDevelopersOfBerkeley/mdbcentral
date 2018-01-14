@@ -87,25 +87,25 @@ function update(params) {
     var url;
     plist.push(storageUtil.upload(params.profileImage).then(function(link) {
       url = link;
-      return authUtil.updateAuthAccount(params.userId, {
+      return authUtil.updateAuthAccount(params.member, {
         photoURL: url,
         email: params.email,
         displayName: params.name
       });
     }).then(function() {
-      return dbUtil.updateObject(ref, params.userId, {
+      return dbUtil.updateObject(ref, params.member, {
         profileImage: url
       });
     }));
   }
 
   if (params.password && params.password.trim() != "") {
-    plist.push(authUtil.updateAuthAccount(params.userId, {
+    plist.push(authUtil.updateAuthAccount(params.member, {
       password: params.password
     }));
   }
 
-  plist.push(dbUtil.updateObject(ref, params.userId, {
+  plist.push(dbUtil.updateObject(ref, params.member, {
     name: params.name,
     email: params.email,
     major: params.major,

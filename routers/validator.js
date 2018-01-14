@@ -60,7 +60,7 @@ module.exports = expressValidator({
         return dbUtil.checkIfAllKeysExist(ref, [param]);
       });
     },
-    validUserId: function(param) {
+    validmember: function(param) {
       return _promiseBoolTrue(function() {
         return getUserById({
           id: param

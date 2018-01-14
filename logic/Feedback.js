@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
-const userLogic = require("./Members.js");
+const memberLogic = require("./Members.js");
 const getEventById = require("./Welcome.js").getById;
 
 // CONSTANTS
@@ -9,10 +9,10 @@ const ref = dbUtil.refs.feedbackRef;
 // METHODS
 function getAll() {
   var result = [];
-  return userLogic.getAll().then(function(users) {
+  return memberLogic.getAll().then(function(users) {
     return Promise.all(users.map(function(user) {
       return dbUtil.getObjectsByFields(ref, {
-        userId: user._key
+        member: user._key
       }).then(function(feedbacks) {
         feedbacks.forEach(function(feedback) {
           feedback.name = user.name;
@@ -33,7 +33,7 @@ function create(params) {
       id: params.eventId,
       title: event.title || event.summary,
       timestamp: new Date().getTime(),
-      userId: params.userId,
+      member: params.member,
       response: params.response
     });
   });

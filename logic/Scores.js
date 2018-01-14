@@ -8,7 +8,7 @@ const nullScoreStr = " - ";
 // METHODS
 function get(params) {
   return dbUtil.getObjectsByFields(ref, {
-    userId: params.uid,
+    member: params.uid,
     assignmentId: params.assignmentId
   }).then(function(scores) {
     if (scores.length > 0) return scores[0];
@@ -19,12 +19,12 @@ function get(params) {
 }
 
 function set(params) {
-  return get(params.userId, params.assignmentId).then(function(score) {
+  return get(params.member, params.assignmentId).then(function(score) {
     if (score.key == null) {
       return dbUtil.createNewObjectByAutoId(ref, {
         assignmentId: params.assignmentId,
         score: params.score,
-        userId: params.userId
+        member: params.member
       });
     }
     return dbUtil.updateObject(ref, score._key, {

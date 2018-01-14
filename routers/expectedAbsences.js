@@ -10,8 +10,8 @@ const ref = dbUtil.refs.expectedAbsencesRef;
 // METHODS
 // NOTE: should be delete but HTML form tag only allows GET and POST
 router.post("/expectedAbsences/:id", function(req, res) {
-  req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
-  req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkParams("id", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkParams("id", routerUtil.errors.dbErrorMessage).keyExistsInDB(ref);
@@ -20,8 +20,8 @@ router.post("/expectedAbsences/:id", function(req, res) {
 });
 
 router.post("/expectedAbsences", function(req, res) {
-  req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
-  req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("eventId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkCookies("reason", routerUtil.errors.missingErrorMessage).notEmpty();

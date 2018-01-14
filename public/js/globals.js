@@ -9,7 +9,7 @@ function signin() {
 
 function logout() {
   firebase.auth().signOut().then(function() {
-    _setCookie("userId", "");
+    _setCookie("member", "");
     window.location.href = "/";
   });
 }
@@ -19,7 +19,7 @@ function login() {
   var password = $("#password").val();
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(user) {
-      _setCookie("userId", user.uid);
+      _setCookie("member", user.uid);
       window.location.href = "/";
     });
 }

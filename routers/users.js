@@ -4,7 +4,7 @@ const router = require("express").Router();
 const routerUtil = require("../util/router.js");
 const dbUtil = require("../util/firebase/db.js");
 const util = require("../util/util.js");
-const usersLogic = require("../logic/Members.js");
+const memberLogic = require("../logic/Members.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.memberRef;
@@ -31,8 +31,8 @@ function _doCreate(req, res) {
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
   return routerUtil.completeRequest(req, res, function(params) {
-    return usersLogic.create(params).then(function(user) {
-      res.cookie('userId', user._key, {
+    return memberLogic.create(params).then(function(user) {
+      res.cookie('member', user._key, {
         maxAge: 900000,
         httpOnly: false
       });
@@ -42,8 +42,8 @@ function _doCreate(req, res) {
 
 function _doUpdate(req, res) {
   req.body.profileImage = req.file;
-  req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
-  req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(ref);
   if (req.body.profileImage) {
     req.checkBody("profileImage", routerUtil.errors.formatErrorMessage).isValidFile();
@@ -58,7 +58,7 @@ function _doUpdate(req, res) {
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
-  return routerUtil.completeRequest(req, res, usersLogic.update,
+  return routerUtil.completeRequest(req, res, memberLogic.update,
     "/profile");
 }
 

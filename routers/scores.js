@@ -6,8 +6,8 @@ const scoresLogic = require("../logic/Scores.js");
 
 // METHODS
 router.post("/scores", function(req, res) {
-  req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
-  req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("assignmentId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("assignmentId", routerUtil.errors.dbErrorMessage)

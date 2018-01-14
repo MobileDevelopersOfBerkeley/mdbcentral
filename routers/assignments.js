@@ -6,8 +6,8 @@ const assignmentLogic = require("../logic/Assignments.js");
 
 // METHODS
 router.post("/assignments", function(req, res) {
-  req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
-  req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("due", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("link", routerUtil.errors.missingErrorMessage).notEmpty();

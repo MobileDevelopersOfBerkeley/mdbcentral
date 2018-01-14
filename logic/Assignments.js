@@ -44,7 +44,7 @@ function getAllScores(params) {
   return getAllUsers().then(function(users) {
     return Promise.all(users.map(function(user) {
       return getAssignmentScores({
-        userId: member.uid,
+        member: member.uid,
         roleId: member.roleId
       }).then(function(assignments) {
         for (var i = 0; i < assignments.length; i++) {
@@ -72,7 +72,7 @@ function getAssignmentScores(params) {
   return _getAssignments(params.roleId).then(function(assignments) {
     var plist = [];
     assignments.forEach(function(assignment) {
-      plist.push(scoresUtil.get(params.userId, assignment.key)
+      plist.push(scoresUtil.get(params.member, assignment.key)
         .then(function(score) {
           assignment.score = score.score;
           result.push(assignment);

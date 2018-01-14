@@ -2,7 +2,7 @@
 const dbUtil = require("../util/firebase/db.js");
 const util = require("../util/util.js");
 const welcomeLogic = require("./Welcome.js");
-const userLogic = require("./Members.js");
+const memberLogic = require("./Members.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.expectedAbsenceRef;
@@ -10,10 +10,10 @@ const ref = dbUtil.refs.expectedAbsenceRef;
 // METHODS
 function getAll() {
   var result = [];
-  return userLogic.getAll().then(function(users) {
+  return memberLogic.getAll().then(function(users) {
     return Promise.all(users.map(function(user) {
       return getByUid({
-        userId: user._key
+        member: user._key
       }).then(function(expectedAbsences) {
         expectedAbsences.forEach(function(expectedAbsence) {
           expectedAbsence.name = user.name;
@@ -28,7 +28,7 @@ function getAll() {
 
 function getByUid(params) {
   return dbUtil.getObjectsByFields(ref, {
-    userId: params.userId
+    member: params.member
   });
 }
 
@@ -38,7 +38,7 @@ function deleteById(params) {
 
 function create(params) {
   return dbUtil.getObjectsByFields(ref, {
-    userId: params.userId
+    member: params.member
   }).then(function(expectedAbsences) {
     if (expectedAbsences.length > 0) {
       return Promise.reject(new Error(
@@ -51,7 +51,7 @@ function create(params) {
       return dbUtil.createNewObjectByAutoId(ref, {
         id: params.eventId,
         reason: params.reason,
-        userId: params.userId,
+        member: params.member,
         timestamp: new Date().getTime(),
         title: event.title || event.summary
       });
