@@ -36,5 +36,5 @@
 
   "welcomeEndpoint": "http://legacy-api.welcomeme.io",
   "semesterStart": "8-25-2017",
-  "canSignUp": false
+  "canSignUp": true
 }

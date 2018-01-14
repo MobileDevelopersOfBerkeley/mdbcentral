@@ -1,5 +1,8 @@
 // DEPENDENCIES
 const router = require("express").Router();
+const routerUtil = require("../util/router.js");
+const dbUtil = require("../util/firebase/db.js");
+const userLogic = require("../logic/Users.js");
 
 // HELPERS
 function _getLiTag(currPage) {
@@ -25,11 +28,16 @@ router.get("/login", function(req, res) {
   res.render("index", {
     currPage: "login",
     roles: [],
-    graphs: []
+    graphs: [],
+    getLiTag: _getLiTag("login"),
+    leadership: true,
+    firstname: "Visitor",
+    notifications: []
   });
 });
 
 router.get("/home", function(req, res) {
+  if (!req.cookies.userId) res.redirect("/login");
   /*
   return Member.getMember(currentUser.uid).then(function(member) {
     var plist = [];
@@ -123,6 +131,7 @@ router.get("/home", function(req, res) {
 });
 
 router.get("/assignments", function(req, res) {
+  if (!req.cookies.userId) res.redirect("/login");
   /*
   return Member.getMember(currentUser.uid).then(function(member) {
     return Assignments.getAssignmentScores(currentUser.uid, member.roleId);
@@ -144,6 +153,7 @@ router.get("/assignments", function(req, res) {
 });
 
 router.get("/calendar", function(req, res) {
+  if (!req.cookies.userId) res.redirect("/login");
   /*
   Attendance.getEventsSoFar().then(function(events) {
     $scope.$apply(function() {
@@ -172,208 +182,216 @@ function roleIdsToString(roleIds) {
 }
 
 router.get("/leadership", function(req, res) {
-  /*
-  var plist = [];
+  if (!req.cookies.userId) res.redirect("/login");
+  userLogic.isLeadership({
+    id: req.cookies.userId
+  }).then(function(bool) {
+    if (!bool) res.redirect("/home");
+    /*
+    var plist = [];
 
-  var totalWatchList = 0;
-  var totalBoardReviewList = 0;
-  var members = [];
-  var totalRoles = {};
-  var total = 0;
+    var totalWatchList = 0;
+    var totalBoardReviewList = 0;
+    var members = [];
+    var totalRoles = {};
+    var total = 0;
 
-  function genData(x, noStr) {
-    var strs = [];
-    var values = [];
-    for (var key in x) {
-      var value = x[key]
-      var percent = Math.ceil((value / total) * 100);
-      if (percent > 0) {
-        var percent_str = percent + "%";
-        var str = "";
-        if (!noStr)
-          str = key + " (" + percent_str + ")";
-        else
-          str = percent_str + " (" + value + ")";
-        strs.push(str);
-        values.push(percent);
-      }
-    }
-    return [strs, values];
-  }
-
-  // plist.push(Assignments.getProjectPercentages().then(function(
-  // 	projectPercentages) {
-  // 	$scope.$apply(function() {
-  // 		$scope.projectPercentages = projectPercentages;
-  // 		$scope.project_id = projectPercentages[0].id;
-  // 	});
-  // }));
-
-  plist.push(Attendance.listAllFeedback().then(function(feedbacks) {
-    $scope.$apply(function() {
-      $scope.feedbacks = feedbacks;
-    });
-  }));
-
-  plist.push(Assignments.getAllAssignments().then(function(assignments) {
-    $scope.$apply(function() {
-      $scope.assignments = assignments;
-      $scope.score_overview_assignmentId = assignments[0].key;
-    });
-    if (assignments.length == 0) return [];
-    return Assignments.getAllScores(assignments[0].key);
-  }).then(scoreCallback));
-
-  // plist.push(Attendance.getSignInCode().then(function(code) {
-  // 	$scope.$apply(function() {
-  // 		$scope.set_signin_code_text = code;
-  // 	});
-  // }));
-
-  // plist.push(Attendance.getSignInMinutes().then(function(minutes) {
-  // 	$scope.$apply(function() {
-  // 		$scope.set_signin_code_minutes = minutes;
-  // 	});
-  // }));
-
-  plist.push(Attendance.listAllExpectedAbsences().then(function(
-    expectedAbsences) {
-    $scope.$apply(function() {
-      $scope.expectedAbsences = expectedAbsences;
-    });
-  }));
-
-  var userLines = {};
-  plist.push(Assignments.getUserLines().then(function(userLiness) {
-    userLines = userLiness || {};
-    return Member.listMembers();
-  }).then(function(memberss) {
-    members = memberss || [];
-    members.forEach(function(member) {
-      for (var username in userLines) {
-        if (member.githubUsername == username) {
-          member.totalLines = userLines[username];
-          break;
+    function genData(x, noStr) {
+      var strs = [];
+      var values = [];
+      for (var key in x) {
+        var value = x[key]
+        var percent = Math.ceil((value / total) * 100);
+        if (percent > 0) {
+          var percent_str = percent + "%";
+          var str = "";
+          if (!noStr)
+            str = key + " (" + percent_str + ")";
+          else
+            str = percent_str + " (" + value + ")";
+          strs.push(str);
+          values.push(percent);
         }
       }
-    });
-    $scope.$apply(function() {
-      $scope.members = members;
-    });
-    // 	return Member.getTotalWatchList();
-    // }).then(function(totalWatchListt) {
-    // 	totalWatchList = totalWatchListt;
-    // 	return Member.getTotalBoardReviewList();
-    // }).then(function(totalBoardReviewListt) {
-    // totalBoardReviewList = totalBoardReviewListt;
-    // totalWatchList -= totalBoardReviewList;
-    total = members.length;
-
-    // if (totalWatchList != 0 && totalBoardReviewList == 0)
-    // 	totalBoardReviewList = .001;
-    //
-    // var totalShortList = {
-    // 	"Fine": total - totalWatchList - totalBoardReviewList,
-    // 	"BoardReviewList": totalBoardReviewList,
-    // 	"WatchList": totalWatchList
-    // };
-    // var data = genData(totalShortList, true);
-    // graphPie("#shortlist_pie", data[0], data[1]);
-
-    var totalYears = {};
-    var totalMajors = {};
-    totalRoles = {};
-    members.forEach(function(member) {
-      if (member.year in totalYears) totalYears[member.year] += 1;
-      else totalYears[member.year] = 1;
-      if (member.roleId in totalRoles) totalRoles[member.roleId] += 1;
-      else totalRoles[member.roleId] = 1;
-      var major = member.major.trim().toLowerCase();
-      var majors = [];
-      if (major.includes(",")) {
-        majors = major.split(",");
-      } else if (major.includes("/")) {
-        majors = major.split("/");
-      } else if (major.includes("+")) {
-        majors = major.split("+");
-      } else {
-        majors.push(major);
-      }
-      majors.forEach(function(major) {
-        major = major.trim();
-        if (major.includes("electric")) major = "eecs";
-        else if (major.includes("computer science")) major = "cs";
-        else if (major.includes("business")) major = "business";
-        else if (major.includes("engineering")) major = "engineering";
-        else if (major.includes("math") || major.includes("stat"))
-          major = "math";
-        if (major in totalMajors) totalMajors[major] += 1;
-        else totalMajors[major] = 1;
-      });
-    });
-
-    var data = genData(totalYears, true);
-    graphPie("#year_pie", data[0], data[1]);
-    data = genData(totalMajors);
-    graphPie("#major_pie", data[0], data[1]);
-    return Member.getRoles();
-  }).then(function(roles) {
-    $scope.$apply(function() {
-      $scope.roles = roles;
-    });
-    var formattedTotalRoles = {
-      "Leaders": 0,
-      "DevCore": 0,
-      "Web": 0,
-      "Market": 0,
-      "Explor": 0
-    };
-    for (var roleId in totalRoles) {
-      var roleName = roles[roleId];
-      var num = totalRoles[roleId];
-      if (roleName.includes("VP") || roleName.includes("Director") ||
-        roleName.includes("President") || roleName.includes("Advisor"))
-        formattedTotalRoles["Leaders"] += num;
-      else if (roleName.includes("Android") || roleName.includes("iOS") ||
-        roleName.includes("Contract"))
-        formattedTotalRoles["DevCore"] += num;
-      else if (roleName.includes("Web"))
-        formattedTotalRoles["Web"] += num;
-      else if (roleName.includes("Market"))
-        formattedTotalRoles["Market"] += num;
-      else if (roleName.includes("Explor"))
-        formattedTotalRoles["Explor"] += num;
+      return [strs, values];
     }
-    data = genData(formattedTotalRoles, true);
-    graphPie("#role_pie", data[0], data[1]);
-  }));
 
-  // plist.push(Attendance.getSummaryBarData().then(function(x) {
-  // 	[x_events, data] = x;
-  // 	graphBar("#summary_attendance_bar", x_events, data);
-  // }));
-  */
-  res.render("index", {
-    firstname: "Krishnan",
-    notifications: [],
-    currPage: "leadership",
-    leadership: true,
-    getLiTag: _getLiTag("leadership"),
-    graphs: [],
-    users: [].sort(function(a, b) {
-      return b.name - a.name;
-    }),
-    expectedAbsences: [].sort(function(a, b) {
-      return a.title - b.title;
-    }),
-    roleIdsToString: roleIdsToString,
-    assignments: [].sort(function(a, b) {
-      return a.due - b.due;
-    }),
-    roles: [],
-    assignments: [],
-    scores: [],
-    feedbacks: []
+    // plist.push(Assignments.getProjectPercentages().then(function(
+    // 	projectPercentages) {
+    // 	$scope.$apply(function() {
+    // 		$scope.projectPercentages = projectPercentages;
+    // 		$scope.project_id = projectPercentages[0].id;
+    // 	});
+    // }));
+
+    plist.push(Attendance.listAllFeedback().then(function(feedbacks) {
+      $scope.$apply(function() {
+        $scope.feedbacks = feedbacks;
+      });
+    }));
+
+    plist.push(Assignments.getAllAssignments().then(function(assignments) {
+      $scope.$apply(function() {
+        $scope.assignments = assignments;
+        $scope.score_overview_assignmentId = assignments[0].key;
+      });
+      if (assignments.length == 0) return [];
+      return Assignments.getAllScores(assignments[0].key);
+    }).then(scoreCallback));
+
+    // plist.push(Attendance.getSignInCode().then(function(code) {
+    // 	$scope.$apply(function() {
+    // 		$scope.set_signin_code_text = code;
+    // 	});
+    // }));
+
+    // plist.push(Attendance.getSignInMinutes().then(function(minutes) {
+    // 	$scope.$apply(function() {
+    // 		$scope.set_signin_code_minutes = minutes;
+    // 	});
+    // }));
+
+    plist.push(Attendance.listAllExpectedAbsences().then(function(
+      expectedAbsences) {
+      $scope.$apply(function() {
+        $scope.expectedAbsences = expectedAbsences;
+      });
+    }));
+
+    var userLines = {};
+    plist.push(Assignments.getUserLines().then(function(userLiness) {
+      userLines = userLiness || {};
+      return Member.listMembers();
+    }).then(function(memberss) {
+      members = memberss || [];
+      members.forEach(function(member) {
+        for (var username in userLines) {
+          if (member.githubUsername == username) {
+            member.totalLines = userLines[username];
+            break;
+          }
+        }
+      });
+      $scope.$apply(function() {
+        $scope.members = members;
+      });
+      // 	return Member.getTotalWatchList();
+      // }).then(function(totalWatchListt) {
+      // 	totalWatchList = totalWatchListt;
+      // 	return Member.getTotalBoardReviewList();
+      // }).then(function(totalBoardReviewListt) {
+      // totalBoardReviewList = totalBoardReviewListt;
+      // totalWatchList -= totalBoardReviewList;
+      total = members.length;
+
+      // if (totalWatchList != 0 && totalBoardReviewList == 0)
+      // 	totalBoardReviewList = .001;
+      //
+      // var totalShortList = {
+      // 	"Fine": total - totalWatchList - totalBoardReviewList,
+      // 	"BoardReviewList": totalBoardReviewList,
+      // 	"WatchList": totalWatchList
+      // };
+      // var data = genData(totalShortList, true);
+      // graphPie("#shortlist_pie", data[0], data[1]);
+
+      var totalYears = {};
+      var totalMajors = {};
+      totalRoles = {};
+      members.forEach(function(member) {
+        if (member.year in totalYears) totalYears[member.year] += 1;
+        else totalYears[member.year] = 1;
+        if (member.roleId in totalRoles) totalRoles[member.roleId] += 1;
+        else totalRoles[member.roleId] = 1;
+        var major = member.major.trim().toLowerCase();
+        var majors = [];
+        if (major.includes(",")) {
+          majors = major.split(",");
+        } else if (major.includes("/")) {
+          majors = major.split("/");
+        } else if (major.includes("+")) {
+          majors = major.split("+");
+        } else {
+          majors.push(major);
+        }
+        majors.forEach(function(major) {
+          major = major.trim();
+          if (major.includes("electric")) major = "eecs";
+          else if (major.includes("computer science")) major = "cs";
+          else if (major.includes("business")) major = "business";
+          else if (major.includes("engineering")) major = "engineering";
+          else if (major.includes("math") || major.includes("stat"))
+            major = "math";
+          if (major in totalMajors) totalMajors[major] += 1;
+          else totalMajors[major] = 1;
+        });
+      });
+
+      var data = genData(totalYears, true);
+      graphPie("#year_pie", data[0], data[1]);
+      data = genData(totalMajors);
+      graphPie("#major_pie", data[0], data[1]);
+      return Member.getRoles();
+    }).then(function(roles) {
+      $scope.$apply(function() {
+        $scope.roles = roles;
+      });
+      var formattedTotalRoles = {
+        "Leaders": 0,
+        "DevCore": 0,
+        "Web": 0,
+        "Market": 0,
+        "Explor": 0
+      };
+      for (var roleId in totalRoles) {
+        var roleName = roles[roleId];
+        var num = totalRoles[roleId];
+        if (roleName.includes("VP") || roleName.includes("Director") ||
+          roleName.includes("President") || roleName.includes("Advisor"))
+          formattedTotalRoles["Leaders"] += num;
+        else if (roleName.includes("Android") || roleName.includes("iOS") ||
+          roleName.includes("Contract"))
+          formattedTotalRoles["DevCore"] += num;
+        else if (roleName.includes("Web"))
+          formattedTotalRoles["Web"] += num;
+        else if (roleName.includes("Market"))
+          formattedTotalRoles["Market"] += num;
+        else if (roleName.includes("Explor"))
+          formattedTotalRoles["Explor"] += num;
+      }
+      data = genData(formattedTotalRoles, true);
+      graphPie("#role_pie", data[0], data[1]);
+    }));
+
+    // plist.push(Attendance.getSummaryBarData().then(function(x) {
+    // 	[x_events, data] = x;
+    // 	graphBar("#summary_attendance_bar", x_events, data);
+    // }));
+    */
+    res.render("index", {
+      firstname: "Krishnan",
+      notifications: [],
+      currPage: "leadership",
+      leadership: true,
+      getLiTag: _getLiTag("leadership"),
+      graphs: [],
+      users: [].sort(function(a, b) {
+        return b.name - a.name;
+      }),
+      expectedAbsences: [].sort(function(a, b) {
+        return a.title - b.title;
+      }),
+      roleIdsToString: roleIdsToString,
+      assignments: [].sort(function(a, b) {
+        return a.due - b.due;
+      }),
+      roles: [],
+      assignments: [],
+      scores: [],
+      feedbacks: []
+    });
+  }).catch(function(error) {
+    res.redirect("/home");
   });
 });
 
@@ -399,6 +417,7 @@ router.get("/policies", function(req, res) {
 });
 
 router.get("/policies/:id", function(req, res) {
+  if (!req.cookies.userId) res.redirect("/login");
   res.render("index", {
     docPath: getDocById(req.params.id),
     firstname: "Krishnan",
@@ -411,6 +430,7 @@ router.get("/policies/:id", function(req, res) {
 });
 
 router.get("/profile", function(req, res) {
+  if (!req.cookies.userId) res.redirect("/login");
   res.render("index", {
     firstname: "Krishnan",
     notifications: [],

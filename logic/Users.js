@@ -10,6 +10,14 @@ const getRoleByUid = require("./Roles.js").getByUid;
 const ref = dbUtil.refs.userRef;
 
 // METHODS
+function isLeadership(params) {
+  return getById({
+    id: params.id
+  }).then(function(user) {
+    return user.leadership === true;
+  });
+}
+
 function getById(params) {
   var id = params.id;
   return dbutil.getByKey(ref, id);
@@ -133,6 +141,7 @@ function getMaxAbsences(params) {
 }
 
 // EXPORTS
+module.exports.isLeadership = isLeadership;
 module.exports.getById = getById;
 module.exports.getAll = getAll;
 module.exports.getRole = getRole;

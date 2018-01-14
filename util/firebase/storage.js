@@ -6,9 +6,13 @@ const storage = firebase.storage();
 
 // METHODS
 function upload(blob) {
-  // TODO: ...
-  return firebase.storage().bucket().file(bucketPath).upload(blob);
-  // return url
+  return firebase.storage().bucket()
+    .file("uploads/" + blob.filename)
+    .upload(blob.path).then(function(data) {
+      console.log(data);
+      console.log(typeof(data));
+      process.exit(0);
+    });
 }
 
 // EXPORTS

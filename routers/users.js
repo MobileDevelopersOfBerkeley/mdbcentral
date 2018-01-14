@@ -1,4 +1,5 @@
 // DEPENDENCIES
+const multer = require('multer');
 const router = require("express").Router();
 const routerUtil = require("../util/router.js");
 const dbUtil = require("../util/firebase/db.js");
@@ -6,9 +7,13 @@ const usersLogic = require("../logic/Users.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.userRef;
+const upload = multer({
+  dest: '/tmp/'
+});
 
 // METHODS
-router.post("/users", function(req, res) {
+router.post("/users", upload.single('profileImage'), function(req, res) {
+  req.body.profileImage = req.file;
   req.checkParams("canSignUp", routerUtil.errors.canNotSignUpMessage).canSignUp();
   req.checkBody("name", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("githubUsername", routerUtil.errors.missingErrorMessage).notEmpty();
@@ -33,10 +38,14 @@ router.post("/users", function(req, res) {
   }, "/home");
 });
 
-router.patch("/users", function(req, res) {
+router.patch("/users", upload.single('profileImage'), function(req, res) {
+  req.body.profileImage = req.file;
   req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(ref);
+  if (req.body.profileImage) {
+    req.checkBody("profileImage", routerUtil.errors.formatErrorMessage).isValidFile();
+  }
   req.checkBody("name", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("githubUsername", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("githubUsername", routerUtil.errors.usernameNotExistMessage)

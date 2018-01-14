@@ -16,7 +16,7 @@ function logout() {
 
 function login() {
   var email = $("#email").val().trim();
-  var password = $("#passowrd").val();
+  var password = $("#password").val();
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(user) {
       _setCookie("userId", user.uid);

@@ -1,6 +1,7 @@
 // DEPENDENCIES
 const expressValidator = require('express-validator');
 const isUrl = require('is-url');
+const fs = require("fs");
 const dbUtil = require("../util/firebase/db.js");
 const githubUtil = require("../util/github.js");
 const getUserById = require("../logic/Users.js").getById;
@@ -28,11 +29,7 @@ module.exports = expressValidator({
       });
     },
     isValidFile: function(param) {
-      // TODO: ...
-      console.log(param);
-      console.log(typeof(param));
-      process.exit(0);
-      return true;
+      return fs.existsSync(param.path);
     },
     canSignUp: function(param) {
       return config.canSignUp === true;

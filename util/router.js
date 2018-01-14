@@ -42,7 +42,7 @@ function _aggregateParams(req) {
 function completeRequest(req, res, func, redirect) {
   return req.getValidationResult().then(function(result) {
     if (!result.isEmpty()) {
-      if (!redirect) _sendRes(res, 400, null, result.array());
+      _sendRes(res, 400, null, result.array());
       return;
     }
     return func(_aggregateParams(req)).then(function(result) {
