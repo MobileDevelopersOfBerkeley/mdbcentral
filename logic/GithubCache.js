@@ -5,15 +5,14 @@ const dbUtil = require("../util/firebase/db.js");
 // CONSTANTS
 const ref = dbUtil.refs.githubCacheRef;
 
-// HELPERS
-function _get() {
+// METHODS
+function get() {
   return ref.once("value").then(function(snapshot) {
     if (!snapshot.exists()) return {};
     return JSON.parse(snapshot.val());
   });
 }
 
-// METHODS
 function update() {
   return githubUtil.getCache().then(function(cache) {
     return ref.set(JSON.stringify(cache, null, 2));
@@ -21,7 +20,7 @@ function update() {
 }
 
 function getUserLines() {
-  return _get().then(function(repoNameToUsernameToLines) {
+  return get().then(function(repoNameToUsernameToLines) {
     var result = {}
     for (var repoName in repoNameToUsernameToLines) {
       var usernameToLines = repoNameToUsernameToLines[repoName];
@@ -39,7 +38,7 @@ function getUserLines() {
 }
 
 function getProjectPercentages() {
-  return _get().then(function(repoNameToUsernameToLines) {
+  return get().then(function(repoNameToUsernameToLines) {
     var projectPercentages = [];
     for (var repoName in repoNameToUsernameToLines) {
       var projectPercentage = {
@@ -68,6 +67,7 @@ function getProjectPercentages() {
 }
 
 // EXPORTS
+module.exports.get = get;
 module.exports.update = update;
 module.exports.getUserLines = getUserLines;
 module.exporst.getProjectPercentages = getProjectPercentages;

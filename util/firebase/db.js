@@ -10,6 +10,7 @@ refs.githubCacheRef = rootRef.child("GithubCache");
 refs.bigLittleRef = rootRef.child("BigLittle");
 refs.assignmentRef = rootRef.child("Assignments");
 refs.scoreRef = rootRef.child("Scores");
+refs.roleRef = rootRef.child("Roles");
 
 // HELPER
 function _multipleCallback(snapshot) {
