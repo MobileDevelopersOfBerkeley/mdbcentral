@@ -38,17 +38,6 @@ function deleteById(params) {
 }
 
 function create(params) {
-  // TODO: make sure its validated
-  // if (uid == null || uid == "") {
-  //   return firebase.Promise.reject(new Error("please fill in uid"));
-  // }
-  // if (eventId == null || eventId == "") {
-  //   return firebase.Promise.reject(new Error("please select event"));
-  // }
-  // if (reason == null || reason.trim() == "") {
-  //   return firebase.Promise.reject(new Error("please fill in reason"));
-  // }
-  // reason = reason.trim();
   return dbUtil.getObjectsByFields(ref, {
     userId: params.userId
   }).then(function(expectedAbsences) {
