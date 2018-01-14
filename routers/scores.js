@@ -5,7 +5,7 @@ const dbUtil = require("../util/firebase/db.js");
 const scoresLogic = require("../logic/Scores.js");
 
 // METHODS
-router.patch("/scores", function(req, res) {
+router.post("/scores", function(req, res) {
   req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);

@@ -8,7 +8,8 @@ const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
 const ref = dbUtil.refs.expectedAbsencesRef;
 
 // METHODS
-router.delete("/expectedAbsences/:id", function(req, res) {
+// NOTE: should be delete but HTML form tag only allows GET and POST
+router.post("/expectedAbsences/:id", function(req, res) {
   req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);

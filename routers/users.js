@@ -12,8 +12,8 @@ const upload = multer({
   dest: '/tmp/'
 });
 
-// METHODS
-router.post("/users", upload.single('profileImage'), function(req, res) {
+// HELPERS
+function _doCreate(req, res) {
   req.body.profileImage = req.file;
   req.checkParams("canSignUp", routerUtil.errors.canNotSignUpMessage).canSignUp();
   req.checkBody("name", routerUtil.errors.missingErrorMessage).notEmpty();
@@ -38,9 +38,9 @@ router.post("/users", upload.single('profileImage'), function(req, res) {
       });
     });
   }, "/home");
-});
+}
 
-router.patch("/users", upload.single('profileImage'), function(req, res) {
+function _doUpdate(req, res) {
   req.body.profileImage = req.file;
   req.checkCookies("userId", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("userId", routerUtil.errors.dbErrorMessage)
@@ -58,8 +58,18 @@ router.patch("/users", upload.single('profileImage'), function(req, res) {
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
-  return routerUtil.completeRequest(req, res, userLogic.update,
+  return routerUtil.completeRequest(req, res, usersLogic.update,
     "/profile");
+}
+
+// METHODS
+// NOTE: should be patch for _doUpdate but HTML form tag only allows GET and POST
+router.post("/users", upload.single('profileImage'), function(req, res) {
+  if (req.body.update) {
+    _doUpdate(req, res);
+  } else {
+    _doCreate(req, res);
+  }
 });
 
 // EXPORTS

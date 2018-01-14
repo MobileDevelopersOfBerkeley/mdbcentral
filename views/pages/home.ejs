@@ -69,7 +69,7 @@
                                       <td>
                                         <%- attendance.date %>
                                         <% if (attendance.type == 'Expected Absent') { %>
-                                          <form action="/expectedAbsences/<%- attendance._key %>" method="delete">
+                                          <form action="/expectedAbsences/<%- attendance._key %>" method="post">
                                             <button style="margin-left: 10px" type="submit">
                                               <i class="fa fa-trash"></i>
                                             </button>

@@ -7,7 +7,8 @@
                         <h4 class="title">Edit Profile</h4>
                     </div>
                     <div class="content">
-                        <form action="/users" enctype="multipart/form-data" method="patch" id="updateForm">
+                        <form action="/users" enctype="multipart/form-data" method="post" id="updateForm">
+                            <input type="hidden" name="update" value="true"/>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -26,13 +27,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Password</label>
-                                        <input required type="password" class="form-control" placeholder="*****" name="password">
+                                        <input type="password" class="form-control" placeholder="*****" name="password">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Confirm Password</label>
-                                        <input required type="password" class="form-control" placeholder="*****" name="confpassword">
+                                        <input type="password" class="form-control" placeholder="*****" name="confpassword">
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +55,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>New Profile Picture</label>
-                                        <input required type="file" name="profileImage">
+                                        <input type="file" name="profileImage">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -73,10 +74,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Role</label>
-                                        <select form="updateForm" required name="roleId" value="<%- user.roleId %>">
+                                        <select form="updateForm" required name="roleId">
                                           <% for (var i = 0; i < roles.length; i++) { %>
                                             <% var role = roles[i]; %>
-                                            <option value="<%- i %>"><%- role.title %></option>
+                                            <% if (i == user.roleId) { %>
+                                              <option selected="1" value="<%- i %>"><%- role.title %></option>
+                                            <% } else { %>
+                                              <option value="<%- i %>"><%- role.title %></option>
+                                            <% } %>
                                           <% } %>
                                         </select>
                                     </div>
@@ -84,11 +89,16 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Year</label>
-                                        <select form="updateForm" required name="year" value="<%- user.year %>">
-                                          <option value="Freshman">Freshman</option>
-                                          <option value="Sophomore">Sophomore</option>
-                                          <option value="Junior">Junior</option>
-                                          <option value="Senior">Senior</option>
+                                        <% var years = ["Freshman", "Sophomore", "Junior", "Senior"]; %>
+                                        <select form="updateForm" required name="year">
+                                          <% for (var i = 0; i < years.length; i++) { %>
+                                            <% var year = years[i]; %>
+                                            <% if (year == user.year) { %>
+                                              <option selected="1" value="<%- year %>"><%- year %></option>
+                                            <% } else { %>
+                                              <option value="<%- year %>"><%- year %></option>
+                                            <% } %>
+                                          <% } %>
                                         </select>
                                     </div>
                                 </div>
@@ -109,7 +119,7 @@
                             <a href="#">
                                 <img class="avatar border-gray" src="<%- user.profileImage %>"/>
                                 <h4 class="title"><%- user.name %><br />
-                                <small><%- roles[user.roleId] %></small>
+                                <small><%- roles[user.roleId].title %></small>
                                 </h4>
                             </a>
                         </div>

@@ -87,25 +87,25 @@ function update(params) {
     var url;
     plist.push(storageUtil.upload(params.profileImage).then(function(link) {
       url = link;
-      return authUtil.updateAuthAccount(params.id, {
+      return authUtil.updateAuthAccount(params.userId, {
         photoURL: url,
         email: params.email,
         displayName: params.name
       });
     }).then(function() {
-      return dbUtil.updateObject(ref, params.id, {
+      return dbUtil.updateObject(ref, params.userId, {
         profileImage: url
       });
     }));
   }
 
-  if (params.password != null) {
-    plist.push(authUtil.updateAuthAccount(params.id, {
+  if (params.password && params.password.trim() != "") {
+    plist.push(authUtil.updateAuthAccount(params.userId, {
       password: params.password
     }));
   }
 
-  plist.push(dbUtil.updateObject(ref, params.id), {
+  plist.push(dbUtil.updateObject(ref, params.userId, {
     name: params.name,
     email: params.email,
     major: params.major,
@@ -113,7 +113,7 @@ function update(params) {
     roleId: params.roleId,
     year: params.year,
     githubUsername: params.githubUsername
-  });
+  }));
 
   return Promise.all(plist);
 }
