@@ -9,7 +9,7 @@ router.post("/slack", function(req, res) {
   req.checkBody("message", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, function(params) {
     return slack.send(params.channel, params.message);
-  }, true);
+  });
 });
 
 // EXPORTS

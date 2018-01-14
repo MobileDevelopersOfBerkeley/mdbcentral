@@ -1,5 +1,5 @@
 function _setCookie(name, val) {
-  document.cookie = "mdbcentral-" + name + "=" + val + "; path=/";
+  document.cookie = name + "=" + val + "; path=/";
 }
 
 function signin() {
@@ -9,7 +9,7 @@ function signin() {
 
 function logout() {
   firebase.auth().signOut().then(function() {
-    _setCookie("uid", "");
+    _setCookie("userId", "");
     window.location.href = "/";
   });
 }
@@ -19,7 +19,7 @@ function login() {
   var password = $("#passowrd").val();
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(user) {
-      _setCookie("uid", user.uid);
+      _setCookie("userId", user.uid);
       window.location.href = "/";
     });
 }

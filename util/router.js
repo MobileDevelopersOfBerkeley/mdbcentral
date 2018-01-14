@@ -4,7 +4,8 @@ const errors = {
   formatErrorMessage: "Invalid param format",
   missingErrorMessage: "Missing or empty param",
   dbErrorMessage: "Object with id specified not found in the database",
-  invalidAuthMessage: "Invalid Authenication Id"
+  invalidAuthMessage: "Invalid Authenication Id",
+  notLoggedInMessage: "No user is logged in"
 };
 
 // HELPERS
@@ -31,20 +32,23 @@ function _aggregateParams(req) {
   helper("query");
   helper("body");
   helper("params");
+  helper("cookies");
   return allParams;
 }
 
 // METHODS
-function completeRequest(req, res, func) {
+function completeRequest(req, res, func, redirect) {
   return req.getValidationResult().then(function(result) {
     if (!result.isEmpty()) {
-      _sendRes(res, 400, null, result.array());
+      if (!redirect) _sendRes(res, 400, null, result.array());
       return;
     }
     return func(_aggregateParams(req)).then(function(result) {
-      _sendRes(res, 200, result, null);
+      if (!redirect) _sendRes(res, 200, result, null);
     }).catch(function(error) {
-      _sendRes(res, 500, null, error.toString());
+      if (!redirect) _sendRes(res, 500, null, error.toString());
+    }).then(function() {
+      if (redirect) res.redirect(redirect);
     });
   });
 }

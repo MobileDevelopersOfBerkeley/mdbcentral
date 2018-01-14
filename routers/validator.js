@@ -56,6 +56,15 @@ module.exports = expressValidator({
       var num = +param;
       return !isNaN(num);
     },
+    isValidNumberArr: function(param) {
+      if (!isNonEmptyArray(param)) return false;
+      for (var i = 0; i < param.length; i++) {
+        var value = param[i];
+        if (!isValidNumber(value)) return false;
+        param[i] = parseInt(param[i]);
+      }
+      return true;
+    },
     isValidUrl: function(param) {
       return isUrl(param);
     }

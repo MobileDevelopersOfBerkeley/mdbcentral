@@ -43,18 +43,6 @@ function _getAssignmentScores(uid, roleId) {
 
 // METHODS
 function create(params) {
-  // TODO: make sure this is validated
-  // if (due == null || due.trim() == "")
-  //   return firebase.Promise.reject(new Error("please fill in due date"));
-  // if (link == null || link.trim() == "")
-  //   return firebase.Promise.reject(new Error("please fill in link"));
-  // if (name == null || name.trim() == "")
-  //   return firebase.Promise.reject(new Error("please fill in name"));
-  // if (roleIds == null || roleIds.length == 0)
-  //   return firebase.Promise.reject(new Error("please assign to at least 1 role"));
-  // for (var i = 0; i < roleIds.length; i++) {
-  //   roleIds[i] = parseInt(roleIds[i]);
-  // }
   return dbUtil.createNewObjectByAutoId(ref, {
     due: params.due,
     link: params.link,
