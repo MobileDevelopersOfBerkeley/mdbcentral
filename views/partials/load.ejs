@@ -4,7 +4,7 @@
       <% var graph = graphs[i]; %>
       <% if (graph.type == "bar") { %>
         graphBar(
-          <%- "#" + graph.elementId %>,
+          "#<%- graph.elementId %>",
           <%- JSON.stringify(graph.xData) %>,
           <%- JSON.stringify(graph.yData) %>
         );

@@ -106,7 +106,6 @@ router.get("/home", function(req, res) {
     plist.push(welcomeLogic.listAbsences({
       member: member
     }).then(function(absences) {
-      console.log(1);
       data.absences = absences.length;
       num_absences = absences.length;
       return welcomeLogic.listSignIns({
@@ -131,8 +130,10 @@ router.get("/home", function(req, res) {
         xData: ['Absences',
           'Inluding Expected', 'Max Absences'
         ],
-        yData: [num_absences, num_absences + num_expected,
-          max_absences
+        yData: [
+          [num_absences, num_absences + num_expected,
+            max_absences
+          ]
         ]
       })
       var attendances = [];

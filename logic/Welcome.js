@@ -80,7 +80,7 @@ function listSignIns(params) {
     return getEvents()
   }).then(function(x) {
     events = x;
-    return _get("/signIns?member=" + welcomeUid)
+    return _get("/signIns?userId=" + welcomeUid)
   }).then(function(signIns) {
     return signIns.map(function(signIn) {
       signIn.timestamp = signIn.time * 1000;
