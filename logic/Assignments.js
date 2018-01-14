@@ -42,28 +42,28 @@ function getByUid(params) {
 }
 
 function getAllScores(params) {
-  var result = [];
-  var num_scores = 0;
-  return getAllUsers().then(function(users) {
-    return Promise.all(users.map(function(user) {
-      return getAssignmentScores({
-        member: user._key,
-        roleId: user.roleId
-      }).then(function(assignments) {
-        for (var i = 0; i < assignments.length; i++) {
-          var assignment = assignments[i];
-          assignment.assignment_name = assignment.name;
-          assignment.member_name = user.name;
-          result.push(assignment);
-          if (assignment.score != nullScoreStr)
-            num_scores += 1;
-        }
+  return dbUtil.getAll(dbUtil.refs.scoreRef).then(function(scores) {
+    var assignments;
+    return getAll().then(function(aList) {
+      assignments = aList;
+      return getAllUsers();
+    }).then(function(members) {
+      return scores.map(function(score) {
+        var aList = assignments.filter(function(a) {
+          return a._key == score.assignmentId;
+        });
+        if (aList.length > 0) score.assignment_name = aList[0].name;
+        var mList = members.filter(function(m) {
+          return m._key == score.member;
+        });
+        if (mList.length > 0) score.member_name = mList[0].name;
+        return score;
       })
-    }));
-  }).then(function() {
+    });
+  }).then(function(scores) {
     return {
-      scores: result,
-      num_scores: num_scores
+      scores: scores,
+      num_scores: scores.length
     };
   });
 }
