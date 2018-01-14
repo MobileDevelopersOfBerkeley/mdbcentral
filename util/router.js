@@ -45,12 +45,14 @@ function completeRequest(req, res, func, redirect) {
       _sendRes(res, 400, null, result.array());
       return;
     }
+    var err = false;
     return func(_aggregateParams(req)).then(function(result) {
       if (!redirect) _sendRes(res, 200, result, null);
     }).catch(function(error) {
-      if (!redirect) _sendRes(res, 500, null, error.toString());
+      err = true;
+      _sendRes(res, 500, null, error.toString());
     }).then(function() {
-      if (redirect) res.redirect(redirect);
+      if (redirect && !err) res.redirect(redirect);
     });
   });
 }

@@ -23,13 +23,17 @@ function _promiseBoolTrue(fn) {
 // EXPORTS
 module.exports = expressValidator({
   customValidators: {
+    isValidBool: function(param) {
+      return param == "true" || param == "false" ||
+        param === true || param === false;
+    },
     isValidGithubUsername: function(param) {
       return _promiseBoolTrue(function() {
         return githubUtil.isValidUsername(param)
       });
     },
     isValidFile: function(param) {
-      return fs.existsSync(param.path);
+      return param && param.path && fs.existsSync(param.path);
     },
     canSignUp: function(param) {
       return config.canSignUp === true;

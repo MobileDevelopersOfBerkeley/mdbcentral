@@ -23,12 +23,12 @@
                         <p class="category">If you know beforehand which meetings you will be late or absent to, please let us know here. Keep in mind that this still counts towards your total absences if you end up not showing up to the event.</p>
                     </div>
                     <div class="content">
-                        <form action="/expectedAbsences" method="post">
+                        <form action="/expectedAbsences" method="post" id="expectedAbsenceForm">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Event</label>
-                                        <select name="eventId" class="form-control" value="<%- closestEventId %>" required>
+                                        <select form="expectedAbsenceForm" name="eventId" class="form-control" value="<%- closestEventId %>" required>
                                           <% for(var i = 0; i < events.length; i++) { %>
                                             <% var event = events[i]; %>
                                             <option value="<%- event.id %>">
@@ -56,12 +56,12 @@
                         <p class="category">Please give leadership feedback on the events that have happend so far this semester.</p>
                     </div>
                     <div class="content">
-                        <form action="/feedback" method="post">
+                        <form action="/feedback" method="post" id="feedbackForm">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Event</label>
-                                        <select name="eventId" class="form-control" value="<%- closestEventId %>" required>
+                                        <select form="feedbackForm" name="eventId" class="form-control" value="<%- closestEventId %>" required>
                                           <% for(var i = 0; i < events.length; i++) { %>
                                             <% var event = events[i]; %>
                                             <option value="<%- event.id %>">

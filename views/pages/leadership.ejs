@@ -70,12 +70,12 @@
                         <p class="category">Form for instructors/graders to set scores for assignments</p>
                     </div>
                     <div class="content">
-                        <form action="/scores" method="patch">
+                        <form action="/scores" method="patch" id="scoresForm">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Member</label>
-                                        <select name="userId" required>
+                                        <select form="scoresForm" name="userId" required>
                                             <% for (var i = 0; i < users.length; i++) { %>
                                               <% var user = users[i]; %>
                                               <option value="<%- user._key %>"><% user.name %></option>
@@ -84,7 +84,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Assignment</label>
-                                        <select name="assignmentId" required>
+                                        <select form="scoresForm" name="assignmentId" required>
                                           <% for (var i = 0; i < assignments.length; i++) { %>
                                             <% var assignment = assignments[i]; %>
                                             <option value="<%- assignment._key %>"><% assignment.name %></option>
@@ -110,7 +110,7 @@
                         <p class="category">Form for instructors/graders to create assignments</p>
                     </div>
                     <div class="content">
-                        <form action="/assignments" method="post">
+                        <form action="/assignments" method="post" id="assignmentsForm">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -126,7 +126,7 @@
                                         <input required type="text" class="form-control" placeholder="Android Mini Proj 1" value="" name="name">
                                     </div>
                                     <div class="form-group">
-                                        <select required multiple class="form-control" name="roleIds">
+                                        <select form="assignmentsForm" required multiple class="form-control" name="roleIds">
                                           <% for (var i = 0; i < roles.length; i++) { %>
                                             <% var role = roles[i]; %>
                                             <option value="<%- i %>"><%- role %></option>

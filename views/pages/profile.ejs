@@ -7,7 +7,7 @@
                         <h4 class="title">Edit Profile</h4>
                     </div>
                     <div class="content">
-                        <form action="/users" enctype="multipart/form-data" method="patch">
+                        <form action="/users" enctype="multipart/form-data" method="patch" id="updateForm">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -61,10 +61,11 @@
                                     <div class="form-group">
                                         <label>New Member?</label>
                                         <% if (user.isNew) { %>
-                                            <input required type="checkbox" name="isNew" checked>
+                                            <input type="checkbox" name="isNew" checked value="true">
                                         <% } else  {%>
-                                            <input required type="checkbox" name="isNew">
+                                            <input type="checkbox" name="isNew" value="true">
                                         <% } %>
+                                        <input type='hidden' name='isNew' value='false'>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +73,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Role</label>
-                                        <select required name="roleId" value="<%- user.roleId %>">
+                                        <select form="updateForm" required name="roleId" value="<%- user.roleId %>">
                                           <% for (var i = 0; i < roles.length; i++) { %>
                                             <% var role = roles[i]; %>
                                             <option value="<%- i %>"><%- role %></option>
@@ -83,7 +84,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Year</label>
-                                        <select required name="year" value="<%- user.year %>">
+                                        <select form="updateForm" required name="year" value="<%- user.year %>">
                                           <option value="Freshman">Freshman</option>
                                           <option value="Sophomore">Sophomore</option>
                                           <option value="Junior">Junior</option>

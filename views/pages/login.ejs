@@ -36,7 +36,7 @@
             <h4 class="title">Sign Up</h4>
           </div>
           <div class="content">
-            <form action="/users" enctype="multipart/form-data" method="post">
+            <form action="/users" enctype="multipart/form-data" method="post" id="signUpForm">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
@@ -77,7 +77,8 @@
                 <div class="col-md-12">
                   <div class="form-group">
                     <label>Are you a new member in MDB?</label>
-                    <input type="checkbox" name="isNew">
+                    <input type="checkbox" name="isNew" value="true">
+                    <input type='hidden' name='isNew' value='false'>
                   </div>
                 </div>
               </div>
@@ -85,7 +86,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Role</label>
-                    <select name="roleId">
+                    <select form="signUpForm" name="roleId">
                       <% for (var i = 0; i < roles.length; i++) { %>
                         <% var role = roles[i]; %>
                         <option value="<%- i %>"><%- role %></option>
@@ -96,7 +97,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Year</label>
-                    <select name="year">
+                    <select form="signUpForm" name="year">
                       <option value="Freshman">Freshman</option>
                       <option value="Sophomore">Sophomore</option>
                       <option value="Junior">Junior</option>
