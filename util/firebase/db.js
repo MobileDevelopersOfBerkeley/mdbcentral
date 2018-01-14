@@ -148,7 +148,7 @@ function getAllGreaterThan(ref, childParam, value) {
 }
 
 function updateObject(ref, id, fieldToVal) {
-	var unixTS = util.getCurrUnixTimeStamp();
+	var unixTS = new Date().getTime();
 	fieldToVal["lastUpdated"] = unixTS;
 	return ref.child(id).update(fieldToVal).then(function() {
 		return getByKey(ref, id);
@@ -172,7 +172,7 @@ function getObjectsByFields(ref, fieldToVal) {
 }
 
 function createNewObjectByAutoId(ref, object) {
-	var unixTS = util.getCurrUnixTimeStamp();
+	var unixTS = new Date().getTime();
 	object["lastUpdated"] = unixTS;
 	var newRef = ref.push();
 	return newRef.set(object).then(function() {
@@ -185,7 +185,7 @@ function createNewObjectByAutoId(ref, object) {
 }
 
 function createNewObject(ref, object, id) {
-	var unixTS = util.getCurrUnixTimeStamp();
+	var unixTS = new Date().getTime();
 	object["lastUpdated"] = unixTS;
 	return ref.child(id).set(object).then(function() {
 		object["_key"] = id;

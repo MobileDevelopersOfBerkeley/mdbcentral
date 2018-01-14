@@ -109,6 +109,7 @@ function getEvent() {
 function getEvents() {
   return _get("/events?eventOrganizationId=keyForMDB")
     .then(function(events) {
+      events = events || [];
       return events.filter(function(event) {
         return event.isAttendance === true;
       }).map(function(event) {

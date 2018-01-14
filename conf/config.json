@@ -2,9 +2,6 @@
   "firebaseDBUrl": "https://mobiledevsberkeley-89d21.firebaseio.com",
   "firebaseStorageUrl": "mobiledevsberkeley-89d21.appspot.com",
 
-  "jwtSecret": "mdbotIsPresident",
-  "jwtExpireTime": 86400,
-
   "apiaiKey": "52486c05cfdc4ec4b2ea4fc955633d5b",
   "apiaiSessionID": "4c641d0f-1437-4758-ad9e-a2bcc8857889",
 

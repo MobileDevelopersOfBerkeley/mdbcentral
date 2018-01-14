@@ -4,6 +4,8 @@ const routerUtil = require("../util/router.js");
 const dbUtil = require("../util/firebase/db.js");
 const userLogic = require("../logic/Members.js");
 const rolesLogic = require("../logic/Roles.js");
+const eventsLogic = require("../logic/Events.js");
+const assignmentsLogic = require("../logic/Assignments.js");
 const config = require("../conf/config.json");
 
 // HELPERS
@@ -12,6 +14,11 @@ function _getLiTag(currPage) {
     if (currPage != page) return "<li>";
     return "<li class='active'>";
   }
+}
+
+function _getFirstName(name) {
+  if (name.indexOf(" ") < 0) return name;
+  return name.split(" ")[0];
 }
 
 function _roleIdsToString(roleIds) {
@@ -30,15 +37,17 @@ function _genData(currPage, uid) {
     firstname: "Visitor",
     notifications: [],
     currPage: currPage,
+    leadership: false,
     graphs: [],
     getLiTag: _getLiTag(currPage)
   };
   return rolesLogic.get().then(function(roles) {
     data.roles = roles;
-    if (!uid) return Promise.resolve(true);
+    if (!uid) return Promise.resolve(data);
     return userLogic.getById({
       id: uid
     }).then(function(user) {
+      data.firstname = _getFirstName(user.name);
       data.leadership = user.leadership === true;
       data.user = user;
       return data;
@@ -180,10 +189,13 @@ router.get("/calendar", function(req, res) {
   _genData("calendar", userId).then(function(data) {
     return eventsLogic.getEventsSoFar().then(function(events) {
       data.events = events;
-      return eventsLogic.getEvent().then(function(event) {
-        data.closestEventId = event.id;
-        res.render("index", data);
+      return eventsLogic.getEvent().catch(function(error) {
+        return null;
       });
+    }).then(function(event) {
+      if (event) data.closestEventId = event.id;
+      else data.closestEventId = null;
+      res.render("index", data);
     });
   });
 });

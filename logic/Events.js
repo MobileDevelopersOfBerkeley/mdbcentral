@@ -39,7 +39,8 @@ function getEvent() {
         minDiff = currDiff;
       }
     }
-    return defaultEvent;
+    if (defaultEvent != null) return defaultEvent;
+    return Promise.reject(new Error("No events to choose from"));
   });
 }
 
@@ -51,7 +52,7 @@ function getById(params) {
         return event;
       }
     }
-    return Promise.reject("no event exists w/ id: " + event_id);
+    return Promise.reject("no event exists w/ id: " + params.id);
   });
 }
 

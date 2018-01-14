@@ -32,7 +32,7 @@ function create(params) {
     return dbUtil.createNewObjectByAutoId(ref, {
       id: params.eventId,
       title: event.title || event.summary,
-      timestamp: util.getCurrUnixTimeStamp(),
+      timestamp: new Date().getTime(),
       userId: params.userId,
       response: params.response
     });

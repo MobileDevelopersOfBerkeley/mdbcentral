@@ -52,7 +52,7 @@ function create(params) {
         id: params.eventId,
         reason: params.reason,
         userId: params.userId,
-        timestamp: util.getCurrUnixTimeStamp(),
+        timestamp: new Date().getTime(),
         title: event.title || event.summary
       });
     });
