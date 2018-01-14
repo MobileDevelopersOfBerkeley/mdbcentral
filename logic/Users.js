@@ -21,7 +21,7 @@ function getAll() {
 
 function create(params) {
   // TODO: make sure its validated
-  // var canSignUp = process.env.CAN_SIGNUP || false;
+  // var canSignUp = config.canSignUp || false;
   // if (name == null || name.trim() == "") {
   //   return firebase.Promise.reject("Please fill in name");
   // }
@@ -146,10 +146,24 @@ function update(params) {
 }
 
 function getRole(params) {
-  return dbUtil.getById(ref, params.id).then(function(user) {
+  return getById({
+    id: params.id
+  }).then(function(user) {
     return getRoleByUid({
       roleId: user.roleId
     });
+  });
+}
+
+function getMaxAbsences(params) {
+  return getById({
+    id: params.id
+  }).then(function(user) {
+    return dbUtil.refs.roleRef.child(user.roleId).child("maxAbsences")
+      .once("value").then(function(snapshot) {
+        if (!snapshot.exists()) return 0;
+        return snapshot.val();
+      });
   });
 }
 
@@ -159,3 +173,4 @@ module.exports.getAll = getAll;
 module.exports.getRole = getRole;
 module.exports.update = update;
 module.exports.updateEffortRatings = updateEffortRatings;
+module.exports.getMaxAbsences = getMaxAbsences;

@@ -11,6 +11,8 @@ refs.bigLittleRef = rootRef.child("BigLittle");
 refs.assignmentRef = rootRef.child("Assignments");
 refs.scoreRef = rootRef.child("Scores");
 refs.roleRef = rootRef.child("Roles");
+refs.expectedAbsenceRef = rootRef.child("ExpectedAbsences");
+refs.feedbackRef = rootRef.child("Feedback");
 
 // HELPER
 function _multipleCallback(snapshot) {
