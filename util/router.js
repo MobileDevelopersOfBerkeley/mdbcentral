@@ -1,6 +1,3 @@
-// DEPENDENCIES
-const auth = require("./auth.js").auth;
-
 // CONSTANTS
 const errors = {
   rangeErrorMessage: "Invalid range for param",
@@ -22,55 +19,33 @@ function _sendRes(res, status, result, error) {
 // HELPERS
 function _aggregateParams(req) {
   var allParams = {};
-  for (var key in req.query) {
-    if (req.query[key] != null) {
-      allParams[key] = req.query[key];
+
+  function helper(field) {
+    for (var key in req[field]) {
+      if (req[field][key] != null) {
+        allParams[key] = req[field][key];
+      }
     }
   }
-  for (var key in req.body) {
-    if (req.body[key] != null) {
-      allParams[key] = req.body[key];
-    }
-  }
-  for (var key in req.params) {
-    if (req.params[key] != null) {
-      allParams[key] = req.params[key];
-    }
-  }
+
+  helper("query");
+  helper("body");
+  helper("params");
   return allParams;
 }
 
 // METHODS
-function completeRequest(req, res, func, noAuth) {
-  var p = Promise.resolve(true);
-  if (!noAuth) {
-    var token = req.headers['x-access-token'];
-    if (!token) {
-      _sendRes(res, 401, null, "Need to set x-access-token header");
+function completeRequest(req, res, func) {
+  return req.getValidationResult().then(function(result) {
+    if (!result.isEmpty()) {
+      _sendRes(res, 400, null, result.array());
       return;
     }
-    p = auth({
-      token: token
+    return func(_aggregateParams(req)).then(function(result) {
+      _sendRes(res, 200, result, null);
+    }).catch(function(error) {
+      _sendRes(res, 500, null, error.toString());
     });
-  }
-  return p.then(function(authed) {
-    if (authed !== true) {
-      _sendRes(res, 403, null, "Forbidden");
-      return;
-    }
-    return req.getValidationResult().then(function(result) {
-      if (!result.isEmpty()) {
-        _sendRes(res, 400, null, result.array());
-        return;
-      }
-      return func(_aggregateParams(req)).then(function(result) {
-        _sendRes(res, 200, result, null);
-      }).catch(function(error) {
-        _sendRes(res, 500, null, error.toString());
-      });
-    });
-  }).catch(function(error) {
-    _sendRes(res, 403, null, error);
   });
 }
 

@@ -26,7 +26,6 @@
   "gmailFromStr": "\"MDB Leadership Bot\" <contact@mobiledevsberkeley.org>",
   "gmailSubjectPrefix": "[MDB] ",
 
-  "slackBotToken": "PUT TOKEN HERE",
   "slackBotName": "MDBot",
   "slackBotChannel": "biglittlecontest",
   "slackBotHello": "Hello! I'm MDBot!!! Prepare to get savaged :p",

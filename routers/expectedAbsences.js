@@ -27,34 +27,5 @@ router.post("/expectedAbsences", function(req, res) {
   res.redirect("/calendar");
 });
 
-router.post("/feedback", function(req, res) {
-  /*
-  Attendance.submitFeedback($scope.uid, $scope.feedback_event_id, $scope.feedback_response).then(function() {
-    changeSpinnerAsync(false);
-    showSuccessModal("feedback submitted");
-  }).catch(function(error) {
-    changeSpinnerAsync(false);
-    showErrorModal(error.toString());
-  });
-  */
-  res.redirect("/calendar");
-});
-
-router.post("/users", function(req, res) {
-  res.redirect("/home");
-});
-
-router.patch("/users", function(req, res) {
-  res.redirect("/profile");
-});
-
-router.patch("/scores", function(req, res) {
-  res.redirect("/leadership");
-});
-
-router.post("/assignments", function(req, res) {
-  res.redirect("/leadership");
-});
-
 // EXPORTS
 module.exports = router;
