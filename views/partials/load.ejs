@@ -4,11 +4,13 @@
       <% var graph = graphs[i]; %>
       <% if (graph.type == "bar") { %>
         graphBar(
+      <% } else if (graph.type == "pie") { %>
+        graphPie(
+      <% } %>
           "#<%- graph.elementId %>",
           <%- JSON.stringify(graph.xData) %>,
           <%- JSON.stringify(graph.yData) %>
         );
-      <% } %>
     <% } %>
     loadGCal();
     showPDF('.pdf');

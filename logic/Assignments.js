@@ -1,7 +1,9 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
-const getUserById = require("./Members.js").getById;
-const scoresUtil = require("./Scores.js");
+const memberLogic = require("./Members.js");
+const getUserById = memberLogic.getById;
+const getAllUsers = memberLogic.getAll;
+const scoresLogic = require("./Scores.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.assignmentRef;
@@ -44,14 +46,14 @@ function getAllScores(params) {
   return getAllUsers().then(function(users) {
     return Promise.all(users.map(function(user) {
       return getAssignmentScores({
-        member: member.uid,
-        roleId: member.roleId
+        member: user._key,
+        roleId: user.roleId
       }).then(function(assignments) {
         for (var i = 0; i < assignments.length; i++) {
           var assignment = assignments[i];
-          if (assignment.key == params.assignmentId) {
+          if (assignment._key == params.assignmentId) {
             assignment.assignment_name = assignment.name;
-            assignment.member_name = member.name;
+            assignment.member_name = user.name;
             result.push(assignment);
             if (assignment.score != nullScoreStr)
               num_scores += 1;
@@ -72,11 +74,13 @@ function getAssignmentScores(params) {
   return _getAssignments(params.roleId).then(function(assignments) {
     var plist = [];
     assignments.forEach(function(assignment) {
-      plist.push(scoresUtil.get(params.member, assignment.key)
-        .then(function(score) {
-          assignment.score = score.score;
-          result.push(assignment);
-        }));
+      plist.push(scoresLogic.get({
+        member: params.member,
+        assignmentId: assignment._key
+      }).then(function(score) {
+        assignment.score = score.score;
+        result.push(assignment);
+      }));
     });
     return Promise.all(plist);
   }).then(function() {

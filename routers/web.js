@@ -8,7 +8,14 @@ const rolesLogic = require("../logic/Roles.js");
 const welcomeLogic = require("../logic/Welcome.js");
 const assignmentsLogic = require("../logic/Assignments.js");
 const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
+const feedbackLogic = require("../logic/Feedback.js");
+const githubCacheLogic = require("../logic/GithubCache.js");
 const config = require("../conf/config.json");
+
+// PROTOTYPES
+String.prototype.includes = function(str) {
+  return this.indexOf(str) >= 0;
+}
 
 // HELPERS
 function _getLiTag(currPage) {
@@ -23,10 +30,9 @@ function _getFirstName(name) {
   return name.split(" ")[0];
 }
 
-function _roleIdsToString(roleIds) {
-  var roles = [];
+function _roleIdsToString(roles, roleIds) {
   return roleIds.map(function(roleId) {
-    return roles[roleId];
+    return roles[roleId].title + " ";
   });
 }
 
@@ -216,20 +222,20 @@ router.get("/leadership", function(req, res) {
     res.redirect("/login");
     return;
   }
-  memberLogic.isLeadership({
-    id: req.cookies.member
-  }).then(function(bool) {
-    if (!bool) {
+  var member = req.cookies.member;
+  var data;
+  _genData("leadership", member).then(function(d) {
+    data = d;
+
+    if (!data.leadership) {
       res.redirect("/home");
       return;
     }
-    /*
-    var plist = [];
 
-    var totalWatchList = 0;
-    var totalBoardReviewList = 0;
+    var plist = [];
     var members = [];
     var totalRoles = {};
+    var userLines = {};
     var total = 0;
 
     function genData(x, noStr) {
@@ -252,54 +258,39 @@ router.get("/leadership", function(req, res) {
       return [strs, values];
     }
 
-    // plist.push(Assignments.getProjectPercentages().then(function(
-    // 	projectPercentages) {
-    // 	$scope.$apply(function() {
-    // 		$scope.projectPercentages = projectPercentages;
-    // 		$scope.project_id = projectPercentages[0].id;
-    // 	});
-    // }));
-
-    plist.push(Attendance.listAllFeedback().then(function(feedbacks) {
-      $scope.$apply(function() {
-        $scope.feedbacks = feedbacks;
-      });
+    plist.push(welcomeLogic.getEventsSoFar().then(function(events) {
+      data.events = events;
     }));
 
-    plist.push(Assignments.getAllAssignments().then(function(assignments) {
-      $scope.$apply(function() {
-        $scope.assignments = assignments;
-        $scope.score_overview_assignmentId = assignments[0].key;
-      });
+    plist.push(welcomeLogic.getEvent().then(function(event) {
+      data.closestEventId = event.id;
+    }))
+
+    plist.push(feedbackLogic.getAll().then(function(feedbacks) {
+      data.feedbacks = feedbacks;
+    }));
+
+    plist.push(assignmentsLogic.getAll().then(function(assignments) {
+      data.assignments = assignments;
       if (assignments.length == 0) return [];
-      return Assignments.getAllScores(assignments[0].key);
-    }).then(scoreCallback));
-
-    // plist.push(Attendance.getSignInCode().then(function(code) {
-    // 	$scope.$apply(function() {
-    // 		$scope.set_signin_code_text = code;
-    // 	});
-    // }));
-
-    // plist.push(Attendance.getSignInMinutes().then(function(minutes) {
-    // 	$scope.$apply(function() {
-    // 		$scope.set_signin_code_minutes = minutes;
-    // 	});
-    // }));
-
-    plist.push(Attendance.listAllExpectedAbsences().then(function(
-      expectedAbsences) {
-      $scope.$apply(function() {
-        $scope.expectedAbsences = expectedAbsences;
+      return assignmentsLogic.getAllScores({
+        assignmentId: assignments[0].key
       });
+    }).then(function(d) {
+      data.scores = d.scores;
+      data.num_scores = d.num_scores;
     }));
 
-    var userLines = {};
-    plist.push(Assignments.getUserLines().then(function(userLiness) {
+    plist.push(expectedAbsencesLogic.getAll()
+      .then(function(expectedAbsences) {
+        data.expectedAbsences = expectedAbsences;
+      }));
+
+    plist.push(githubCacheLogic.getUserLines().then(function(userLiness) {
       userLines = userLiness || {};
-      return Member.listMembers();
-    }).then(function(memberss) {
-      members = memberss || [];
+      return memberLogic.getAll();
+    }).then(function(mList) {
+      members = mList || [];
       members.forEach(function(member) {
         for (var username in userLines) {
           if (member.githubUsername == username) {
@@ -308,36 +299,19 @@ router.get("/leadership", function(req, res) {
           }
         }
       });
-      $scope.$apply(function() {
-        $scope.members = members;
-      });
-      // 	return Member.getTotalWatchList();
-      // }).then(function(totalWatchListt) {
-      // 	totalWatchList = totalWatchListt;
-      // 	return Member.getTotalBoardReviewList();
-      // }).then(function(totalBoardReviewListt) {
-      // totalBoardReviewList = totalBoardReviewListt;
-      // totalWatchList -= totalBoardReviewList;
-      total = members.length;
 
-      // if (totalWatchList != 0 && totalBoardReviewList == 0)
-      // 	totalBoardReviewList = .001;
-      //
-      // var totalShortList = {
-      // 	"Fine": total - totalWatchList - totalBoardReviewList,
-      // 	"BoardReviewList": totalBoardReviewList,
-      // 	"WatchList": totalWatchList
-      // };
-      // var data = genData(totalShortList, true);
-      // graphPie("#shortlist_pie", data[0], data[1]);
+      data.members = members;
+      total = members.length;
 
       var totalYears = {};
       var totalMajors = {};
       totalRoles = {};
       members.forEach(function(member) {
-        if (member.year in totalYears) totalYears[member.year] += 1;
+        if (member.year in totalYears)
+          totalYears[member.year] += 1;
         else totalYears[member.year] = 1;
-        if (member.roleId in totalRoles) totalRoles[member.roleId] += 1;
+        if (member.roleId in totalRoles)
+          totalRoles[member.roleId] += 1;
         else totalRoles[member.roleId] = 1;
         var major = member.major.trim().toLowerCase();
         var majors = [];
@@ -353,25 +327,38 @@ router.get("/leadership", function(req, res) {
         majors.forEach(function(major) {
           major = major.trim();
           if (major.includes("electric")) major = "eecs";
-          else if (major.includes("computer science")) major = "cs";
-          else if (major.includes("business")) major = "business";
-          else if (major.includes("engineering")) major = "engineering";
-          else if (major.includes("math") || major.includes("stat"))
+          else if (major.includes("computer science"))
+            major = "cs";
+          else if (major.includes("business")) major =
+            "business";
+          else if (major.includes("engineering")) major =
+            "engineering";
+          else if (major.includes("math") || major.includes(
+              "stat"))
             major = "math";
-          if (major in totalMajors) totalMajors[major] += 1;
+          if (major in totalMajors) totalMajors[major] +=
+            1;
           else totalMajors[major] = 1;
         });
       });
 
-      var data = genData(totalYears, true);
-      graphPie("#year_pie", data[0], data[1]);
-      data = genData(totalMajors);
-      graphPie("#major_pie", data[0], data[1]);
-      return Member.getRoles();
-    }).then(function(roles) {
-      $scope.$apply(function() {
-        $scope.roles = roles;
+      var d = genData(totalYears, true);
+      data.graphs.push({
+        elementId: "year_pie",
+        type: "pie",
+        xData: d[0],
+        yData: d[1]
+      })
+      d = genData(totalMajors);
+      data.graphs.push({
+        elementId: "major_pie",
+        type: "pie",
+        xData: d[0],
+        yData: d[1]
       });
+      return rolesLogic.get();
+    }).then(function(roles) {
+      data.roles = roles;
       var formattedTotalRoles = {
         "Leaders": 0,
         "DevCore": 0,
@@ -380,12 +367,15 @@ router.get("/leadership", function(req, res) {
         "Explor": 0
       };
       for (var roleId in totalRoles) {
-        var roleName = roles[roleId];
+        var roleName = roles[roleId].title;
         var num = totalRoles[roleId];
-        if (roleName.includes("VP") || roleName.includes("Director") ||
-          roleName.includes("President") || roleName.includes("Advisor"))
+        if (roleName.includes("VP") || roleName.includes(
+            "Director") ||
+          roleName.includes("President") || roleName.includes(
+            "Advisor"))
           formattedTotalRoles["Leaders"] += num;
-        else if (roleName.includes("Android") || roleName.includes("iOS") ||
+        else if (roleName.includes("Android") || roleName.includes(
+            "iOS") ||
           roleName.includes("Contract"))
           formattedTotalRoles["DevCore"] += num;
         else if (roleName.includes("Web"))
@@ -395,37 +385,27 @@ router.get("/leadership", function(req, res) {
         else if (roleName.includes("Explor"))
           formattedTotalRoles["Explor"] += num;
       }
-      data = genData(formattedTotalRoles, true);
-      graphPie("#role_pie", data[0], data[1]);
+      var d = genData(formattedTotalRoles, true);
+      data.graphs.push({
+        elementId: "role_pie",
+        type: "pie",
+        xData: d[0],
+        yData: d[1]
+      })
     }));
-
-    // plist.push(Attendance.getSummaryBarData().then(function(x) {
-    // 	[x_events, data] = x;
-    // 	graphBar("#summary_attendance_bar", x_events, data);
-    // }));
-    */
-    res.render("index", {
-      firstname: "Krishnan",
-      notifications: [],
-      currPage: "leadership",
-      leadership: true,
-      getLiTag: _getLiTag("leadership"),
-      graphs: [],
-      users: [].sort(function(a, b) {
-        return b.name - a.name;
-      }),
-      expectedAbsences: [].sort(function(a, b) {
-        return a.title - b.title;
-      }),
-      _roleIdsToString: _roleIdsToString,
-      assignments: [].sort(function(a, b) {
-        return a.due - b.due;
-      }),
-      roles: [],
-      assignments: [],
-      scores: [],
-      feedbacks: []
+    return Promise.all(plist);
+  }).then(function() {
+    data.expectedAbsences = data.expectedAbsences.sort(function(a, b) {
+      return a.title - b.title;
     });
+    data.assignments = data.assignments.sort(function(a, b) {
+      return a.due - b.due;
+    });
+    data.members = data.members.sort(function(a, b) {
+      return b.name - a.name;
+    });
+    data.roleIdsToString = _roleIdsToString;
+    res.render("index", data);
   });
 });
 

@@ -76,9 +76,9 @@
                                     <div class="form-group">
                                         <label>Member</label>
                                         <select form="scoresForm" name="member" required>
-                                            <% for (var i = 0; i < users.length; i++) { %>
-                                              <% var user = users[i]; %>
-                                              <option value="<%- user._key %>"><% user.name %></option>
+                                            <% for (var i = 0; i < members.length; i++) { %>
+                                              <% var user = members[i]; %>
+                                              <option value="<%- user._key %>"><%- user.name %></option>
                                             <% } %>
                                         </select>
                                     </div>
@@ -87,7 +87,7 @@
                                         <select form="scoresForm" name="assignmentId" required>
                                           <% for (var i = 0; i < assignments.length; i++) { %>
                                             <% var assignment = assignments[i]; %>
-                                            <option value="<%- assignment._key %>"><% assignment.name %></option>
+                                            <option value="<%- assignment._key %>"><%- assignment.name %></option>
                                           <% } %>
                                         </select>
                                     </div>
@@ -195,7 +195,7 @@
                                     <td><%- assignment.name %></td>
                                     <td><%- assignment.due %></td>
                                     <td><a href="<%- assignment.link %>" target="_blank"><%- assignment.link %></a></td>
-                                    <td><%- roleIdsToString(assignment.roleIds) %></td>
+                                    <td><%- roleIdsToString(roles, assignment.roleIds) %></td>
                                   </tr>
                                 <% } %>
                             </tbody>
