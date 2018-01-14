@@ -1,6 +1,6 @@
 // DEPENDENCIES
 var promisifyRequest = require("./apicaller.js").promisifyRequest;
-var config = require("../config.json");
+const config = require("../conf/config.json");
 
 // CONSTANTS
 const google_calendar_api_key = config.gcalKey;

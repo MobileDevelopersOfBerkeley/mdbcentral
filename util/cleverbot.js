@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const Cleverbot = require('cleverbot-node');
-const config = require("../config.json");
+const config = require("../conf/config.json");
 
 // SETUP
 var cleverbot = new Cleverbot;

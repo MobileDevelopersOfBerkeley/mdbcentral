@@ -17,10 +17,11 @@ app.use(bodyParser.urlencoded({
 app.use(validator);
 app.use(cookieParser());
 app.use("/", router);
+app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
 // START SERVER
-slack.listen();
+// slack.listen();
 const port = process.env.PORT || 8080;
 app.listen(port, function() {
   console.log("Server listening on port: " + port);

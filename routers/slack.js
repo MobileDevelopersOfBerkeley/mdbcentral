@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const routerUtil = require("../../util/router.js");
+const routerUtil = require("../util/router.js");
 const slackUtil = require("../util/slack.js");
 
 // METHODS

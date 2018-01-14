@@ -1,0 +1,388 @@
+<div class="content page" ng-controller="LeadershipCtrl">
+    <div class="container-fluid">
+        <!-- <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Set Sign In Code</h4>
+                        <p class="category">Anyone in leadership can set sign in code</p>
+                    </div>
+                    <div class="content">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Code</label>
+                                        <input type="text" class="form-control" ng-model="signin_code" placeholder="code goes here" value="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Minutes</label>
+                                        <input type="number" class="form-control" ng-model="signin_minutes" placeholder="the amount of minutes the code is valid after the meeting starts" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-fill pull-right" ng-click="set_signin_code(signin_code, signin_minutes)">Set</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Year Graph</h4>
+                        <p class="category">Percetanges of the club split up by year.</p>
+                    </div>
+                    <div class="content">
+                        <div id="year_pie" class="ct-chart ct-perfect-fourth"></div>
+                        <div class="footer">
+                            <i class="fa fa-circle text-info"></i> Freshman
+                            <i class="fa fa-circle text-danger"></i> Sophomore
+                            <i class="fa fa-circle text-warning"></i> Junior
+                            <i class="fa fa-circle text-other"></i> Senior
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-pie-chart"></i> Rounded (ceiling) values
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Major Graph</h4>
+                        <p class="category">Percetanges of the club split up by major.</p>
+                    </div>
+                    <div class="content">
+                        <div id="major_pie" class="ct-chart ct-perfect-fourth"></div>
+                        <div class="footer">
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-pie-chart"></i> Rounded (ceiling) values
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Role Graph</h4>
+                        <p class="category">Percetanges of the club split up by role.</p>
+                    </div>
+                    <div class="content">
+                        <div id="role_pie" class="ct-chart ct-perfect-fourth"></div>
+                        <div class="footer">
+                            <i class="fa fa-circle text-info"></i> Leaders
+                            <i class="fa fa-circle text-danger"></i> DevCore
+                            <i class="fa fa-circle text-warning"></i> Web
+                            <i class="fa fa-circle text-other"></i> Marketing
+                            <i class="fa fa-circle text-other-2"></i> Exploration
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-pie-chart"></i> Rounded (ceiling) values
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Short List Graph</h4>
+                        <p class="category">Percetanges of the club in watch list or board review list.</p>
+                    </div>
+                    <div class="content">
+                        <div id="shortlist_pie" class="ct-chart ct-perfect-fourth"></div>
+                        <div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle text-info"></i> Fine
+                                <i class="fa fa-circle text-danger"></i> Boardreview list
+                                <i class="fa fa-circle text-warning"></i> Watch list
+                            </div>
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-pie-chart"></i> Rounded (ceiling) values
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Project Work Graph</h4>
+                        <p class="category">Percetanges of each team and how much they contribute to project.</p>
+                        <select ng-model="project_id" class="category pull-right form-control filter-select">
+                            <option ng-repeat="project in projectPercentages" value="{{project.id}}">{{project.name}}</option>
+                        </select>
+                    </div>
+                    <div class="content">
+                        <div id="work_pie" class="ct-chart ct-perfect-fourth"></div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title">Attendance Graph</h4>
+                        <p class="category">A summary of the total attendances and absences per each event so far.</p>
+                    </div>
+                    <div class="content">
+                        <div id="summary_attendance_bar" class="ct-chart"></div>
+                        <div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle text-info"></i> Attended
+                                <i class="fa fa-circle text-danger"></i> Absent
+                                <i class="fa fa-circle text-warning"></i> Expected Absent
+                            </div>
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-area-chart"></i> Exact values
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Set Scores</h4>
+                        <p class="category">Form for instructors/graders to set scores for assignments</p>
+                    </div>
+                    <div class="content">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Member</label>
+                                        <select ng-model="set_score_uid">
+                                            <option ng-repeat="member in members | orderBy:'+name'" value="{{member.uid}}">{{member.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Assignment</label>
+                                        <select ng-model="set_score_assignmentId">
+                                            <option ng-repeat="assignment in assignments" value="{{assignment.key}}">{{assignment.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Score</label>
+                                        <input type="text" class="form-control" placeholder="10/10" value="" ng-model="set_score_score">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-fill pull-right" ng-click="setScore()">Set</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Create Assignments</h4>
+                        <p class="category">Form for instructors/graders to create assignments</p>
+                    </div>
+                    <div class="content">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Due</label>
+                                        <input type="text" class="form-control" placeholder="1/17/17" value="" ng-model="create_assignment_due">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Documentation Link</label>
+                                        <input type="text" class="form-control" placeholder="http://google.com" value="" ng-model="create_assignment_link">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" placeholder="Android Mini Proj 1" value="" ng-model="create_assignment_name">
+                                    </div>
+                                    <div class="form-group">
+                                        <select multiple class="form-control" ng-model="create_assignment_roles">
+                                            <option ng-repeat="role in roles" value="{{roles.indexOf(role)}}">{{role}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-fill pull-right" ng-click="createAssignment()">Create</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Expected Absence Overview</h4>
+                        <p class="category pull-left">View of all expected absences</p>
+                        <p class="category pull-right btn btn-default hide-button" ng-click="toggleExpectedAbsences()">{{hideExpectedAbsencesLabel}}</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Event</th>
+                                <th>Reason</th>
+                            </thead>
+                            <tbody ng-hide="hideExpectedAbsences">
+                                <tr ng-repeat="expected in expectedAbsences | orderBy:'-title'">
+                                    <td>{{expected.name}}</td>
+                                    <td>{{expected.title}}</td>
+                                    <td>{{expected.reason}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Assignment Overview</h4>
+                        <p class="category pull-left">View of all assignments created</p>
+                        <p class="category pull-right btn btn-default hide-button" ng-click="toggleAssignments()">{{hideAssignmentLabel}}</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Due</th>
+                                <th>Link</th>
+                                <th>Roles</th>
+                            </thead>
+                            <tbody ng-hide="hideAssignments">
+                                <tr ng-repeat="assignment in assignments">
+                                    <td>{{assignment.name}}</td>
+                                    <td>{{assignment.due}}</td>
+                                    <td><a href="{{assignment.link}}" target="_blank">{{assignment.link}}</a></td>
+                                    <td>{{roleIdsToString(assignment.roleIds)}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Score Overview</h4>
+                        <p class="category pull-left">View of scores for all assignments for all members</p>
+                        <p class="category pull-right btn btn-default hide-button" ng-click="toggleScores()">{{hideScoreLabel}}</p>
+                        <select ng-model="score_overview_assignmentId" class="category pull-right form-control filter-select">
+                            <option ng-repeat="a in assignments" value="{{a.key}}">{{a.name}}</option>
+                        </select>
+                        <p class="category pull-right" style="margin-right: 5px;">{{num_scores}} / {{scores.length}} submitted</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Assignment Name</th>
+                                <th>Member Name</th>
+                                <th>Score</th>
+                                <th>Due</th>
+                            </thead>
+                            <tbody ng-hide="hideScores">
+                                <tr ng-repeat="score in scores | orderBy:'-member_name'">
+                                    <td>{{score.assignment_name}}</td>
+                                    <td>{{score.member_name}}</td>
+                                    <td>{{score.score}}</td>
+                                    <td>{{score.due}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Attendance Overview</h4>
+                        <p class="category pull-left">View of the attendance stats per each member in the club</p>
+                        <p class="category pull-right btn btn-default hide-button" ng-click="toggleOverview()">{{hideLabel}}</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>#</th>
+                                <th>Profile</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Year</th>
+                                <th>New/Old</th>
+                                <th>Total Absences</th>
+                                <th>Effort Rating</th>
+                                <th>Total Lines Written</th>
+                                <th>Watch List</th>
+                                <th>Boardreview List</th>
+                            </thead>
+                            <tbody ng-hide="hideOverview">
+                                <tr ng-repeat="member in members | orderBy:'+name'">
+                                    <td>{{$index + 1}}</td>
+                                    <td><img alt="..." class="avatar border-grey" src="{{member.profileImage}}"></td>
+                                    <td>{{member.name}}</td>
+                                    <td>{{roleIdToString(member.roleId)}}</td>
+                                    <td>{{member.year}}</td>
+                                    <td>{{member.new === true ? "New" : "Old"}}</td>
+                                    <td>{{member.totalAbsences || 0}}</td>
+                                    <td>{{member.effortRating || " - "}}</td>
+                                    <td>{{member.totalLines || 0}}</td>
+                                    <td ng-class="{'text-danger': member.watchList === true, 'text-success': member.watchList !== true}">{{member.watchList === true ? "Yes" : "No" }}</td>
+                                    <td ng-class="{'text-danger': member.boardReviewList === true, 'text-success': member.boardReviewList !== true}">{{member.boardReviewList === true ? "Yes" : "No"}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Feedback</h4>
+                        <p class="category pull-left">View of all feedback submitted</p>
+                        <p class="category pull-right btn btn-default hide-button" ng-click="toggleFeedback()">{{hideFeedbackLabel}}</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Event</th>
+                                <th>Response</th>
+                            </thead>
+                            <tbody ng-hide="hideFeedback">
+                                <tr ng-repeat="feedback in feedbacks">
+                                    <td>{{feedback.name}}</td>
+                                    <td>{{feedback.title}}</td>
+                                    <td>{{feedback.response}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

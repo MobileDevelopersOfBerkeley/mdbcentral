@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const apiai = require('apiai');
-const config = require("../config.json");
+const config = require("../conf/config.json");
 
 // SETUP
 var app = apiai(config.apiaiKey);

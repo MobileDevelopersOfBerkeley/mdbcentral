@@ -1,6 +1,6 @@
 // DEPENDENCIES
-const dbUtil = require("../../util/firebase/db.js");
-const githubUtil = require("../../util/github.js");
+const dbUtil = require("../util/firebase/db.js");
+const githubUtil = require("../util/github.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.userRef;

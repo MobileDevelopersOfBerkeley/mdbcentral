@@ -6,17 +6,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=3.0.0"
+  },
   "author": "Krishnan Rajiyah",
   "license": "ISC",
   "dependencies": {
     "apiai": "^4.0.3",
+    "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "cleverbot-node": "^0.3.11",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
+    "ejs": "^2.5.7",
     "express": "^4.16.2",
+    "express-validator": "^4.3.0",
     "firebase-admin": "^5.8.0",
     "github": "^13.1.0",
+    "is-url": "^1.2.2",
     "jsonwebtoken": "^8.1.0",
     "nodemailer": "^4.4.1",
     "nodemailer-smtp-transport": "^2.7.4",

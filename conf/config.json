@@ -1,6 +1,6 @@
 {
-  "firebaseDBUrl": "",
-  "firebaseStorageUrl": "",
+  "firebaseDBUrl": "https://mdbcentral.firebaseio.com/",
+  "firebaseStorageUrl": "mdbcentral.appspot.com",
 
   "jwtSecret": "mdbotIsPresident",
   "jwtExpireTime": 86400,

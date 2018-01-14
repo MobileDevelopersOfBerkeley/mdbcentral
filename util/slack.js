@@ -3,7 +3,7 @@ var SlackBot = require('slackbots');
 var similarity = require("string-similarity");
 var apiai = require("./apiai.js");
 var cleverbot = require("./cleverbot.js");
-var config = require("../config.json");
+const config = require("../conf/config.json");
 
 // CONSTANTS
 const SLACK_BOT_HELLO_MESSAGE = config.slackBotHello;

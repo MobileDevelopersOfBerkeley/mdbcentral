@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const request = require("request");
-const config = require("../config.json");
+const config = require("../conf/config.json");
 
 // METHODS
 function promisifyRequest(url, params) {
