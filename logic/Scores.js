@@ -19,12 +19,12 @@ function get(params) {
 }
 
 function set(params) {
-  return get(uid, assignmentId).then(function(score) {
+  return get(params.userId, params.assignmentId).then(function(score) {
     if (score.key == null) {
       return dbUtil.createNewObjectByAutoId(ref, {
         assignmentId: params.assignmentId,
         score: params.score,
-        userId: params.uid
+        userId: params.userId
       });
     }
     return dbUtil.updateObject(ref, score._key, {
