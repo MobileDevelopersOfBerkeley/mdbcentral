@@ -121,6 +121,6 @@ function getEvents() {
 
 // EXPORTS
 module.exports.listAbsences = listAbsences;
-module.expoerts.listSignIns = listSignIns;
+module.exports.listSignIns = listSignIns;
 module.exports.getEvent = getEvent;
 module.exports.getEvents = getEvents;
