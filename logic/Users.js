@@ -20,37 +20,10 @@ function getAll() {
 }
 
 function create(params) {
-  // TODO: make sure its validated
-  // var canSignUp = config.canSignUp || false;
-  // if (name == null || name.trim() == "") {
-  //   return firebase.Promise.reject("Please fill in name");
-  // }
-  // if (githubUsername == null || githubUsername.trim() == "") {
-  //   return firebase.Promise.reject("Please fill in githubUsername");
-  // }
-  // if (email == null || email.trim() == "") {
-  //   return firebase.Promise.reject("Please fill in email");
-  // }
-  // if (password == null || password == "") {
-  //   return firebase.Promise.reject("Please fill in password");
-  // }
-  // if (confpassword == null || confpassword == "") {
-  //   return firebase.Promise.reject("Please fill in confirm password");
-  // }
-  // if (profileImage == null) {
-  //   return firebase.Promise.reject("Please fill in profile image");
-  // }
-  // if (year == null || year.trim() == "") {
-  //   return firebase.Promise.reject("Please fill in year");
-  // }
-  // if (roleId == null) {
-  //   return firebase.Promise.reject("Please fill in role");
-  // }
-  // if (password != confpassword) {
-  //   return firebase.Promise.reject("Passwords do not match");
-  // }
-  // newMember = newMember || false;
   var url, authData;
+  if (params.password != params.confpassword) {
+    return Promise.reject(new Error("passwords dont match"));
+  }
   return authUtil.createAuthAccount(params.email, params.password)
     .then(function(data) {
       authData = data;
@@ -96,19 +69,11 @@ function updateEffortRatings() {
 }
 
 function update(params) {
-  // TODO: make sure this is validated
-  // if (edit_githubUsername == null || edit_githubUsername.trim() == "" ||
-  //   edit_name == null || edit_name.trim() == "" || edit_email == null ||
-  //   edit_email.trim() == "" || edit_major == null || edit_major.trim() == "" ||
-  //   edit_roleId == null || edit_year == null || edit_year.trim() == "") {
-  //   return firebase.Promise.reject("Please fill in required fields");
-  // }
-  // if (edit_password != null && edit_password != edit_confpassword) {
-  //   return firebase.Promise.reject("Passwords do not match");
-  // }
-  // edit_new = edit_new || false;
-
   var plist = [];
+
+  if (params.password != null && params.password != params.confpassword) {
+    return Promise.reject(new Error("passwords dont match"));
+  }
 
   if (params.profileImage != null) {
     var url;
@@ -133,13 +98,13 @@ function update(params) {
   }
 
   plist.push(dbUtil.updateObject(ref, params.id), {
-    name: edit_name,
-    email: edit_email,
-    major: edit_major,
-    newMember: edit_new,
-    roleId: edit_roleId,
-    year: edit_year,
-    githubUsername: edit_githubUsername
+    name: params.name,
+    email: params.email,
+    major: params.major,
+    isNew: params.isNew,
+    roleId: params.roleId,
+    year: params.year,
+    githubUsername: params.githubUsername
   });
 
   return Promise.all(plist);

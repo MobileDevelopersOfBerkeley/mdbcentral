@@ -201,6 +201,12 @@ function listEffortRatings(cache) {
   return result
 }
 
+function isValidUsername(username) {
+  // TODO: ...
+  return Promise.resolve(true);
+}
+
 // EXPORTS
 module.exports.getCache = getCache;
 module.exports.listEffortRatings = listEffortRatings;
+module.exports.isValidUsername = isValidUsername;

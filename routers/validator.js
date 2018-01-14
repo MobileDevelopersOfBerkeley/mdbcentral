@@ -2,7 +2,9 @@
 const expressValidator = require('express-validator');
 const isUrl = require('is-url');
 const dbUtil = require("../util/firebase/db.js");
+const githubUtil = require("../util/github.js");
 const getUserById = require("../logic/Users.js").getById;
+const config = require("../conf/config.json");
 
 // HELPERS
 function _promiseBoolTrue(fn) {
@@ -20,6 +22,18 @@ function _promiseBoolTrue(fn) {
 // EXPORTS
 module.exports = expressValidator({
   customValidators: {
+    isValidGithubUsername: function(param) {
+      return _promiseBoolTrue(function() {
+        return githubUtil.isValidUsername(param)
+      });
+    },
+    isValidFile: function(param) {
+      // TODO: ...
+      return true;
+    },
+    canSignUp: function(param) {
+      return config.canSignUp === true;
+    },
     valueLessThan: function(param, value) {
       return param < value;
     },

@@ -5,7 +5,9 @@ const errors = {
   missingErrorMessage: "Missing or empty param",
   dbErrorMessage: "Object with id specified not found in the database",
   invalidAuthMessage: "Invalid Authenication Id",
-  notLoggedInMessage: "No user is logged in"
+  notLoggedInMessage: "No user is logged in",
+  canNotSignUpMessage: "No users are allowed to sign up at this time",
+  usernameNotExistMessage: "Username does not exist"
 };
 
 // HELPERS
