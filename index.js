@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({
 app.use(validator);
 app.use(cookieParser());
 app.use("/", router);
+app.use(express.static("public"));
 
 // START SERVER
 slack.listen();
