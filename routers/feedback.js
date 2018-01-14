@@ -10,7 +10,7 @@ router.post("/feedback", function(req, res) {
   req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("eventId", routerUtil.errors.missingErrorMessage).notEmpty();
-  req.checkCookies("response", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkBody("response", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, feedbackLogic.create,
     "/calendar");
 });

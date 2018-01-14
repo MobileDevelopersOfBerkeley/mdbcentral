@@ -24,7 +24,7 @@ router.post("/expectedAbsences", function(req, res) {
   req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("eventId", routerUtil.errors.missingErrorMessage).notEmpty();
-  req.checkCookies("reason", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkBody("reason", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, expectedAbsencesLogic.create,
     "/calendar");
 });
