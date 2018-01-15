@@ -7,6 +7,7 @@ const errors = {
   invalidAuthMessage: "Invalid Authenication Id",
   notLoggedInMessage: "No user is logged in",
   canNotSignUpMessage: "No users are allowed to sign up at this time",
+  notLeadershipMessage: "You are not on leadership. You should apply next semester though :)",
   usernameNotExistMessage: "Username does not exist"
 };
 

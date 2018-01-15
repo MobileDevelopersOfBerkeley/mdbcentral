@@ -22,6 +22,7 @@ router.post("/paymentRequests", upload.single("image"), function(req, res) {
   req.body.dollars = parseFloat(req.body.dollars);
   req.checkBody("message", routerUtil.errors.missingErrorMessage).notEmpty();
   if (req.body.charge) {
+    req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
     req.checkBody("members", routerUtil.errors.missingErrorMessage).notEmpty();
     if (typeof(req.body.members) == "string")
       req.body.members = [req.body.members];
@@ -43,6 +44,7 @@ router.post("/paymentRequests/:id", function(req, res) {
   req.checkParams("id", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkParams("id", routerUtil.errors.dbErrorMessage).keyExistsInDB(ref);
   if (req.body.reimbursement) {
+    req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
     return routerUtil.completeRequest(req, res, paymentRequestLogic.completeReimbursement,
       "/leadership");
   }

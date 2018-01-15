@@ -9,6 +9,7 @@ router.post("/scores", function(req, res) {
   req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
+  req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
   req.checkBody("assignmentId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("assignmentId", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.assignmentRef);
