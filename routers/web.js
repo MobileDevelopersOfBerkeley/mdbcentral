@@ -10,6 +10,7 @@ const assignmentsLogic = require("../logic/Assignments.js");
 const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
 const feedbackLogic = require("../logic/Feedback.js");
 const githubCacheLogic = require("../logic/GithubCache.js");
+const paymentRequestLogic = require("../logic/PaymentRequests.js");
 const config = require("../conf/config.json");
 
 // PROTOTYPES
@@ -90,6 +91,12 @@ router.get("/home", function(req, res) {
     var plist = [];
     var num_absences = 0;
     var num_expected = 0;
+
+    plist.push(paymentRequestLogic.getByMember({
+      member: id
+    }).then(function(requests) {
+      data.requests = requests;
+    }));
 
     plist.push(expectedAbsencesLogic.getByUid({
       member: id
@@ -257,6 +264,10 @@ router.get("/leadership", function(req, res) {
       }
       return [strs, values];
     }
+
+    plist.push(paymentRequestLogic.getAll().then(function(requests) {
+      data.requests = requests;
+    }));
 
     plist.push(welcomeLogic.getEventsSoFar().then(function(events) {
       data.events = events;

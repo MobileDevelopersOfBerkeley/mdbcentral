@@ -52,8 +52,24 @@ function completeReimbursement(params) {
   });
 }
 
+function getAll() {
+  return dbUtil.getAll(ref);
+}
+
+function getByMember(params) {
+  return getAll().then(function(requests) {
+    return requests.filter(function(req) {
+      if (req.member) return req.member == params.member;
+      if (req.members) return req.members.indexOf(params.member) >= 0;
+      return false;
+    });
+  });
+}
+
 
 // EXPORTS
+module.exports.getByMember = getByMember;
+module.exports.getAll = getAll;
 module.exports.createChargeRequest = createChargeRequest;
 module.exports.createReimbursementRequest = createReimbursementRequest;
 module.exports.completeReimbursement = completeReimbursement;
