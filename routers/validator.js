@@ -23,6 +23,22 @@ function _promiseBoolTrue(fn) {
 // EXPORTS
 module.exports = expressValidator({
   customValidators: {
+    isValidDate: function(param) {
+      if (!param || typeof(param) != "string" ||
+        param.trim() == "" || param.indexOf("-") < 0)
+        return false;
+      var x = param.split("-");
+      if (x.length != 3) return false;
+      if (x[0].length > 2 || x[0].length == 0) return false;
+      if (x[1].length > 2 || x[1].length == 0) return false;
+      if (x[2].length != 4) return false;
+      var isValidNumber = function(param) {
+        var num = +param;
+        return !isNaN(num);
+      }
+      return isValidNumber(x[0]) && isValidNumber(x[1]) &&
+        isValidNumber(x[2]);
+    },
     isValidBool: function(param) {
       return param == "true" || param == "false" ||
         param === true || param === false;

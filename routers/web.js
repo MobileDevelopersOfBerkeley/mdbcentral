@@ -11,6 +11,7 @@ const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
 const feedbackLogic = require("../logic/Feedback.js");
 const githubCacheLogic = require("../logic/GithubCache.js");
 const paymentRequestLogic = require("../logic/PaymentRequests.js");
+const semesterStartLogic = require("../logic/SemesterStart.js");
 const config = require("../conf/config.json");
 
 // PROTOTYPES
@@ -291,6 +292,10 @@ router.get("/leadership", function(req, res) {
       }
       return [strs, values];
     }
+
+    plist.push(semesterStartLogic.get().then(function(date) {
+      data.semesterStart = date;
+    }));
 
     plist.push(paymentRequestLogic.getAll().then(function(requests) {
       data.requests = requests;

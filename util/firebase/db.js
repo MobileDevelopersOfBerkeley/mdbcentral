@@ -14,6 +14,7 @@ refs.roleRef = rootRef.child("Roles");
 refs.expectedAbsenceRef = rootRef.child("ExpectedAbsences");
 refs.feedbackRef = rootRef.child("Feedback");
 refs.paymentRequestRef = rootRef.child("PaymentRequests");
+refs.semesterStartRef = rootRef.child("semesterStart");
 
 // HELPER
 function _multipleCallback(snapshot) {
