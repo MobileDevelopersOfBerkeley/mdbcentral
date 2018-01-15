@@ -13,11 +13,10 @@ const port = process.env.PORT || config.devPort;
 
 // SETUP
 var app = express();
-
-// NOTE: comment this out when running locally
 app.use(function(req, res, next) {
-  if (!req.secure)
-    return res.redirect('https://' + req.headers.host + req.url);
+  if (proccess.env.ENV == "PROD" &&
+    req.headers['x-forwarded-proto'] != 'https')
+    return res.redirect('https://' + req.headers.host + req.url)
   next();
 });
 
