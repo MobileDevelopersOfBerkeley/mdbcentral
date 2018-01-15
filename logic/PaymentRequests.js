@@ -37,6 +37,10 @@ function completeCharge(params) {
       dollars: request.dollars,
       desc: request.message
     });
+  }).then(function() {
+    return dbUtil.updateObject(ref, params.id, {
+      complete: true
+    });
   });
 }
 
@@ -48,6 +52,10 @@ function completeReimbursement(params) {
       member: request.member,
       dollars: request.dollars,
       type: "reimbursement"
+    });
+  }).then(function() {
+    return dbUtil.updateObject(ref, params.id, {
+      complete: true
     });
   });
 }

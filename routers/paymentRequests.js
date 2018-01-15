@@ -34,18 +34,18 @@ router.post("/paymentRequests", upload.single("image"), function(req, res) {
     "/leadership");
 });
 
-router.post("/paymentRequests/:id/complete", function(req, res) {
+router.post("/paymentRequests/:id", function(req, res) {
   req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
-  req.checkBody("id", routerUtil.errors.missingErrorMessage).notEmpty();
-  req.checkBody("id", routerUtil.errors.dbErrorMessage).keyExistsInDB(ref);
-  if (req.body.charge) {
-    return routerUtil.completeRequest(req, res, paymentRequestLogic.completeCharge,
-      "/home");
+  req.checkParams("id", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkParams("id", routerUtil.errors.dbErrorMessage).keyExistsInDB(ref);
+  if (req.body.reimbursement) {
+    return routerUtil.completeRequest(req, res, paymentRequestLogic.completeReimbursement,
+      "/leadership");
   }
-  return routerUtil.completeRequest(req, res, paymentRequestLogic.completeReimbursement,
-    "/leadership");
+  return routerUtil.completeRequest(req, res, paymentRequestLogic.completeCharge,
+    "/home");
 });
 
 // EXPORTS

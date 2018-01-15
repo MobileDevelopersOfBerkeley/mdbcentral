@@ -84,5 +84,58 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Payment History</h4>
+                        <p class="category">All payments made and recieved and the status on each</p>
+                    </div>
+                    <div class="content table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Type</th>
+                                <th>Completed?</th>
+                                <th>Amount</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Complete</th>
+                            </thead>
+                            <tbody>
+                                <% for (var i = 0; i < requests.length; i++) { %>
+                                  <% var request = requests[i]; %>
+                                  <tr>
+                                      <td><%- request.type %></td>
+                                      <% if (request.completed === true) { %>
+                                        <td class="text-success">Yes
+                                      <% } else { %>
+                                        <td class="text-danger">No
+                                      <% } %>
+                                      <%- request.type %>
+                                      </td>
+                                      <td><%- request.dollars %></td>
+                                      <td><%- request.message %></td>
+                                      <td><%- timeToString(request.lastUpdated) %></td>
+                                      <td>
+                                        <% if (request.completed !== true && request.type == "charge") { %>
+                                          <form action="/paymentRequests/<%- request._key %>" method="post">
+                                            <button style="margin-left: 10px" type="submit">
+                                              <i class="fa fa-check"></i>
+                                            </button>
+                                          </form>
+                                        <% } else if (request.complete === true) { %>
+                                          No action required.
+                                        <% } else { %>
+                                          Waiting for leadership approval...
+                                        <% } %>
+                                      </td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

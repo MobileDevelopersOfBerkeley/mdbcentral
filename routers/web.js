@@ -26,6 +26,12 @@ function _getLiTag(currPage) {
   }
 }
 
+function _timeToString(time) {
+  var d = new Date();
+  d.setTime(time);
+  return dateToString(d);
+}
+
 function _getFirstName(name) {
   if (name.indexOf(" ") < 0) return name;
   return name.split(" ")[0];
@@ -43,6 +49,7 @@ function _getDocById(id) {
 
 function _genData(currPage, uid) {
   var data = {
+    timeToString: _timeToString,
     firstname: "Visitor",
     notifications: [],
     currPage: currPage,
