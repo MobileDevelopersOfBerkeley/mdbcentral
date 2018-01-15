@@ -13,6 +13,7 @@ refs.scoreRef = rootRef.child("Scores");
 refs.roleRef = rootRef.child("Roles");
 refs.expectedAbsenceRef = rootRef.child("ExpectedAbsences");
 refs.feedbackRef = rootRef.child("Feedback");
+refs.paymentRequestRef = rootRef.child("PaymentRequests");
 
 // HELPER
 function _multipleCallback(snapshot) {

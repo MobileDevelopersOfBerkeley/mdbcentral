@@ -3,11 +3,23 @@ const storageUtil = require("../util/firebase/storage.js");
 const dbUtil = require("../util/firebase/db.js");
 const authUtil = require("../util/firebase/auth.js");
 const githubUtil = require("../util/github.js");
+const stripeUtil = require("../util/stripe.js");
 const getGithubCache = require("./GithubCache.js").get;
 const getRoleByUid = require("./Roles.js").getByUid;
 
 // CONSTANTS
 const ref = dbUtil.refs.memberRef;
+
+// HELPERS
+function _setupAccount(email, stripeToken) {
+  var accountId;
+  return stripeUtil.createAccount(email).then(function(accId) {
+    accountId = accId;
+    return stripeUtil.updateAccountCard(accountId, stripeToken);
+  }).then(function() {
+    return accountId;
+  });
+}
 
 // METHODS
 function isLeadership(params) {
@@ -43,8 +55,10 @@ function create(params) {
         photoURL: url
       });
     }).then(function() {
-      // TODO: setup stripe card/account w/ params.stripeToken
+      return _setupAccount(params.email, params.stripeToken);
+    }).then(function(accountId) {
       return dbUtil.createNewObject(ref, {
+        accountId: accountId,
         name: params.name,
         email: params.email,
         profileImage: url,
@@ -108,7 +122,17 @@ function update(params) {
     }));
   }
 
-  // TODO: do stuff with params.stripeToken
+  plist.push(dbUtil.getByKey(ref, params.member).then(function(member) {
+    if (member.accountId)
+      return stripeUtil.updateAccountCard(member.accountId, params.stripeToken);
+    return _setupAccount(params.email, params.stripeToken)
+      .then(function(accountId) {
+        return dbUtil.updateObject(ref, params.member, {
+          accountId: accountId
+        });
+      });
+  }));
+
   plist.push(dbUtil.updateObject(ref, params.member, {
     name: params.name,
     email: params.email,
@@ -144,7 +168,31 @@ function getMaxAbsences(params) {
   });
 }
 
+function charge(params) {
+  return dbUtil.getByKey(ref, params.member).then(function(member) {
+    if (!member.accountId) {
+      return Promise.reject(new Error(
+        "Can't charge user! They have not entered their payment information on mdbcentral yet!"
+      ));
+    }
+    return stripeUtil.charge(member.accountId, params.dollars, params.desc);
+  });
+}
+
+function transfer(params) {
+  return dbUtil.getByKey(ref, params.member).then(function(member) {
+    if (!member.accountId) {
+      return Promise.reject(new Error(
+        "Can't transfer money to user! They have not entered their payment information on mdbcentral yet!"
+      ));
+    }
+  });
+  return stripeUtil.transfer(member.accountId, params.dollars, params.type);
+}
+
 // EXPORTS
+module.exports.charge = charge;
+module.exports.transfer = transfer;
 module.exports.isLeadership = isLeadership;
 module.exports.getById = getById;
 module.exports.getAll = getAll;
