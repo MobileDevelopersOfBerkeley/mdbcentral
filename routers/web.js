@@ -32,6 +32,14 @@ function _timeToString(time) {
   return dateToString(d);
 }
 
+function _getMemberName(members, member) {
+  var mLust = members.filter(function(m) {
+    return m._key == member;
+  });
+  if (mList.length == 0) return "NULL";
+  return mList[0].name;
+}
+
 function _getFirstName(name) {
   if (name.indexOf(" ") < 0) return name;
   return name.split(" ")[0];
@@ -49,6 +57,7 @@ function _getDocById(id) {
 
 function _genData(currPage, uid) {
   var data = {
+    getMemberName: _getMemberName,
     timeToString: _timeToString,
     firstname: "Visitor",
     notifications: [],
