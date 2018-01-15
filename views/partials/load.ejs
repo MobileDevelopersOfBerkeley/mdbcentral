@@ -14,6 +14,7 @@
     <% } %>
     loadGCal();
     showPDF('.pdf');
-    $(".loading-icon").css("visibility", "hidden");
+    setupStripeInput("signUpForm", "stripe-input", "stripe-errors", signup);
+    setupStripeInput("stripe-form", "stripe-input", "stripe-errors", updateProfile);
   }
 </script>
