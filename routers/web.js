@@ -33,11 +33,21 @@ function _timeToString(time) {
 }
 
 function _getMemberName(members, member) {
-  var mLust = members.filter(function(m) {
+  var mList = members.filter(function(m) {
     return m._key == member;
   });
   if (mList.length == 0) return "NULL";
   return mList[0].name;
+}
+
+function _getMemberNames(members, ms) {
+  var mList = members.filter(function(m) {
+    return ms.indexOf(m._key) >= 0;
+  });
+  if (mList.length == 0) return "ALLNULL";
+  return mList.map(function(m) {
+    return m.name + ", ";
+  });
 }
 
 function _getFirstName(name) {
@@ -57,6 +67,7 @@ function _getDocById(id) {
 
 function _genData(currPage, uid) {
   var data = {
+    getMemberNames: _getMemberNames,
     getMemberName: _getMemberName,
     timeToString: _timeToString,
     firstname: "Visitor",
@@ -427,7 +438,9 @@ router.get("/leadership", function(req, res) {
       return a.due - b.due;
     });
     data.members = data.members.sort(function(a, b) {
-      return b.name - a.name;
+      var textA = a.name.toUpperCase();
+      var textB = b.name.toUpperCase();
+      return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
     });
     data.roleIdsToString = _roleIdsToString;
     res.render("index", data);
@@ -456,7 +469,14 @@ router.get("/profile", function(req, res) {
     return;
   }
   var member = req.cookies.member;
-  _genData("profile", member).then(function(data) {
+  var data;
+  _genData("profile", member).then(function(d) {
+    data = d;
+    return memberLogic.getCardInfo({
+      member: member
+    });
+  }).then(function(card) {
+    data.cardInfo = card;
     res.render("index", data);
   });
 });

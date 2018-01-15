@@ -11,9 +11,9 @@ const getRoleByUid = require("./Roles.js").getByUid;
 const ref = dbUtil.refs.memberRef;
 
 // HELPERS
-function _setupAccount(email, stripeToken) {
+function _setupAccount(stripeToken) {
   var accountId;
-  return stripeUtil.createAccount(email).then(function(accId) {
+  return stripeUtil.createAccount().then(function(accId) {
     accountId = accId;
     return stripeUtil.updateAccountCard(accountId, stripeToken);
   }).then(function() {
@@ -55,7 +55,7 @@ function create(params) {
         photoURL: url
       });
     }).then(function() {
-      return _setupAccount(params.email, params.stripeToken);
+      return _setupAccount(params.stripeToken);
     }).then(function(accountId) {
       return dbUtil.createNewObject(ref, {
         accountId: accountId,
@@ -125,7 +125,7 @@ function update(params) {
   plist.push(dbUtil.getByKey(ref, params.member).then(function(member) {
     if (member.accountId)
       return stripeUtil.updateAccountCard(member.accountId, params.stripeToken);
-    return _setupAccount(params.email, params.stripeToken)
+    return _setupAccount(params.stripeToken)
       .then(function(accountId) {
         return dbUtil.updateObject(ref, params.member, {
           accountId: accountId
@@ -186,11 +186,20 @@ function transfer(params) {
         "Can't transfer money to user! They have not entered their payment information on mdbcentral yet!"
       ));
     }
+    return stripeUtil.transfer(member.accountId, params.dollars, params.type);
   });
-  return stripeUtil.transfer(member.accountId, params.dollars, params.type);
+
+}
+
+function getCardInfo(params) {
+  return dbUtil.getByKey(ref, params.member).then(function(member) {
+    if (!member.accountId) return null;
+    return stripeUtil.getCard(member.accountId);
+  });
 }
 
 // EXPORTS
+module.exports.getCardInfo = getCardInfo;
 module.exports.charge = charge;
 module.exports.transfer = transfer;
 module.exports.isLeadership = isLeadership;

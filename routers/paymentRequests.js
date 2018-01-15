@@ -3,7 +3,7 @@ const router = require("express").Router();
 const multer = require('multer');
 const dbUtil = require("../util/firebase/db.js");
 const routerUtil = require("../util/router.js");
-const paymentRequestLogic = require("../logic/paymentRequests.js");
+const paymentRequestLogic = require("../logic/PaymentRequests.js");
 const stripeUtil = require("../util/stripe.js");
 
 // CONSTANTS
@@ -23,6 +23,8 @@ router.post("/paymentRequests", upload.single("image"), function(req, res) {
   req.checkBody("message", routerUtil.errors.missingErrorMessage).notEmpty();
   if (req.body.charge) {
     req.checkBody("members", routerUtil.errors.missingErrorMessage).notEmpty();
+    if (typeof(req.body.members) == "string")
+      req.body.members = [req.body.members];
     req.checkBody("members", routerUtil.errors.formatErrorMessage).isNonEmptyArray();
     return routerUtil.completeRequest(req, res, paymentRequestLogic.createChargeRequest,
       "/leadership");

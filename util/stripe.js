@@ -33,23 +33,22 @@ function _deleteExtAccount(accountId, cardId) {
     accountId, cardId);
 }
 
-function _getExtAccountId(accountId) {
+// METHODS
+function getCard(accountId) {
   return _promisify(stripe.accounts.retrieve, accountId)
     .then(function(account) {
       if (account.external_accounts.total_count == 0) {
         return Promise.reject(new Error(
           "account does not have any external accounts"));
       }
-      return account.external_accounts.data[0].id;
+      return account.external_accounts.data[0];
     });
 }
 
-// METHODS
-function createAccount(email) {
+function createAccount() {
   return _promisify(stripe.accounts.create, {
     type: 'custom',
-    country: 'US',
-    email: email
+    country: 'US'
   });
 }
 
@@ -66,11 +65,11 @@ function updateAccountCard(accountId, token) {
 }
 
 function charge(accountId, dollars, desc) {
-  return _getExtAccountId(accountId).then(function(cardId) {
+  return getCard(accountId).then(function(card) {
     return _promisify(stripe.charges.create, {
       amount: dollars * 100,
       currency: "usd",
-      source: cardId,
+      source: card.id,
       description: desc
     });
   });
@@ -93,6 +92,7 @@ function transfer(accountId, dollars, type) {
 }
 
 // EXPORTS
+module.exports.getCard = getCard;
 module.exports.createAccount = createAccount;
 module.exports.updateAccountCard = updateAccountCard;
 module.exports.charge = charge;
