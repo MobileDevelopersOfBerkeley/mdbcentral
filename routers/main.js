@@ -8,6 +8,7 @@ const assignmentsRouter = require("./assignments.js");
 const scoresRouter = require("./scores.js");
 const paymentReqRouter = require("./paymentRequests.js");
 const semesterStartRouter = require("./semesterStart.js");
+const canSignUpRouter = require("./canSignUp.js");
 const webRouter = require("./web.js");
 
 // SETUP
@@ -20,6 +21,7 @@ router.use(scoresRouter);
 router.use(paymentReqRouter);
 router.use(webRouter);
 router.use(semesterStartRouter);
+router.use(canSignUpRouter);
 
 // EXPORTS
 module.exports = router;

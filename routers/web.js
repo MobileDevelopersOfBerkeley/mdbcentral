@@ -12,6 +12,7 @@ const feedbackLogic = require("../logic/Feedback.js");
 const githubCacheLogic = require("../logic/GithubCache.js");
 const paymentRequestLogic = require("../logic/PaymentRequests.js");
 const semesterStartLogic = require("../logic/SemesterStart.js");
+const canSignUpLogic = require("../logic/CanSignUp.js");
 const config = require("../conf/config.json");
 
 // PROTOTYPES
@@ -239,7 +240,9 @@ router.get("/calendar", function(req, res) {
   }
   var member = req.cookies.member;
   _genData("calendar", member).then(function(data) {
-    return welcomeLogic.getEventsSoFar().then(function(events) {
+    return semesterStartLogic.get().then(function(semesterStart) {
+      return welcomeLogic.getEventsSoFar(semesterStart);
+    }).then(function(events) {
       data.events = events;
       return welcomeLogic.getEvent().catch(function(error) {
         return null;
@@ -293,16 +296,19 @@ router.get("/leadership", function(req, res) {
       return [strs, values];
     }
 
-    plist.push(semesterStartLogic.get().then(function(date) {
-      data.semesterStart = date;
+    plist.push(canSignUpLogic.get().then(function(bool) {
+      data.canSignUp = bool;
+    }));
+
+    plist.push(semesterStartLogic.get().then(function(semesterStart) {
+      data.semesterStart = semesterStart;
+      return welcomeLogic.getEventsSoFar(semesterStart);
+    }).then(function(events) {
+      data.events = events;
     }));
 
     plist.push(paymentRequestLogic.getAll().then(function(requests) {
       data.requests = requests;
-    }));
-
-    plist.push(welcomeLogic.getEventsSoFar().then(function(events) {
-      data.events = events;
     }));
 
     plist.push(welcomeLogic.getEvent().then(function(event) {

@@ -131,8 +131,8 @@ function getEvents() {
     });
 }
 
-function getEventsSoFar() {
-  var start = new Date(config.semesterStart);
+function getEventsSoFar(semesterStart) {
+  var start = new Date(semesterStart);
   return getEvents().then(function(events) {
     events = events || [];
     return events.filter(function(event) {
