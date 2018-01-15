@@ -3,17 +3,17 @@ var SlackBot = require('slackbots');
 var similarity = require("string-similarity");
 var apiai = require("./apiai.js");
 var cleverbot = require("./cleverbot.js");
-const config = require("../conf/config.json");
+const config = require("../config.json");
 
 // CONSTANTS
 const SLACK_BOT_HELLO_MESSAGE = config.slackBotHello;
 const SLACK_BOT_TOKEN = process.env.SLACK_TOKEN;
 const SLACK_BOT_NAME = config.slackBotName;
-const SLACK_BOT_CHANNEL = config.slackBotChannel;
+const SLACK_BOT_CHANNEL = process.env.SLACK_CHANNEL;
 const SLACK_BOT_IMAGE = config.slackBotImage;
 const SLACK_BOT_TS_HIT_LENGTH = 1000;
 const newLineStr = "\r\n";
-const IVP_ID = config.ivpID;
+const IVP_ID = process.env.SLACK_IVP_ID;
 const STRING_SIMILARITY_RATIO_THRESH = .7;
 const POST_HELLO_MESSAGE = false;
 const ERROR_MESSAGE = config.slackBotErrorMessage;

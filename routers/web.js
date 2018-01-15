@@ -13,7 +13,7 @@ const githubCacheLogic = require("../logic/GithubCache.js");
 const paymentRequestLogic = require("../logic/PaymentRequests.js");
 const semesterStartLogic = require("../logic/SemesterStart.js");
 const canSignUpLogic = require("../logic/CanSignUp.js");
-const config = require("../conf/config.json");
+const config = require("../config.json");
 
 // PROTOTYPES
 String.prototype.includes = function(str) {

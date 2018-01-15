@@ -1,11 +1,10 @@
 // DEPENDENCIES
 const Cleverbot = require('cleverbot-node');
-const config = require("../conf/config.json");
 
 // SETUP
 var cleverbot = new Cleverbot;
 cleverbot.configure({
-	botapi: config.cleverbotKey
+	botapi: process.env.CLEVERBOT_KEY
 });
 
 // FUNCTIONS

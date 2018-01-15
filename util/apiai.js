@@ -1,11 +1,10 @@
 // DEPENDENCIES
 const apiai = require('apiai');
-const config = require("../conf/config.json");
 
 // SETUP
-var app = apiai(config.apiaiKey);
+var app = apiai(process.env.APIAI_KEY);
 var options = {
-	sessionId: config.apiaiSessionID
+	sessionId: process.env.APIAI_SESSION_ID
 };
 
 // METHODS

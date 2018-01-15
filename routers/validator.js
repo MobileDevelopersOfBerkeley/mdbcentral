@@ -6,7 +6,7 @@ const dbUtil = require("../util/firebase/db.js");
 const canSignUp = require("../logic/CanSignUp.js").get;
 const githubUtil = require("../util/github.js");
 const getUserById = require("../logic/Members.js").getById;
-const config = require("../conf/config.json");
+const config = require("../config.json");
 
 // HELPERS
 function _promiseBoolTrue(fn) {

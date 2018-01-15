@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const request = require("request");
-const config = require("../conf/config.json");
+const config = require("../config.json");
 
 // HELPERS
 function _request(type, route, params) {

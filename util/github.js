@@ -2,12 +2,12 @@
 const GitHubApi = require("github");
 const stats = require("stats-lite");
 const bluebird = require('bluebird');
-const config = require("../conf/config.json");
+const config = require("../config.json");
 
 // CONSTANTS
-const client_secret = config.githubClientSecret;
-const client_id = config.githubClientID;
-const org_id = config.githubOrgID;
+const client_secret = process.env.GITHUB_CLIENT_SECRET;
+const client_id = process.env.GITHUB_CLIENT_ID;
+const org_id = process.env.GITHUB_ORG_ID;
 const effortRating_3_lines = config.effortRating3Lines;
 const timeout = 100000;
 const cli_border = "================";

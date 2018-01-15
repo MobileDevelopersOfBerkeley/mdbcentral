@@ -1,12 +1,12 @@
 // DEPENDENCIES
 var nodemailer = require("nodemailer");
 var smtpTransport = require('nodemailer-smtp-transport');
-const config = require("../conf/config.json");
+const config = require("../config.json");
 
 // CONSTANTS
 const newLineStr = "\r\n";
-const leadershipGmailPassword = config.gmailPassword;
-const leadershipGmail = config.gmailEmail;
+const leadershipGmailPassword = proccess.env.GMAIL_PASSWORD;
+const leadershipGmail = process.env.GMAIL_EMAIL;
 const nodemailerService = "gmail";
 const emailFromStr = config.gmailFromStr;
 const subjectPrefix = config.gmailSubjectPrefix;
