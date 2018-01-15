@@ -3,6 +3,7 @@ var SlackBot = require('slackbots');
 var similarity = require("string-similarity");
 var apiai = require("./apiai.js");
 var cleverbot = require("./cleverbot.js");
+var bigLittleContestLogic = require("../logic/BigLittleContest.js");
 const config = require("../config.json");
 
 // CONSTANTS
@@ -85,7 +86,7 @@ function _postMessage(message, str, isChannel) {
 
 function _doLeaderBoard() {
 	console.log(">> leaderboard @ " + new Date().toString());
-	var p = firebase_logic.getLeaderBoard().then(function(leaderboard) {
+	var p = bigLittleContestLogic.get().then(function(leaderboard) {
 		var result = "";
 		var place = 1;
 		leaderboard.forEach(function(item) {
@@ -124,7 +125,7 @@ function _doPointChange(text) {
 		name = namee;
 		operator = operatorr;
 		value = valuee;
-		return firebase_logic.getLeaderBoard();
+		return bigLittleContestLogic.get();
 	}).then(function(leaderboard) {
 		var bigNames = [];
 		var lilNames = [];
@@ -165,7 +166,7 @@ function _doPointChange(text) {
 				}
 			}
 		}
-		return firebase_logic.setLeaderBoard(leaderboard);
+		return bigLittleContestLogic.set(leaderboard);
 	}).then(function() {
 		if (operator == "+=") return pair + " got " + value + " points";
 		if (operator == "-=") return pair + " lost " + value + " points";
