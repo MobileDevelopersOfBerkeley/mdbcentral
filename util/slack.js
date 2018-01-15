@@ -244,7 +244,7 @@ function _message(data) {
 }
 
 module.exports.listen = function() {
-	console.log("listening");
+	console.log("slack bot listening");
 	_init();
 	return Promise.resolve(true);
 }

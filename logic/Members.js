@@ -43,6 +43,7 @@ function create(params) {
         photoURL: url
       });
     }).then(function() {
+      // TODO: setup stripe card/account w/ params.stripeToken
       return dbUtil.createNewObject(ref, {
         name: params.name,
         email: params.email,
@@ -51,11 +52,13 @@ function create(params) {
         year: params.year,
         roleId: params.roleId,
         newMember: params.newMember,
-        githubUsername: githubUsername.toLowerCase()
+        githubUsername: params.githubUsername.toLowerCase()
       }, authData.uid);
     }).catch(function(error) {
       if (!authData) return Promise.reject(error);
-      return authUtil.deleteAuthAccount(authData.uid);
+      return authUtil.deleteAuthAccount(authData.uid).then(function() {
+        return Promise.reject(error);
+      });
     });
 }
 
@@ -105,6 +108,7 @@ function update(params) {
     }));
   }
 
+  // TODO: do stuff with params.stripeToken
   plist.push(dbUtil.updateObject(ref, params.member, {
     name: params.name,
     email: params.email,
@@ -112,7 +116,7 @@ function update(params) {
     newMember: params.newMember,
     roleId: params.roleId,
     year: params.year,
-    githubUsername: params.githubUsername
+    githubUsername: params.githubUsername.toLowerCase()
   }));
 
   return Promise.all(plist);
@@ -146,5 +150,6 @@ module.exports.getById = getById;
 module.exports.getAll = getAll;
 module.exports.getRole = getRole;
 module.exports.update = update;
+module.exports.create = create;
 module.exports.updateEffortRatings = updateEffortRatings;
 module.exports.getMaxAbsences = getMaxAbsences;

@@ -14,7 +14,11 @@
     <% } %>
     loadGCal();
     showPDF('.pdf');
-    setupStripeInput("signUpForm", "stripe-input", "stripe-errors", signup);
-    setupStripeInput("stripe-form", "stripe-input", "stripe-errors", updateProfile);
+    <% if (currPage == "login") { %>
+    setupStripeInput("signUpForm", "signUpForm-card", "signUpForm-errors", signup);
+    <% } %>
+    <% if (currPage == "profile") { %>
+    setupStripeInput("updateForm", "updateForm-card", "updateForm-errors", signup);
+    <% } %>
   }
 </script>

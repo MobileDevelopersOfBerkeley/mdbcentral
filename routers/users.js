@@ -15,6 +15,7 @@ const upload = multer({
 // HELPERS
 function _doCreate(req, res) {
   req.body.profileImage = req.file;
+  req.checkBody("stripeToken", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkParams("canSignUp", routerUtil.errors.canNotSignUpMessage).canSignUp();
   req.checkBody("name", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("githubUsername", routerUtil.errors.missingErrorMessage).notEmpty();
@@ -30,14 +31,7 @@ function _doCreate(req, res) {
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
-  return routerUtil.completeRequest(req, res, function(params) {
-    return memberLogic.create(params).then(function(user) {
-      res.cookie('member', user._key, {
-        maxAge: 900000,
-        httpOnly: false
-      });
-    });
-  }, "/home");
+  return routerUtil.completeRequest(req, res, memberLogic.create);
 }
 
 function _doUpdate(req, res) {
@@ -58,8 +52,7 @@ function _doUpdate(req, res) {
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
-  return routerUtil.completeRequest(req, res, memberLogic.update,
-    "/profile");
+  return routerUtil.completeRequest(req, res, memberLogic.update);
 }
 
 // METHODS

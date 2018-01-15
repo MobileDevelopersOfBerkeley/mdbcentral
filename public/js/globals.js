@@ -15,8 +15,8 @@ function logout() {
 }
 
 function login() {
-  var email = $("#email").val().trim();
-  var password = $("#password").val();
+  var email = $("#loginEmail").val().trim();
+  var password = $("#loginPassword").val();
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function(user) {
       _setCookie("member", user.uid);
@@ -43,86 +43,111 @@ function toggleCard(elementId) {
   else _showCard(elementId);
 }
 
-var elements = stripe.elements();
-var card = elements.create('card', {
-  style: {
-    base: {
-      color: '#32325d',
-      lineHeight: '18px',
-      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-      fontSmoothing: 'antialiased',
-      fontSize: '16px',
-      '::placeholder': {
-        color: '#aab7c4'
-      }
-    },
-    invalid: {
-      color: '#fa755a',
-      iconColor: '#fa755a'
-    }
-  }
-});
-
 function setupStripeInput(formId, inputId, errorId, tokenCallback) {
-  card.mount('#' + inputId);
-  card.addEventListener('change', function(event) {
-    var displayError = document.getElementById(errorId);
-    if (event.error) {
-      displayError.textContent = event.error.message;
-    } else {
-      displayError.textContent = '';
-    }
-  });
   var form = document.getElementById(formId);
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-    stripe.createToken(card).then(function(result) {
-      if (result.error) {
-        var errorElement = document.getElementById(errorId);
-        errorElement.textContent = result.error.message;
+  if (form) {
+    card.mount('#' + inputId);
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById(errorId);
+      if (event.error) {
+        displayError.textContent = event.error.message;
       } else {
-        tokenCallback(result.token);
+        displayError.textContent = '';
       }
     });
-  });
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          var errorElement = document.getElementById(errorId);
+          errorElement.textContent = result.error.message;
+        } else {
+          tokenCallback(result.token.id);
+        }
+      });
+    });
+  }
 }
 
-function _postUsers(data, cb) {
+function _postUsers(token, cb, isUpdate) {
+  var data = new FormData();
+  data.append('stripeToken', token);
+  if (isUpdate) data.append('update', true);
+
+  function _getInt(val) {
+    if (!val || val.trim() == "") return null;
+    return parseInt(val);
+  }
+
+  function _getString(val) {
+    if (!val || val.trim() == "") return null;
+    return val;
+  }
+
+  function _getBool(dom) {
+    return dom.checked === true;
+  }
+
+  function _getFile(dom) {
+    if (!dom || !dom.files || dom.files.length == 0 || !dom.files[0])
+      return null;
+    return dom.files[0];
+  }
+
+  var vals = {
+    'name': "string",
+    'email': "string",
+    'password': "string",
+    'confpassword': "string",
+    'profileImage': "file",
+    'newMember': "boolean",
+    'roleId': "number",
+    'year': "string",
+    'major': 'string',
+    'githubUsername': 'string'
+  };
+
+  Object.keys(vals).forEach(function(param) {
+    var type = vals[param];
+    var value = null;
+    if (type == "string")
+      value = _getString($("#" + param).val());
+    else if (type == "number")
+      value = _getInt($("#" + param).val());
+    else if (type == "boolean")
+      value = _getBool($("#" + param)[0]);
+    else if (type == "file")
+      value = _getFile($("#" + param)[0]);
+    if (value !== null)
+      data.append(param, value);
+  });
+
   $.ajax({
     url: "/users",
-    type: "post",
-    data: JSON.stringify(data),
-    contentType: "application/json",
-    dataType: "json",
+    data: data,
+    cache: false,
+    contentType: false,
+    processData: false,
+    method: 'POST',
+    type: 'POST',
     success: function(response) {
-      cb(response);
+      cb(response.result);
     },
     error: function(error) {
-      if (!error.responseJSON) alert(error);
-      else if (error.responseJSON.message) alert(error.responseJSON.message);
-      else alert(error.responseJSON.error);
+      alert("Oops! Something went wrong :(");
     }
   });
 }
 
 function signup(token) {
-  // TODO: figure out how to form data
-  var data = {
-    stripeToken: token
-  };
-  _postUsers(data, function(user) {
+  _postUsers(token, function(user) {
     _setCookie("member", user._key);
     window.location.href = "/home";
   });
 }
 
 function updateProfile(token) {
-  // TODO: figure out how to form data
-  var data = {
-    stripeToken: token,
-    update: true
-  };
-  _postUsers(data, function() {
+  _postUsers(token, function() {
     window.location.href = "/profile";
-  });
+  }, true);
 }
