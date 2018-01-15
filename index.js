@@ -14,7 +14,7 @@ const port = process.env.PORT || config.devPort;
 // SETUP
 var app = express();
 app.use(function(req, res, next) {
-  if (proccess.env.ENV == "PROD" &&
+  if (process.env.ENV == "PROD" &&
     req.headers['x-forwarded-proto'] != 'https')
     return res.redirect('https://' + req.headers.host + req.url)
   next();
