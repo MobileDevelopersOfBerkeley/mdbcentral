@@ -1,0 +1,24 @@
+<script>
+  window.onload = function() {
+    <% for (var i = 0; i < graphs.length; i++) { %>
+      <% var graph = graphs[i]; %>
+      <% if (graph.type == "bar") { %>
+        graphBar(
+      <% } else if (graph.type == "pie") { %>
+        graphPie(
+      <% } %>
+          "#<%- graph.elementId %>",
+          <%- JSON.stringify(graph.xData) %>,
+          <%- JSON.stringify(graph.yData) %>
+        );
+    <% } %>
+    loadGCal();
+    showPDF('.pdf');
+    <% if (currPage == "login") { %>
+    setupStripeInput("signUpForm", "signUpForm-card", "signUpForm-errors", signup);
+    <% } %>
+    <% if (currPage == "profile") { %>
+    setupStripeInput("updateForm", "updateForm-card", "updateForm-errors", updateProfile);
+    <% } %>
+  }
+</script>

@@ -1,0 +1,35 @@
+<div class="content page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Assignment Scores</h4>
+                        <p class="category">List of assignments assigned so far</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Score</th>
+                                <th>Due</th>
+                            </thead>
+                            <tbody>
+                                <% for (var i = 0; i < assignments.length; i++) { %>
+                                  <% var assignment = assignments[i]; %>
+                                  <tr>
+                                      <td><a href="<%- assignment.link %>" target="_blank">
+                                        <%- assignment.name %>
+                                      </a></td>
+                                      <td><%- assignment.score %></td>
+                                      <td><%- assignment.due %></td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

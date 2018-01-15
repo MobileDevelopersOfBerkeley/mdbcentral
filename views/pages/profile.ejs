@@ -1,0 +1,155 @@
+<div class="content page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Edit Profile</h4>
+                    </div>
+                    <div class="content">
+                        <form action="/users" enctype="multipart/form-data" method="post" id="updateForm">
+                            <input type="hidden" name="update" value="true"/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input required id="name" type="text" class="form-control" placeholder="Full Name"  name="name" value="<%- user.name %>">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input required id="email" type="email" class="form-control" placeholder="some" name="email" value="<%- user.email %>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="password" id="password" class="form-control" placeholder="*****" name="password">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Confirm Password</label>
+                                        <input type="password" id="confpassword" class="form-control" placeholder="*****" name="confpassword">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Major</label>
+                                        <input required type="text" id="major" class="form-control" placeholder="Major goes here" name="major" value="<%- user.major %>">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>GitHub Username</label>
+                                        <input required type="text" id="githubUsername" class="form-control" placeholder="github username goes here" name="githubUsername" value="<%- user.githubUsername %>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>New Profile Picture</label>
+                                        <input type="file" id="profileImage" name="profileImage">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>New Member?</label>
+                                        <% if (user.newMember) { %>
+                                            <input type="checkbox" name="newMember" checked value="true" id="newMember">
+                                        <% } else  {%>
+                                            <input type="checkbox" name="newMember" value="true" id="newMember">
+                                        <% } %>
+                                        <input type='hidden' name='newMember' value='false'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select form="updateForm" required name="roleId" id="roleId">
+                                          <% for (var i = 0; i < roles.length; i++) { %>
+                                            <% var role = roles[i]; %>
+                                            <% if (i == user.roleId) { %>
+                                              <option selected="1" value="<%- i %>"><%- role.title %></option>
+                                            <% } else { %>
+                                              <option value="<%- i %>"><%- role.title %></option>
+                                            <% } %>
+                                          <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Year</label>
+                                        <% var years = ["Freshman", "Sophomore", "Junior", "Senior"]; %>
+                                        <select form="updateForm" required name="year" id="year">
+                                          <% for (var i = 0; i < years.length; i++) { %>
+                                            <% var year = years[i]; %>
+                                            <% if (year == user.year) { %>
+                                              <option selected="1" value="<%- year %>"><%- year %></option>
+                                            <% } else { %>
+                                              <option value="<%- year %>"><%- year %></option>
+                                            <% } %>
+                                          <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                  <label for="updateForm-card">New credit or debit card</label>
+                                  <div id="updateForm-card"></div>
+                                  <div id="updateForm-errors" role="alert"></div>
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="cardInfo">Card Info</label>
+                                  <% if (!cardInfo) { %>
+                                    <p id="cardInfo"> You have not set your card info yet. </p>
+                                  <% } else { %>
+                                    <p id="cardInfo">Brand: <%- cardInfo.brand %></p>
+                                    <p>Type: <%- cardInfo.funding %></p>
+                                    <p>Last 4: <%- cardInfo.last4 %></p>
+                                  <% } %>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-fill pull-right">Update Profile</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-user">
+                    <div class="image">
+                        <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="..."/>
+                    </div>
+                    <div class="content">
+                        <div class="author">
+                            <a href="#">
+                                <img class="avatar border-gray" src="<%- user.profileImage %>"/>
+                                <h4 class="title"><%- user.name %><br />
+                                <small><%- roles[user.roleId].title %></small>
+                                </h4>
+                            </a>
+                        </div>
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <button href="#" class="btn btn-simple"><i class="fa fa-facebook-square"></i></button>
+                        <button href="#" class="btn btn-simple"><i class="fa fa-twitter"></i></button>
+                        <button href="#" class="btn btn-simple"><i class="fa fa-google-plus-square"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

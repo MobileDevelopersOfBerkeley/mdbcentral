@@ -1,0 +1,40 @@
+<ul class="nav">
+    <%- getLiTag("home") %>
+        <a href="/home">
+            <i class="pe-7s-home"></i>
+            <p>Home</p>
+        </a>
+    </li>
+    <%- getLiTag("profile") %>
+        <a href="/profile">
+            <i class="pe-7s-user"></i>
+            <p>Profile</p>
+        </a>
+    </li>
+    <%- getLiTag("calendar") %>
+        <a href="/calendar">
+            <i class="pe-7s-date"></i>
+            <p>Events</p>
+        </a>
+    </li>
+    <%- getLiTag("assignments") %>
+        <a href="/assignments">
+            <i class="pe-7s-note"></i>
+            <p>Assignments</p>
+        </a>
+    </li>
+    <%- getLiTag("policies") %>
+        <a href="/policies">
+            <i class="pe-7s-pen"></i>
+            <p>Handbook</p>
+        </a>
+    </li>
+    <% if (leadership) { %>
+      <%- getLiTag("leadership") %>
+          <a href="/leadership">
+              <i class="pe-7s-helm"></i>
+              <p>Leadership</p>
+          </a>
+      </li>
+    <% } %>
+</ul>

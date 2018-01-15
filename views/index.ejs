@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+    <% include ./partials/head %>
+    <body>
+        <div class="wrapper">
+            <div class="sidebar" data-color="azure" data-image="/img/favicon.jpg">
+                <div class="sidebar-wrapper">
+                    <div class="logo">
+                        <a href="/" class="simple-text">
+                            MDB Central
+                        </a>
+                    </div>
+                    <% include ./partials/sidebar %>
+                </div>
+            </div>
+            <div class="main-panel">
+                <% include ./partials/nav %>
+                <% include ./pages/page-switch %>
+                <% include ./partials/footer %>
+            </div>
+        </div>
+        <% include ./partials/post-js %>
+        <% include ./partials/load %>
+    </body>
+</html>

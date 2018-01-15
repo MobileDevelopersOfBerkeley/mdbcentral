@@ -1,0 +1,15 @@
+<% if (currPage == "assignments") { %>
+  <% include ./assignments %>
+<% } else if (currPage == "calendar") { %>
+  <% include ./calendar %>
+<% } else if (currPage == "home") { %>
+  <% include ./home %>
+<% } else if (currPage == "leadership") { %>
+  <% include ./leadership %>
+<% } else if (currPage == "policies") { %>
+  <% include ./policies %>
+<% } else if (currPage == "profile") { %>
+  <% include ./profile %>
+<% } else { %>
+  <% include ./login %>
+<% } %>

@@ -1,0 +1,59 @@
+.clickable:hover {
+	cursor: pointer;
+}
+
+.helpful-link {
+	width: 20px;
+	margin-right: 5px;
+}
+.announcement::after {
+	content: "" !important;
+	clear: both !important;
+	display: table !important;
+}
+.announcement > p, .announcement > img {
+	float: left !important;
+}
+.announcement > img {
+	width: 15% !important;
+	height: 15% !important;
+	margin-right: 20px !important;
+	vertical-align: text-top;
+}
+.announcement > p {
+	width: 75% !important;
+}
+#next-month, #prev-month {
+	display: inline-block;
+}
+#prev-month {
+	float: left;
+}
+#next-month {
+	float: right;
+}
+.loading-icon {
+	position: fixed !important;
+	left: 50% !important;
+	top: 50% !important;
+	z-index: 1000 !important;
+}
+.page {
+	margin-top: 15px !important;
+}
+.hide-button {
+	margin-right: 15px !important;
+}
+.text-other {
+	color: #9368E9 !important;
+}
+.text-other-2 {
+	color: #87CB16 !important;
+}
+.tab_button {
+	margin: 5px;
+}
+.filter-select {
+	margin-right: 10px !important;
+	max-width: 21% !important;
+}
