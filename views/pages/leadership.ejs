@@ -306,7 +306,13 @@
                                 <% } %>
                                 </td>
                                 <td><%- request.dollars %></td>
-                                <td><%- request.message %></td>
+                                <td>
+                                <% if (request.type == "reimbursement") { %>
+                                  <% url = request.imageUrl %>
+                                  <% include ../partials/modal-image %>
+                                <% } %>
+                                <%- request.message %>
+                                </td>
                                 <td><%- timeToString(request.lastUpdated) %></td>
                                 <td>
                                   <% if (request.completed !== true && request.type == "reimbursement") { %>

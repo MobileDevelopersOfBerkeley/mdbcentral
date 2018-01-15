@@ -33,7 +33,7 @@ router.post("/paymentRequests", upload.single("image"), function(req, res) {
   req.checkBody("image", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("image", routerUtil.errors.missingErrorMessage).isValidFile();
   return routerUtil.completeRequest(req, res, paymentRequestLogic.createReimbursementRequest,
-    "/leadership");
+    "/home");
 });
 
 router.post("/paymentRequests/:id", function(req, res) {
