@@ -10,14 +10,6 @@
                 <div class="content">
                     <div id="category_spending_graph" class="ct-chart ct-perfect-fourth"></div>
                     <div class="footer">
-                        <i class="fa fa-circle text-info"></i> Contract
-                        <i class="fa fa-circle text-danger"></i> Membership Dues
-                        <i class="fa fa-circle text-warning"></i> Junior
-                        <i class="fa fa-circle text-other"></i> Retreat
-                        <i class="fa fa-circle text-other"></i> Food
-                        <i class="fa fa-circle text-other"></i> Events
-                        <i class="fa fa-circle text-other"></i> Reimbursements
-                        <i class="fa fa-circle text-other"></i> Other
                         <hr>
                         <div class="stats">
                             <i class="fa fa-pie-chart"></i> Rounded values
@@ -35,14 +27,6 @@
                 <div class="content">
                     <div id="category_income_graph" class="ct-chart ct-perfect-fourth"></div>
                     <div class="footer">
-                        <i class="fa fa-circle text-info"></i> Contract
-                        <i class="fa fa-circle text-danger"></i> Membership Dues
-                        <i class="fa fa-circle text-warning"></i> Junior
-                        <i class="fa fa-circle text-other"></i> Retreat
-                        <i class="fa fa-circle text-other"></i> Food
-                        <i class="fa fa-circle text-other"></i> Events
-                        <i class="fa fa-circle text-other"></i> Reimbursements
-                        <i class="fa fa-circle text-other"></i> Other
                         <hr>
                         <div class="stats">
                             <i class="fa fa-pie-chart"></i> Rounded values
@@ -104,13 +88,10 @@
                                   <div class="form-group">
                                       <label>Category</label>
                                       <select form="finReportForm" name="category" class="form-control" required>
-                                        <option value="Contract">Contract</option>
-                                        <option value="Membership Dues">Membership Dues</option>
-                                        <option value="Retreat">Retreat</option>
-                                        <option value="Food">Food</option>
-                                        <option value="Events">Events</option>
-                                        <option value="Reimbursements">Reimbursements</option>
-                                        <option value="Other">Other</option>
+                                        <% for (var i = 0; i < categories.length; i++) { %>
+                                          <% var category = categories[i]; %>
+                                          <option value="<%- category %>"><%- category %></option>
+                                        <% } %>
                                       </select>
                                   </div>
                               </div>
