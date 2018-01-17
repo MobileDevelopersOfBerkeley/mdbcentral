@@ -22,7 +22,7 @@ String.prototype.includes = function(str) {
 }
 
 // HELPERS
-function genGraphData(x, total, noStr) {
+function genPieData(x, total, noStr) {
   var strs = [];
   var values = [];
   for (var key in x) {
@@ -270,6 +270,7 @@ router.get("/financial", function(req, res) {
 
       var totalSpending = {};
       var totalIncome = {};
+      var deltaBalance = [];
       data.categories.forEach(function(category) {
         totalSpending[category] = 0;
         totalIncome[category] = 0;
@@ -279,19 +280,38 @@ router.get("/financial", function(req, res) {
           totalSpending[report.category] += report.dollars;
         else if (report.dollars < 0)
           totalIncome[report.category] += report.dollars * -1;
+        deltaBalance.push([
+          _timeToString(report.lastUpdated),
+          report.dollars
+        ]);
       });
 
-      var d = genGraphData(totalSpending, 1);
+      var d = genPieData(totalSpending, 1);
       data.graphs.push({
         elementId: "category_spending_graph",
         type: "pie",
         xData: d[0],
         yData: d[1]
       });
-      d = genGraphData(totalIncome, 1);
+      d = genPieData(totalIncome, 1);
       data.graphs.push({
         elementId: "category_income_graph",
         type: "pie",
+        xData: d[0],
+        yData: d[1]
+      });
+      d = [
+        deltaBalance.map(function(tuple) {
+          return tuple[0];
+        }), [
+          deltaBalance.map(function(tuple) {
+            return tuple[1];
+          })
+        ]
+      ];
+      data.graphs.push({
+        elementId: "balance_graph",
+        type: "line",
         xData: d[0],
         yData: d[1]
       });
@@ -436,14 +456,14 @@ router.get("/leadership", function(req, res) {
         });
       });
 
-      var d = genGraphData(totalYears, total, true);
+      var d = genPieData(totalYears, total, true);
       data.graphs.push({
         elementId: "year_pie",
         type: "pie",
         xData: d[0],
         yData: d[1]
       })
-      d = genGraphData(totalMajors, total);
+      d = genPieData(totalMajors, total);
       data.graphs.push({
         elementId: "major_pie",
         type: "pie",
@@ -479,7 +499,7 @@ router.get("/leadership", function(req, res) {
         else if (roleName.includes("Explor"))
           formattedTotalRoles["Explor"] += num;
       }
-      var d = genGraphData(formattedTotalRoles, total, true);
+      var d = genPieData(formattedTotalRoles, total, true);
       data.graphs.push({
         elementId: "role_pie",
         type: "pie",
