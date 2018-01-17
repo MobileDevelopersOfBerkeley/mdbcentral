@@ -5,6 +5,14 @@ const dbUtil = require("../util/firebase/db.js");
 const finReportLogic = require("../logic/FinReports.js");
 
 // METHODS
+router.get("/finReports", function(req, res) {
+  req.checkHeaders("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkHeaders("member", routerUtil.errors.dbErrorMessage)
+    .keyExistsInDB(dbUtil.refs.memberRef);
+  req.checkHeaders("member", routerUtil.errors.notLeadershipMessage).isLeadership();
+  return routerUtil.completeRequest(req, res, finReportLogic.getAll);
+});
+
 router.post("/finReports", function(req, res) {
   req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("member", routerUtil.errors.dbErrorMessage)

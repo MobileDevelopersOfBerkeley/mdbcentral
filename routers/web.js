@@ -51,6 +51,18 @@ function _genPieData(x, noStr) {
   return [strs, values];
 }
 
+function _differentDay(d1, d2) {
+  var day1 = d1.getDate();
+  var day2 = d2.getDate();
+  if (day1 != day2) return true;
+  var month1 = d1.getMonth();
+  var month2 = d2.getMonth();
+  if (month1 != month2) return true;
+  var year1 = d1.getFullYear();
+  var year2 = d2.getFullYear();
+  return year1 != year2;
+}
+
 function _aggregateByX(data) {
   var newData = {};
   new Set(data.map(function(point) {
@@ -68,16 +80,16 @@ function _aggregateByX(data) {
   });
 }
 
-function _formatLineData(data) {
-  return [
-    data.map(function(tuple) {
-      return tuple[0];
-    }), [
-      data.map(function(tuple) {
-        return tuple[1];
-      })
-    ]
-  ];
+function _formatLineData(...dataList) {
+  var xVals = dataList[0].map(function(tuple) {
+    return tuple[0];
+  });
+  var yVals = dataList.map(function(data) {
+    return data.map(function(tuple) {
+      return tuple[1];
+    })
+  });
+  return [xVals, yVals];
 }
 
 function _getLiTag(currPage) {
@@ -313,29 +325,42 @@ router.get("/financial", function(req, res) {
       ];
       var totalSpending = {};
       var totalIncome = {};
-      var deltaSpending = [];
-      var projDeltaSpending = [];
+      var spending = [];
+      var futureSpending = [];
+      var projSpending = [];
       data.categories.forEach(function(category) {
         totalSpending[category] = 0;
         totalIncome[category] = 0;
       });
-      data.reports.forEach(function(report) {
-        if (report.dollars > 0)
-          totalIncome[report.category] += report.dollars;
-        else if (report.dollars < 0) {
-          totalSpending[report.category] += report.dollars * -1;
-          deltaSpending.push([
-            _timeToString((new Date(report.date).getTime())),
-            report.dollars
-          ]);
-          projDeltaSpending.push([
-            new Date(report.date).getTime(),
-            report.dollars
-          ]);
+      var today = new Date();
+      data.reports.sort(function(a, b) {
+        var tsA = new Date(a.date).getTime();
+        var tsB = new Date(b.date).getTime();
+        return tsA - tsB;
+      }).forEach(function(report) {
+        var y = report.dollars;
+        var date = new Date(report.date);
+        var cat = report.category;
+        var ts = date.getTime();
+        var x = _timeToString(ts);
+        if (ts > today.getTime() && _differentDay(date, today) &&
+          y < 0) {
+          futureSpending.push([x, y]);
+          spending.push([x, 0]);
+        } else {
+          if (y > 0)
+            totalIncome[cat] += y;
+          else if (y < 0) {
+            totalSpending[cat] += y * -1;
+            futureSpending.push([x, 0]);
+            spending.push([x, y]);
+          }
         }
+        projSpending.push([ts, y]);
       });
-      deltaSpending = _aggregateByX(deltaSpending);
-      projDeltaSpending = _aggregateByX(projDeltaSpending);
+      spending = _aggregateByX(spending);
+      futureSpending = _aggregateByX(futureSpending);
+      projSpending = _aggregateByX(projSpending);
       var d = _genPieData(totalSpending);
       data.graphs.push({
         elementId: "category_spending_graph",
@@ -350,14 +375,14 @@ router.get("/financial", function(req, res) {
         xData: d[0],
         yData: d[1]
       });
-      d = _formatLineData(deltaSpending);
+      d = _formatLineData(spending, futureSpending);
       data.graphs.push({
         elementId: "spending_graph",
         type: "line",
         xData: d[0],
         yData: d[1]
       });
-      d = util.getProjectedPoints(projDeltaSpending, 2);
+      d = util.getProjectedPoints(projSpending, 2);
       d = _formatLineData(d);
       d[0] = d[0].map(function(point) {
         return _timeToString(point);
