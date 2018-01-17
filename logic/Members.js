@@ -30,6 +30,28 @@ function isLeadership(params) {
   });
 }
 
+function addLeader(params) {
+  return dbUtil.updateObject(ref, {
+    leadership: true
+  });
+}
+
+function removeLeader(params) {
+  return getAll().then(function(members) {
+    var leaders = members.filter(function(member) {
+      return member.leadership === true;
+    });
+    if (leaders == 1 && leaders[0]._key != params._key)
+      return Promise.reject(new Error("SYS FAIL"));
+    else if (leaders == 1)
+      return Promise.reject(new Error(
+        "Can't remove yourself as leader! You are only leader left."));
+    return dbUtil.updateObject(ref, {
+      leadership: false
+    });
+  });
+}
+
 function getById(params) {
   var id = params.id;
   return dbUtil.getByKey(ref, id);
@@ -199,6 +221,8 @@ function getCardInfo(params) {
 }
 
 // EXPORTS
+module.exports.removeLeader = removeLeader;
+module.exports.addLeader = addLeader;
 module.exports.getCardInfo = getCardInfo;
 module.exports.charge = charge;
 module.exports.transfer = transfer;

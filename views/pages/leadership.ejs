@@ -406,5 +406,39 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Manage Leaders</h4>
+                        <p class="category pull-left">View and Edit leadership status</p>
+                        <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('leaders')" id="leadersToggle">Hide</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Delete?</th>
+                            </thead>
+                            <tbody id="leaders">
+                                <% for (var i = 0; i < leaders.length; i++) { %>
+                                  <% var leader = leaders[i]; %>
+                                  <tr>
+                                    <td><%- leader.name %></td>
+                                    <td>
+                                      <form action="/leaders/<%- leader._key %>" method="post">
+                                        <button style="margin-left: 10px" type="submit">
+                                          <i class="fa fa-trash"></i>
+                                        </button>
+                                      </form>
+                                    </td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
