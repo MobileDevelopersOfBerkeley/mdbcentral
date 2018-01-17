@@ -22,9 +22,18 @@ String.prototype.includes = function(str) {
 }
 
 // HELPERS
-function genPieData(x, total, noStr) {
+function genPieData(x, noStr) {
+  var total = Object.keys(x).map(function(key) {
+    return x[key];
+  }).reduce(function(sum, ele, i, arr) {
+    sum += ele;
+    return sum;
+  }, 0);
   var strs = [];
   var values = [];
+
+  if (total <= 0) return [strs, values];
+
   for (var key in x) {
     var value = x[key]
     var percent = Math.ceil((value / total) * 100);
@@ -47,6 +56,11 @@ function _getLiTag(currPage) {
     if (currPage != page) return "<li>";
     return "<li class='active'>";
   }
+}
+
+function _getCurrDateStr() {
+  var d = new Date();
+  return d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
 }
 
 function _timeToString(time) {
@@ -93,6 +107,7 @@ function _genData(currPage, uid) {
     getMemberNames: _getMemberNames,
     getMemberName: _getMemberName,
     timeToString: _timeToString,
+    getCurrDateStr: _getCurrDateStr,
     firstname: "Visitor",
     notifications: [],
     currPage: currPage,
@@ -276,24 +291,24 @@ router.get("/financial", function(req, res) {
         totalIncome[category] = 0;
       });
       data.reports.forEach(function(report) {
-        if (report.dollars > 0)
-          totalSpending[report.category] += report.dollars;
-        else if (report.dollars < 0)
-          totalIncome[report.category] += report.dollars * -1;
+        if (report.dollars < 0)
+          totalSpending[report.category] += report.dollars * -1;
+        else if (report.dollars > 0)
+          totalIncome[report.category] += report.dollars;
         deltaBalance.push([
           _timeToString(report.lastUpdated),
           report.dollars
         ]);
       });
 
-      var d = genPieData(totalSpending, 1);
+      var d = genPieData(totalSpending);
       data.graphs.push({
         elementId: "category_spending_graph",
         type: "pie",
         xData: d[0],
         yData: d[1]
       });
-      d = genPieData(totalIncome, 1);
+      d = genPieData(totalIncome);
       data.graphs.push({
         elementId: "category_income_graph",
         type: "pie",
@@ -456,14 +471,14 @@ router.get("/leadership", function(req, res) {
         });
       });
 
-      var d = genPieData(totalYears, total, true);
+      var d = genPieData(totalYears, true);
       data.graphs.push({
         elementId: "year_pie",
         type: "pie",
         xData: d[0],
         yData: d[1]
       })
-      d = genPieData(totalMajors, total);
+      d = genPieData(totalMajors);
       data.graphs.push({
         elementId: "major_pie",
         type: "pie",
@@ -499,7 +514,7 @@ router.get("/leadership", function(req, res) {
         else if (roleName.includes("Explor"))
           formattedTotalRoles["Explor"] += num;
       }
-      var d = genPieData(formattedTotalRoles, total, true);
+      var d = genPieData(formattedTotalRoles, true);
       data.graphs.push({
         elementId: "role_pie",
         type: "pie",

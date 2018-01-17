@@ -102,7 +102,7 @@ module.exports = expressValidator({
       for (var i = 0; i < param.length; i++) {
         var value = param[i];
         if (!isValidNumber(value)) return false;
-        param[i] = parseInt(param[i]);
+        param[i] = parseFloat(param[i]);
       }
       return true;
     },

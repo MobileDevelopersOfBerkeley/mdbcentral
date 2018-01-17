@@ -8,6 +8,7 @@ const ref = dbUtil.refs.finReportRef;
 function create(params) {
   return dbUtil.createNewObjectByAutoId(ref, {
     desc: params.desc,
+    date: params.date,
     dollars: params.dollars,
     category: params.category
   });
@@ -17,6 +18,11 @@ function getAll() {
   return dbUtil.getAll(ref);
 }
 
+function deleteById(params) {
+  return dbUtil.remove(ref, params.id);
+}
+
 // EXPORTS
 module.exports.create = create;
 module.exports.getAll = getAll;
+module.exports.deleteById = deleteById;
