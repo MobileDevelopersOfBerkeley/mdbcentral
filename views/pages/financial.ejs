@@ -69,6 +69,9 @@
                                 <th>Description</th>
                                 <th>Amount</th>
                                 <th>Date Submitted</th>
+                                <% if (leadership === true) { %>
+                                  <th>Delete?</th>
+                                <% } %>
                             </thead>
                             <tbody>
                                 <% for (var i = 0; i < reports.length; i++) { %>
@@ -78,6 +81,15 @@
                                       <td><%- report.desc %></td>
                                       <td><%- report.dollars %></td>
                                       <td><%- report.date %></td>
+                                      <% if (leadership === true) { %>
+                                        <td>
+                                          <form action="/finReports/<%- report._key %>" method="post">
+                                            <button style="margin-left: 10px" type="submit">
+                                              <i class="fa fa-trash"></i>
+                                            </button>
+                                          </form>
+                                        </td>
+                                      <% } %>
                                   </tr>
                                 <% } %>
                             </tbody>
@@ -100,7 +112,7 @@
                               <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Amount ($)</label>
-                                    <input type="number" name="dollars" placeholder="negative means spending, postive means income" class="form-control" required />
+                                    <input type="number" step="0.01" name="dollars" placeholder="negative means spending, postive means income" class="form-control" required />
                                 </div>
                               </div>
                               <div class="col-md-6">

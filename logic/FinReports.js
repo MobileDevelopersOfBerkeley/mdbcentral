@@ -18,6 +18,11 @@ function getAll() {
   return dbUtil.getAll(ref);
 }
 
+function deleteById(params) {
+  return dbUtil.remove(ref, params.id);
+}
+
 // EXPORTS
 module.exports.create = create;
 module.exports.getAll = getAll;
+module.exports.deleteById = deleteById;
