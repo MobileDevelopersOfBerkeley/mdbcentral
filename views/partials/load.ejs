@@ -6,6 +6,8 @@
         graphBar(
       <% } else if (graph.type == "pie") { %>
         graphPie(
+      <% } else if (graph.type == "line") { %>
+        graphLine(
       <% } %>
           "#<%- graph.elementId %>",
           <%- JSON.stringify(graph.xData) %>,

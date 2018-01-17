@@ -11,6 +11,7 @@ const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
 const feedbackLogic = require("../logic/Feedback.js");
 const githubCacheLogic = require("../logic/GithubCache.js");
 const paymentRequestLogic = require("../logic/PaymentRequests.js");
+const finReportLogic = require("../logic/FinReports.js");
 const semesterStartLogic = require("../logic/SemesterStart.js");
 const canSignUpLogic = require("../logic/CanSignUp.js");
 const config = require("../config.json");
@@ -21,6 +22,26 @@ String.prototype.includes = function(str) {
 }
 
 // HELPERS
+function genPieData(x, total, noStr) {
+  var strs = [];
+  var values = [];
+  for (var key in x) {
+    var value = x[key]
+    var percent = Math.ceil((value / total) * 100);
+    if (percent > 0) {
+      var percent_str = percent + "%";
+      var str = "";
+      if (!noStr)
+        str = key + " (" + percent_str + ")";
+      else
+        str = percent_str + " (" + value + ")";
+      strs.push(str);
+      values.push(percent);
+    }
+  }
+  return [strs, values];
+}
+
 function _getLiTag(currPage) {
   return function(page) {
     if (currPage != page) return "<li>";
@@ -233,6 +254,72 @@ router.get("/assignments", function(req, res) {
   });
 });
 
+router.get("/financial", function(req, res) {
+  if (!req.cookies.member) {
+    res.redirect("/login");
+    return;
+  }
+  var member = req.cookies.member;
+  _genData("financial", member).then(function(data) {
+    return finReportLogic.getAll().then(function(reports) {
+      data.reports = reports;
+      data.categories = [
+        "Contract", "Membership Dues", "Retreat",
+        "Food", "Events", "Reimbursements", "Other"
+      ];
+
+      var totalSpending = {};
+      var totalIncome = {};
+      var deltaBalance = [];
+      data.categories.forEach(function(category) {
+        totalSpending[category] = 0;
+        totalIncome[category] = 0;
+      });
+      data.reports.forEach(function(report) {
+        if (report.dollars > 0)
+          totalSpending[report.category] += report.dollars;
+        else if (report.dollars < 0)
+          totalIncome[report.category] += report.dollars * -1;
+        deltaBalance.push([
+          _timeToString(report.lastUpdated),
+          report.dollars
+        ]);
+      });
+
+      var d = genPieData(totalSpending, 1);
+      data.graphs.push({
+        elementId: "category_spending_graph",
+        type: "pie",
+        xData: d[0],
+        yData: d[1]
+      });
+      d = genPieData(totalIncome, 1);
+      data.graphs.push({
+        elementId: "category_income_graph",
+        type: "pie",
+        xData: d[0],
+        yData: d[1]
+      });
+      d = [
+        deltaBalance.map(function(tuple) {
+          return tuple[0];
+        }), [
+          deltaBalance.map(function(tuple) {
+            return tuple[1];
+          })
+        ]
+      ];
+      data.graphs.push({
+        elementId: "balance_graph",
+        type: "line",
+        xData: d[0],
+        yData: d[1]
+      });
+      res.render("index", data);
+    });
+  });
+});
+
 router.get("/calendar", function(req, res) {
   if (!req.cookies.member) {
     res.redirect("/login");
@@ -275,26 +362,6 @@ router.get("/leadership", function(req, res) {
     var totalRoles = {};
     var userLines = {};
     var total = 0;
-
-    function genData(x, noStr) {
-      var strs = [];
-      var values = [];
-      for (var key in x) {
-        var value = x[key]
-        var percent = Math.ceil((value / total) * 100);
-        if (percent > 0) {
-          var percent_str = percent + "%";
-          var str = "";
-          if (!noStr)
-            str = key + " (" + percent_str + ")";
-          else
-            str = percent_str + " (" + value + ")";
-          strs.push(str);
-          values.push(percent);
-        }
-      }
-      return [strs, values];
-    }
 
     plist.push(canSignUpLogic.get().then(function(bool) {
       data.canSignUp = bool;
@@ -389,14 +456,14 @@ router.get("/leadership", function(req, res) {
         });
       });
 
-      var d = genData(totalYears, true);
+      var d = genPieData(totalYears, total, true);
       data.graphs.push({
         elementId: "year_pie",
         type: "pie",
         xData: d[0],
         yData: d[1]
       })
-      d = genData(totalMajors);
+      d = genPieData(totalMajors, total);
       data.graphs.push({
         elementId: "major_pie",
         type: "pie",
@@ -432,7 +499,7 @@ router.get("/leadership", function(req, res) {
         else if (roleName.includes("Explor"))
           formattedTotalRoles["Explor"] += num;
       }
-      var d = genData(formattedTotalRoles, true);
+      var d = genPieData(formattedTotalRoles, total, true);
       data.graphs.push({
         elementId: "role_pie",
         type: "pie",
