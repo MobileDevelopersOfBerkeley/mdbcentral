@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const routerUtil = require("../util/router.js");
-const dateToString = require("../util/util.js").dateToString;
+const util = require("../util/util.js");
 const dbUtil = require("../util/firebase/db.js");
 const memberLogic = require("../logic/Members.js");
 const rolesLogic = require("../logic/Roles.js");
@@ -22,7 +22,7 @@ String.prototype.includes = function(str) {
 }
 
 // HELPERS
-function genPieData(x, noStr) {
+function _genPieData(x, noStr) {
   var total = Object.keys(x).map(function(key) {
     return x[key];
   }).reduce(function(sum, ele, i, arr) {
@@ -51,6 +51,35 @@ function genPieData(x, noStr) {
   return [strs, values];
 }
 
+function _aggregateByX(data) {
+  var newData = {};
+  new Set(data.map(function(point) {
+    return point[0];
+  })).forEach(function(x) {
+    data.forEach(function(point) {
+      if (point[0] == x) {
+        if (!(x in newData)) newData[x] = 0;
+        newData[x] += point[1];
+      }
+    });
+  });
+  return Object.keys(newData).map(function(x) {
+    return [x, newData[x]];
+  });
+}
+
+function _formatLineData(data) {
+  return [
+    data.map(function(tuple) {
+      return tuple[0];
+    }), [
+      data.map(function(tuple) {
+        return tuple[1];
+      })
+    ]
+  ];
+}
+
 function _getLiTag(currPage) {
   return function(page) {
     if (currPage != page) return "<li>";
@@ -66,7 +95,7 @@ function _getCurrDateStr() {
 function _timeToString(time) {
   var d = new Date();
   d.setTime(time);
-  return dateToString(d);
+  return util.dateToString(d);
 }
 
 function _getMemberName(members, member) {
@@ -220,7 +249,7 @@ router.get("/home", function(req, res) {
         signin.type = "Attended";
         var date = new Date();
         date.setTime(signin.timestamp);
-        signin.date = dateToString(date);
+        signin.date = util.dateToString(date);
         attendances.push(signin);
       }
       for (var i = 0; i < data.absences.length; i++) {
@@ -228,7 +257,7 @@ router.get("/home", function(req, res) {
         absence.type = "Absent";
         var date = new Date();
         date.setTime(absence.timestamp);
-        absence.date = dateToString(date);
+        absence.date = util.dateToString(date);
         attendances.push(absence);
       }
       for (var i = 0; i < data.expectedAbsences.length; i++) {
@@ -236,7 +265,7 @@ router.get("/home", function(req, res) {
         expectedAbsence.type = "Expected Absent";
         var date = new Date();
         date.setTime(expectedAbsence.timestamp);
-        expectedAbsence.date = dateToString(date);
+        expectedAbsence.date = util.dateToString(date);
         attendances.push(expectedAbsence);
       }
       data.absencesLeft = absencesLeft;
@@ -282,54 +311,63 @@ router.get("/financial", function(req, res) {
         "Contract", "Membership Dues", "Retreat",
         "Food", "Events", "Reimbursements", "Other"
       ];
-
       var totalSpending = {};
       var totalIncome = {};
-      var deltaBalance = [];
+      var deltaSpending = [];
+      var projDeltaSpending = [];
       data.categories.forEach(function(category) {
         totalSpending[category] = 0;
         totalIncome[category] = 0;
       });
       data.reports.forEach(function(report) {
-        if (report.dollars < 0)
-          totalSpending[report.category] += report.dollars * -1;
-        else if (report.dollars > 0)
+        if (report.dollars > 0)
           totalIncome[report.category] += report.dollars;
-        deltaBalance.push([
-          _timeToString(report.lastUpdated),
-          report.dollars
-        ]);
+        else if (report.dollars < 0) {
+          totalSpending[report.category] += report.dollars * -1;
+          deltaSpending.push([
+            _timeToString((new Date(report.date).getTime())),
+            report.dollars
+          ]);
+          projDeltaSpending.push([
+            new Date(report.date).getTime(),
+            report.dollars
+          ]);
+        }
       });
-
-      var d = genPieData(totalSpending);
+      deltaSpending = _aggregateByX(deltaSpending);
+      projDeltaSpending = _aggregateByX(projDeltaSpending);
+      var d = _genPieData(totalSpending);
       data.graphs.push({
         elementId: "category_spending_graph",
         type: "pie",
         xData: d[0],
         yData: d[1]
       });
-      d = genPieData(totalIncome);
+      d = _genPieData(totalIncome);
       data.graphs.push({
         elementId: "category_income_graph",
         type: "pie",
         xData: d[0],
         yData: d[1]
       });
-      d = [
-        deltaBalance.map(function(tuple) {
-          return tuple[0];
-        }), [
-          deltaBalance.map(function(tuple) {
-            return tuple[1];
-          })
-        ]
-      ];
+      d = _formatLineData(deltaSpending);
       data.graphs.push({
-        elementId: "balance_graph",
+        elementId: "spending_graph",
         type: "line",
         xData: d[0],
         yData: d[1]
       });
+      d = util.getProjectedPoints(projDeltaSpending, 2);
+      d = _formatLineData(d);
+      d[0] = d[0].map(function(point) {
+        return _timeToString(point);
+      });
+      data.graphs.push({
+        elementId: "proj_spending_graph",
+        type: "line",
+        xData: d[0],
+        yData: d[1]
+      })
       res.render("index", data);
     });
   });
@@ -471,14 +509,14 @@ router.get("/leadership", function(req, res) {
         });
       });
 
-      var d = genPieData(totalYears, true);
+      var d = _genPieData(totalYears, true);
       data.graphs.push({
         elementId: "year_pie",
         type: "pie",
         xData: d[0],
         yData: d[1]
       })
-      d = genPieData(totalMajors);
+      d = _genPieData(totalMajors);
       data.graphs.push({
         elementId: "major_pie",
         type: "pie",
@@ -514,7 +552,7 @@ router.get("/leadership", function(req, res) {
         else if (roleName.includes("Explor"))
           formattedTotalRoles["Explor"] += num;
       }
-      var d = genPieData(formattedTotalRoles, true);
+      var d = _genPieData(formattedTotalRoles, true);
       data.graphs.push({
         elementId: "role_pie",
         type: "pie",
