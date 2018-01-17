@@ -31,7 +31,7 @@ function isLeadership(params) {
 }
 
 function addLeader(params) {
-  return dbUtil.updateObject(ref, {
+  return dbUtil.updateObject(ref, params.id, {
     leadership: true
   });
 }
@@ -41,12 +41,12 @@ function removeLeader(params) {
     var leaders = members.filter(function(member) {
       return member.leadership === true;
     });
-    if (leaders == 1 && leaders[0]._key != params._key)
+    if (leaders == 1 && leaders[0]._key != params.id)
       return Promise.reject(new Error("SYS FAIL"));
     else if (leaders == 1)
       return Promise.reject(new Error(
         "Can't remove yourself as leader! You are only leader left."));
-    return dbUtil.updateObject(ref, {
+    return dbUtil.updateObject(ref, params.id, {
       leadership: false
     });
   });
