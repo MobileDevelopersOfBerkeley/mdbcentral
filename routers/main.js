@@ -8,6 +8,7 @@ const assignmentsRouter = require("./assignments.js");
 const scoresRouter = require("./scores.js");
 const paymentReqRouter = require("./paymentRequests.js");
 const finReportRouter = require("./finReports.js");
+const leaderRouter = require("./leaders.js");
 const semesterStartRouter = require("./semesterStart.js");
 const canSignUpRouter = require("./canSignUp.js");
 const webRouter = require("./web.js");
@@ -22,6 +23,7 @@ router.use(scoresRouter);
 router.use(paymentReqRouter);
 router.use(webRouter);
 router.use(finReportRouter);
+router.use(leaderRouter);
 router.use(semesterStartRouter);
 router.use(canSignUpRouter);
 

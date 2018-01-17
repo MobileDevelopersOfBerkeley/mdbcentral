@@ -536,6 +536,9 @@ router.get("/leadership", function(req, res) {
       return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
     });
     data.roleIdsToString = _roleIdsToString;
+    data.leaders = data.members.filter(function(member) {
+      return member.leadership === true;
+    });
     res.render("index", data);
   });
 });
