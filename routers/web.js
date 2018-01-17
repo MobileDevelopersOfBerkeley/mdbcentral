@@ -49,6 +49,11 @@ function _getLiTag(currPage) {
   }
 }
 
+function _getCurrDateStr() {
+  var d = new Date();
+  return d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
+}
+
 function _timeToString(time) {
   var d = new Date();
   d.setTime(time);
@@ -93,6 +98,7 @@ function _genData(currPage, uid) {
     getMemberNames: _getMemberNames,
     getMemberName: _getMemberName,
     timeToString: _timeToString,
+    getCurrDateStr: _getCurrDateStr,
     firstname: "Visitor",
     notifications: [],
     currPage: currPage,

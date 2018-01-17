@@ -14,6 +14,7 @@ router.post("/finReports", function(req, res) {
   req.checkBody("dollars", routerUtil.errors.missingErrorMessage).isValidNumber();
   req.body.dollars = parseInt(req.body.dollars);
   req.checkBody("desc", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkBody("date", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("category", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, finReportLogic.create,
     "/financial");

@@ -8,6 +8,7 @@ const ref = dbUtil.refs.finReportRef;
 function create(params) {
   return dbUtil.createNewObjectByAutoId(ref, {
     desc: params.desc,
+    date: params.date,
     dollars: params.dollars,
     category: params.category
   });
