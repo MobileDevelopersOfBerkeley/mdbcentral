@@ -11,6 +11,7 @@ const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
 const feedbackLogic = require("../logic/Feedback.js");
 const githubCacheLogic = require("../logic/GithubCache.js");
 const paymentRequestLogic = require("../logic/PaymentRequests.js");
+const finReportLogic = require("../logic/FinReports.js");
 const semesterStartLogic = require("../logic/SemesterStart.js");
 const canSignUpLogic = require("../logic/CanSignUp.js");
 const config = require("../config.json");
@@ -228,6 +229,20 @@ router.get("/assignments", function(req, res) {
       roleId: data.user.roleId
     }).then(function(assignments) {
       data.assignments = assignments;
+      res.render("index", data);
+    });
+  });
+});
+
+router.get("/financial", function(req, res) {
+  if (!req.cookies.member) {
+    res.redirect("/login");
+    return;
+  }
+  var member = req.cookies.member;
+  _genData("financial", member).then(function(data) {
+    return finReportLogic.getAll().then(function(reports) {
+      data.reports = reports;
       res.render("index", data);
     });
   });
