@@ -407,12 +407,38 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Add Leaders</h4>
+                        <p class="category pull-left">Add new leaders to the board</p>
+                    </div>
+                    <div class="content">
+                        <form action="/leaders" method="post" id="addLeadersForm">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Member</label>
+                                        <select form="addLeadersForm" name="id" required>
+                                            <% for (var i = 0; i < members.length; i++) { %>
+                                              <% var user = members[i]; %>
+                                              <option value="<%- user._key %>"><%- user.name %></option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-fill pull-right">Add</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
                 <div class="card">
                     <div class="header">
                         <h4 class="title">Manage Leaders</h4>
                         <p class="category pull-left">View and Edit leadership status</p>
-                        <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('leaders')" id="leadersToggle">Hide</p>
                     </div>
                     <div class="content table-responsive table-full-width">
                         <table class="table table-hover table-striped">
@@ -420,7 +446,7 @@
                                 <th>Name</th>
                                 <th>Delete?</th>
                             </thead>
-                            <tbody id="leaders">
+                            <tbody>
                                 <% for (var i = 0; i < leaders.length; i++) { %>
                                   <% var leader = leaders[i]; %>
                                   <tr>
