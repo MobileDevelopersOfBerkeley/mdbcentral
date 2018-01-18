@@ -328,11 +328,13 @@ router.get("/financial", function(req, res) {
       var spending = [];
       var futureSpending = [];
       var projSpending = [];
+      var balance = [];
       data.categories.forEach(function(category) {
         totalSpending[category] = 0;
         totalIncome[category] = 0;
       });
       var today = new Date();
+      var balanceTotal = 0;
       data.reports.sort(function(a, b) {
         var tsA = new Date(a.date).getTime();
         var tsB = new Date(b.date).getTime();
@@ -346,18 +348,19 @@ router.get("/financial", function(req, res) {
         if (ts > today.getTime() && _differentDay(date, today) &&
           y < 0) {
           futureSpending.push([x, y]);
-          spending.push([x, 0]);
         } else {
           if (y > 0)
             totalIncome[cat] += y;
           else if (y < 0) {
             totalSpending[cat] += y * -1;
-            futureSpending.push([x, 0]);
             spending.push([x, y]);
+            projSpending.push([ts, y]);
           }
+          balanceTotal += y;
+          balance.push([x, balanceTotal]);
         }
-        projSpending.push([ts, y]);
       });
+      balance = _aggregateByX(balance);
       spending = _aggregateByX(spending);
       futureSpending = _aggregateByX(futureSpending);
       projSpending = _aggregateByX(projSpending);
@@ -375,9 +378,23 @@ router.get("/financial", function(req, res) {
         xData: d[0],
         yData: d[1]
       });
-      d = _formatLineData(spending, futureSpending);
+      d = _formatLineData(spending);
       data.graphs.push({
         elementId: "spending_graph",
+        type: "line",
+        xData: d[0],
+        yData: d[1]
+      });
+      d = _formatLineData(futureSpending);
+      data.graphs.push({
+        elementId: "future_spending_graph",
+        type: "line",
+        xData: d[0],
+        yData: d[1]
+      });
+      d = _formatLineData(balance);
+      data.graphs.push({
+        elementId: "balance_graph",
         type: "line",
         xData: d[0],
         yData: d[1]

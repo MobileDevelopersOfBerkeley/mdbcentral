@@ -27,11 +27,10 @@ function getProjectedPoints(data, shiftConstant) {
   var result = regression.linear(data);
   var c = result.equation[0];
   var b = result.equation[1];
-  var x = data.map(function(point) {
+  return data.map(function(point) {
     point[1] = c * point[0] + b;
     return point;
   });
-  return x;
 }
 
 // EXPORTS
