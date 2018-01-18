@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const webUtil = require("../../util/web.js");
+const helper = require("../helper.js");
 const assignmentsLogic = require("../../logic/Assignments.js");
 
 // METHODS
@@ -10,7 +10,7 @@ router.get("/assignments", function(req, res) {
     return;
   }
   var member = req.cookies.member;
-  webUtil.genData("assignments", member).then(function(data) {
+  helper.genData("assignments", member).then(function(data) {
     return assignmentsLogic.getAssignmentScores({
       member: member,
       roleId: data.user.roleId

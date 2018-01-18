@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const webUtil = require("../../util/web.js");
+const helper = require("../helper.js");
 const semesterStartLogic = require("../../logic/SemesterStart.js");
 const welcomeLogic = require("../../logic/Welcome.js");
 
@@ -11,7 +11,7 @@ router.get("/calendar", function(req, res) {
     return;
   }
   var member = req.cookies.member;
-  webUtil.genData("calendar", member).then(function(data) {
+  helper.genData("calendar", member).then(function(data) {
     return semesterStartLogic.get().then(function(semesterStart) {
       return welcomeLogic.getEventsSoFar(semesterStart);
     }).then(function(events) {

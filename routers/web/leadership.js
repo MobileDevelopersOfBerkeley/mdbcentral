@@ -28,7 +28,7 @@ router.get("/leadership", function(req, res) {
   }
   var member = req.cookies.member;
   var data;
-  webUtil.genData("leadership", member).then(function(d) {
+  helper.genData("leadership", member).then(function(d) {
     data = d;
 
     if (!data.leadership) {

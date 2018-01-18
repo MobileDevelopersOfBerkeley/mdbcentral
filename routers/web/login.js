@@ -1,10 +1,10 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const webUtil = require("../../util/web.js");
+const helper = require("../helper.js");
 
 // METHODS
 router.get("/login", function(req, res) {
-  webUtil.genData("login").then(function(data) {
+  helper.genData("login").then(function(data) {
     res.render("index", data);
   });
 });

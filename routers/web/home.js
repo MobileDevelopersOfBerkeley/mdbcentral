@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const util = require("../../util/util.js");
-const webUtil = require("../../util/web.js");
+const helper = require("../helper.js");
 const memberLogic = require("../../logic/Members.js");
 const paymentRequestLogic = require("../../logic/PaymentRequests.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
@@ -19,7 +19,7 @@ router.get("/home", function(req, res) {
   }
   var id = req.cookies.member;
   var data;
-  webUtil.genData("home", id).then(function(d) {
+  helper.genData("home", id).then(function(d) {
     data = d;
     return memberLogic.getById({
       id: id

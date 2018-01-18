@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const util = require("../../util/util.js");
-const webUtil = require("../../util/web.js");
+const helper = require("../helper.js");
 const finReportLogic = require("../../logic/FinReports.js");
 
 // METHODS
@@ -11,7 +11,7 @@ router.get("/financial", function(req, res) {
     return;
   }
   var member = req.cookies.member;
-  webUtil.genData("financial", member).then(function(data) {
+  helper.genData("financial", member).then(function(data) {
     return finReportLogic.getAll().then(function(reports) {
       data.reports = reports;
       data.categories = [

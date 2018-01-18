@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const webUtil = require("../../util/web.js");
+const helper = require("../helper.js");
 const config = require("../../config.json");
 
 // HELPERS
@@ -19,7 +19,7 @@ router.get("/policies/:id", function(req, res) {
     return;
   }
   var member = req.cookies.member;
-  webUtil.genData("policies", member).then(function(data) {
+  helper.genData("policies", member).then(function(data) {
     data.docPath = _getDocById(req.params.id);
     res.render("index", data);
   });

@@ -1,6 +1,6 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const webUtil = require("../../util/web.js");
+const helper = require("../helper.js");
 const memberLogic = require("../../logic/Members.js");
 
 // METHODS
@@ -11,7 +11,7 @@ router.get("/profile", function(req, res) {
   }
   var member = req.cookies.member;
   var data;
-  webUtil.genData("profile", member).then(function(d) {
+  helper.genData("profile", member).then(function(d) {
     data = d;
     return memberLogic.getCardInfo({
       member: member
