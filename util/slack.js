@@ -33,7 +33,7 @@ function _start() {
 			users[user.id] = user;
 		}
 		if (POST_HELLO_MESSAGE === true) {
-			return _postMessage(Promise.resolve(SLACK_BOT_HELLO_MESSAGE), "general",
+			return sendMessage(Promise.resolve(SLACK_BOT_HELLO_MESSAGE), "general",
 				true);
 		}
 	});
@@ -47,7 +47,7 @@ function _init(onMessage) {
 		});
 		bot.on('start', _start);
 		if (onMessage)
-			bot.on('message', onMessage(_postMessage));
+			bot.on('message', onMessage);
 	}
 }
 
@@ -71,15 +71,15 @@ function _genSuccessCallback(str, isChannel) {
 	return successCallback;
 }
 
-function _postMessage(p, str, isChannel) {
+// METHODS
+function sendMessage(p, str, isChannel) {
 	return p.then(_genSuccessCallback(str, isChannel)).catch(_genErrorCallback(str,
 		isChannel));
 }
 
-// METHODS
-function listen(onMessage) {
+function listen() {
 	console.log("slack bot listening");
-	_init(onMessage);
+	_init();
 	return Promise.resolve(true);
 }
 

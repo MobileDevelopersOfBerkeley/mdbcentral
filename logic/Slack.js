@@ -1,4 +1,4 @@
-// DEPENDENCIES
+sendMessage // DEPENDENCIES
 var similarity = require("string-similarity");
 var slackUtil = require("../util/slack.js");
 var apiai = require("../util/apiai.js");
@@ -12,6 +12,9 @@ const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
 const STRING_SIMILARITY_RATIO_THRESH = .7;
 const tsHits = [];
+const users = slackUtil.users;
+const channels = slackUtil.channels;
+const sendMessage = slackUtil.sendMessage;
 
 // PROTOTYPES
 if (!Promise.prototype.spread) {
@@ -55,7 +58,7 @@ function _doLeaderBoard() {
     });
     return result;
   });
-  send(p, SLACK_BOT_CHANNEL, true);
+  sendMessage(p, SLACK_BOT_CHANNEL, true);
 }
 
 function _doPointChange(text) {
@@ -114,7 +117,7 @@ function _doPointChange(text) {
     if (operator == "-=") return pair + " lost " + value + " points";
     return pair + " has " + value + " points";
   });
-  return send(p, SLACK_BOT_CHANNEL, true);
+  return sendMessage(p, SLACK_BOT_CHANNEL, true);
 }
 
 function _doChat(message, str, isChannel) {
@@ -125,7 +128,7 @@ function _doChat(message, str, isChannel) {
       return res.result.fulfillment.speech;
     return "Sorry, I would be too savage, if I responded to that :p";
   });
-  return send(p, str, isChannel);
+  return sendMessage(p, str, isChannel);
 }
 
 function _onMessage(data) {
@@ -142,7 +145,7 @@ function _onMessage(data) {
       var text = data.text.replace("assign", "").trim();
       _doPointChange(text);
     } else if (data.user != IVP_ID && data.text.startsWith("assign")) {
-      send(Promise.resolve("Bruh, only IVP can assign points"),
+      sendMessage(Promise.resolve("Bruh, only IVP can assign points"),
         SLACK_BOT_CHANNEL, true);
     } else if (data.text.startsWith("mdbot") || data.text.startsWith("mdbbot") ||
       data.text.startsWith("mdb bot")) {
@@ -162,7 +165,7 @@ function _onMessage(data) {
 
       _doChat(message, str, isChannel);
     } else if (data.text == "leviboard") {
-      send(Promise.resolve("Dammit Levi, just move back to Kansas"),
+      sendMessage(Promise.resolve("Dammit Levi, just move back to Kansas"),
         SLACK_BOT_CHANNEL,
         true);
     }
@@ -171,8 +174,6 @@ function _onMessage(data) {
 
 // METHODS
 function listen() {
-  var users = slackUtil.users;
-  var channels = slackUtil.channels;
   slackUtil.listen(_onMessage);
 }
 
