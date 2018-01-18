@@ -11,6 +11,7 @@ const SLACK_BOT_TS_HIT_LENGTH = 1000;
 const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
 const STRING_SIMILARITY_RATIO_THRESH = .7;
+const tsHits = [];
 
 // PROTOTYPES
 if (!Promise.prototype.spread) {
@@ -170,6 +171,8 @@ function _onMessage(data) {
 
 // METHODS
 function listen() {
+  var users = slackUtil.users;
+  var channels = slackUtil.channels;
   slackUtil.listen(_onMessage);
 }
 

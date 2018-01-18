@@ -17,7 +17,6 @@ var params = {
 	icon_url: SLACK_BOT_IMAGE
 };
 var users = {};
-var tsHits = [];
 var channels = {};
 
 // HELPER
@@ -90,5 +89,7 @@ function send(channel, message) {
 }
 
 // EXPORTS
+module.exports.users = users;
+module.exports.channels = channels;
 module.exports.listen = listen;
 module.exports.send = send;
