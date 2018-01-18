@@ -20,7 +20,6 @@ router.use(usersRouter);
 router.use(assignmentsRouter);
 router.use(scoresRouter);
 router.use(paymentReqRouter);
-router.use(webRouter);
 router.use(finReportRouter);
 router.use(leaderRouter);
 router.use(semesterStartRouter);
