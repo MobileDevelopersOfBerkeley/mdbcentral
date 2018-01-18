@@ -1,10 +1,10 @@
 // DEPENDENCIES
 const multer = require('multer');
 const router = require("express").Router();
-const routerUtil = require("../util/router.js");
-const dbUtil = require("../util/firebase/db.js");
-const util = require("../util/util.js");
-const memberLogic = require("../logic/Members.js");
+const routerUtil = require("../../util/router.js");
+const dbUtil = require("../../util/firebase/db.js");
+const util = require("../../util/util.js");
+const memberLogic = require("../../logic/Members.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.memberRef;

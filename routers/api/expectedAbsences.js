@@ -1,8 +1,8 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const routerUtil = require("../util/router.js");
-const dbUtil = require("../util/firebase/db.js");
-const expectedAbsencesLogic = require("../logic/ExpectedAbsences.js");
+const routerUtil = require("../../util/router.js");
+const dbUtil = require("../../util/firebase/db.js");
+const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.expectedAbsenceRef;

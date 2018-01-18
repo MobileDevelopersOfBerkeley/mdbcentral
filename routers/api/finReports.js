@@ -1,8 +1,8 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const routerUtil = require("../util/router.js");
-const dbUtil = require("../util/firebase/db.js");
-const finReportLogic = require("../logic/FinReports.js");
+const routerUtil = require("../../util/router.js");
+const dbUtil = require("../../util/firebase/db.js");
+const finReportLogic = require("../../logic/FinReports.js");
 
 // METHODS
 router.get("/finReports", function(req, res) {

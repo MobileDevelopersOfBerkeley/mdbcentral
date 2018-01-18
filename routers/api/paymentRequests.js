@@ -1,10 +1,10 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const multer = require('multer');
-const dbUtil = require("../util/firebase/db.js");
-const routerUtil = require("../util/router.js");
-const paymentRequestLogic = require("../logic/PaymentRequests.js");
-const stripeUtil = require("../util/stripe.js");
+const dbUtil = require("../../util/firebase/db.js");
+const routerUtil = require("../../util/router.js");
+const paymentRequestLogic = require("../../logic/PaymentRequests.js");
+const stripeUtil = require("../../util/stripe.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.paymentRequestRef;

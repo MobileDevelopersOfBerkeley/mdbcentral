@@ -1,8 +1,8 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const routerUtil = require("../util/router.js");
-const dbUtil = require("../util/firebase/db.js");
-const semesterStartLogic = require("../logic/SemesterStart.js");
+const routerUtil = require("../../util/router.js");
+const dbUtil = require("../../util/firebase/db.js");
+const semesterStartLogic = require("../../logic/SemesterStart.js");
 
 // METHODS
 router.post("/semesterStart", function(req, res) {

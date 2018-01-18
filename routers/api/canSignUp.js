@@ -1,9 +1,9 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const util = require("../util/util.js");
-const routerUtil = require("../util/router.js");
-const dbUtil = require("../util/firebase/db.js");
-const canSignUpLogic = require("../logic/CanSignUp.js");
+const util = require("../../util/util.js");
+const routerUtil = require("../../util/router.js");
+const dbUtil = require("../../util/firebase/db.js");
+const canSignUpLogic = require("../../logic/CanSignUp.js");
 
 // METHODS
 router.post("/canSignUp", function(req, res) {

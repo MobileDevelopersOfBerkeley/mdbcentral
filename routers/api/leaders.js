@@ -1,8 +1,8 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const routerUtil = require("../util/router.js");
-const dbUtil = require("../util/firebase/db.js");
-const memberLogic = require("../logic/Members.js");
+const routerUtil = require("../../util/router.js");
+const dbUtil = require("../../util/firebase/db.js");
+const memberLogic = require("../../logic/Members.js");
 
 // METHODS
 router.post("/leaders", function(req, res) {

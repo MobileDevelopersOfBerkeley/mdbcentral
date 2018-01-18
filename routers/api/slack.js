@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const routerUtil = require("../util/router.js");
-const slackUtil = require("../util/slack.js");
+const routerUtil = require("../../util/router.js");
+const slackUtil = require("../../util/slack.js");
 
 // METHODS
 router.post("/slack", function(req, res) {
