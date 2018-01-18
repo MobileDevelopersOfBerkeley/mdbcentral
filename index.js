@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const router = require("./routers/main.js");
 const validator = require('./routers/validator.js');
-const slack = require("./util/slack.js");
+const slack = require("./logic/Slack.js");
 const config = require("./config.json");
 
 // CONSTANTS
