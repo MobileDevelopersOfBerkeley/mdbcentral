@@ -28,6 +28,11 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 22. Leaders can set the date the semester starts for the club
 23. Leaders can create charge requests
 24. Leaders can see all payment history for the whole club (including receipts of reimbursement requests)
+25. Users can see balance over time of the club bank
+26. Leaders can use GET route to run analysis on financial reports
+27. Users can see spending, future spending, and projected spending over time
+29. Leaders can add/remove leadership status
+30. Leaders can add/remove financial reports
 
 ## Environment Variables
 - FIREBASE_PROJECT_ID
