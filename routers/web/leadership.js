@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const router = require("express").Router();
+const helper = require("../helper.js");
 const util = require("../../util/util.js");
 const memberLogic = require("../../logic/Members.js");
 const rolesLogic = require("../../logic/Roles.js");
