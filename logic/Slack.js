@@ -1,4 +1,4 @@
-sendMessage // DEPENDENCIES
+// DEPENDENCIES
 var similarity = require("string-similarity");
 var slackUtil = require("../util/slack.js");
 var apiai = require("../util/apiai.js");
