@@ -40,8 +40,8 @@ router.get("/financial", function(req, res) {
         var cat = report.category;
         var ts = date.getTime();
         var x = util.timeToString(ts);
-        if (ts > today.getTime() && _differentDay(date, today) &&
-          y < 0) {
+        if (ts > today.getTime() &&
+          util.differentDay(date, today) && y < 0) {
           futureSpending.push([x, y]);
         } else {
           if (y > 0)
