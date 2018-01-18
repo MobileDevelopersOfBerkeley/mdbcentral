@@ -3,13 +3,11 @@ var SlackBot = require('slackbots');
 const config = require("../config.json");
 
 // CONSTANTS
-const SLACK_BOT_HELLO_MESSAGE = config.slackBotHello;
 const SLACK_BOT_TOKEN = process.env.SLACK_TOKEN;
-const SLACK_BOT_NAME = config.slackBotName;
-const SLACK_BOT_CHANNEL = process.env.SLACK_CHANNEL;
 const SLACK_BOT_IMAGE = config.slackBotImage;
-const SLACK_BOT_TS_HIT_LENGTH = 1000;
 const POST_HELLO_MESSAGE = true;
+const SLACK_BOT_HELLO_MESSAGE = config.slackBotHello;
+const SLACK_BOT_NAME = config.slackBotName;
 const ERROR_MESSAGE = config.slackBotErrorMessage;
 
 // SETUP

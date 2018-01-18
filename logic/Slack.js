@@ -6,6 +6,8 @@ var cleverbot = require("../util/cleverbot.js");
 var bigLittleContestLogic = require("./BigLittleContest.js");
 
 // CONSTANTS
+const SLACK_BOT_CHANNEL = process.env.SLACK_CHANNEL;
+const SLACK_BOT_TS_HIT_LENGTH = 1000;
 const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
 const STRING_SIMILARITY_RATIO_THRESH = .7;
@@ -167,9 +169,9 @@ function _onMessage(data) {
 }
 
 // METHODS
-function init() {
-  slackUtil.init(_onMessage);
+function listen() {
+  slackUtil.listen(_onMessage);
 }
 
 // EXPORTS
-module.exports.init = init;
+module.exports.listen = listen;
