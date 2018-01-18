@@ -1,4 +1,5 @@
 // DEPENDENCIES
+const util = require("../util/util.js");
 const rolesLogic = require("../logic/Roles.js");
 const memberLogic = require("../logic/Members.js");
 
@@ -43,7 +44,7 @@ function genData(currPage, uid) {
   var data = {
     getMemberNames: _getMemberNames,
     getMemberName: _getMemberName,
-    timeToString: timeToString,
+    timeToString: util.timeToString,
     getCurrDateStr: _getCurrDateStr,
     firstname: "Visitor",
     notifications: [],
