@@ -60,6 +60,7 @@ function getAllScores(params) {
           return m._key == score.member;
         });
         if (mList.length > 0) score.member_name = mList[0].name;
+        score.due = aList[0].due;
         return score;
       })
     });

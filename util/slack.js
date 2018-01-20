@@ -5,7 +5,7 @@ const config = require("../config.json");
 // CONSTANTS
 const SLACK_BOT_TOKEN = process.env.SLACK_TOKEN;
 const SLACK_BOT_IMAGE = config.slackBotImage;
-const POST_HELLO_MESSAGE = true;
+const POST_HELLO_MESSAGE = false;
 const SLACK_BOT_HELLO_MESSAGE = config.slackBotHello;
 const SLACK_BOT_NAME = config.slackBotName;
 const ERROR_MESSAGE = config.slackBotErrorMessage;

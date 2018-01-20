@@ -20,7 +20,7 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 14. Leaders can view expected absences
 15. Leaders can view assignments and scores
 16. Leaders can view feedback
-17. Users can submit reimbursement requests 
+17. Users can submit reimbursement requests
 18. Users can see all payment history (incoming and outgoing)
 19. Users can approve charge requests
 20. Users can edit payment info at any time (secured via stripe and HTTPS)
@@ -31,8 +31,9 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 25. Users can see balance over time of the club bank
 26. Leaders can use GET route to run analysis on financial reports
 27. Users can see spending, future spending, and projected spending over time
-29. Leaders can add/remove leadership status
-30. Leaders can add/remove financial reports
+28. Leaders can add/remove leadership status
+29. Leaders can add/remove financial reports
+30. Leaders can archive old scores
 
 ## Environment Variables
 - FIREBASE_PROJECT_ID
