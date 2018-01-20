@@ -18,5 +18,17 @@ router.post("/scores", function(req, res) {
     "/leadership");
 });
 
+router.post("/scores/:id", function(req, res) {
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
+    .keyExistsInDB(dbUtil.refs.memberRef);
+  req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
+  req.checkParams("id", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkParams("id", routerUtil.errors.dbErrorMessage)
+    .keyExistsInDB(dbUtil.refs.scoreRef);
+  return routerUtil.completeRequest(req, res, scoresLogic.archive,
+    "/leadership");
+});
+
 // EXPORTS
 module.exports = router;

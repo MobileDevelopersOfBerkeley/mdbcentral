@@ -31,11 +31,19 @@ function set(params) {
       });
     }
     return dbUtil.updateObject(ref, score._key, {
-      score: params.score
+      score: params.score,
+      archived: false
     });
   });
 }
 
+function archive(params) {
+  return dbUtil.updateObject(ref, score._key, {
+    archived: true
+  });
+}
+
 // EXPORTS
+module.exports.archive = archive;
 module.exports.get = get;
 module.exports.set = set;

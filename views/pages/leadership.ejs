@@ -293,6 +293,7 @@
                                 <th>Member Name</th>
                                 <th>Score</th>
                                 <th>Due</th>
+                                <th>Archive</th>
                             </thead>
                             <tbody id="scores">
                                 <% for (var i = 0; i < scores.length; i++) { %>
@@ -302,6 +303,14 @@
                                     <td><%- score.member_name %></td>
                                     <td><%- score.score %></td>
                                     <td><%- score.due %></td>
+                                    <td>
+                                      <form action="/scores/<%- score._key %>" method="post">
+                                        <input type="hidden" name="archive" value="true">
+                                        <button style="margin-left: 10px" type="submit">
+                                          <i class="fa fa-archive"></i>
+                                        </button>
+                                      </form>
+                                    </td>
                                   </tr>
                                 <% } %>
                             </tbody>

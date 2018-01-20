@@ -43,6 +43,9 @@ function getByUid(params) {
 
 function getAllScores(params) {
   return dbUtil.getAll(dbUtil.refs.scoreRef).then(function(scores) {
+    scores = scores.filter(function(score) {
+      return score.archived !== true;
+    });
     var assignments;
     return getAll().then(function(aList) {
       assignments = aList;
