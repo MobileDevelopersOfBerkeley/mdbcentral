@@ -4,7 +4,6 @@ const helper = require("../helper.js");
 const util = require("../../util/util.js");
 const memberLogic = require("../../logic/Members.js");
 const rolesLogic = require("../../logic/Roles.js");
-const welcomeLogic = require("../../logic/Welcome.js");
 const assignmentsLogic = require("../../logic/Assignments.js");
 const scoreLogic = require("../../logic/Scores.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
@@ -50,7 +49,9 @@ router.get("/leadership", function(req, res) {
 
     plist.push(semesterStartLogic.get().then(function(semesterStart) {
       data.semesterStart = semesterStart;
-      return welcomeLogic.getEventsSoFar(semesterStart);
+      // TODO: implement this w/o Welcome API
+      return Promise.resolve([]);
+      // return welcomeLogic.getEventsSoFar(semesterStart);
     }).then(function(events) {
       data.events = events;
     }));
@@ -59,9 +60,10 @@ router.get("/leadership", function(req, res) {
       data.requests = requests;
     }));
 
-    plist.push(welcomeLogic.getEvent().then(function(event) {
-      data.closestEventId = event.id;
-    }))
+    // TODO: implement this w/o Welcome API
+    // plist.push(welcomeLogic.getEvent().then(function(event) {
+    //   data.closestEventId = event.id;
+    // }))
 
     plist.push(feedbackLogic.getAll().then(function(feedbacks) {
       data.feedbacks = feedbacks;

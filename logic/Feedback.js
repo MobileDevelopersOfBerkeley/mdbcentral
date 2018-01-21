@@ -1,7 +1,6 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
 const memberLogic = require("./Members.js");
-const getEventById = require("./Welcome.js").getById;
 
 // CONSTANTS
 const ref = dbUtil.refs.feedbackRef;
@@ -26,17 +25,19 @@ function getAll() {
 }
 
 function create(params) {
-  return getEventById({
-    id: params.eventId
-  }).then(function(event) {
-    return dbUtil.createNewObjectByAutoId(ref, {
-      id: params.eventId,
-      title: event.title || event.summary,
-      timestamp: new Date().getTime(),
-      member: params.member,
-      response: params.response
-    });
-  });
+  // TODO: implement this w/o Welcome API
+  return Promise.reject(new Error("SHREYA PLZ IMPLEMENT ME"));
+  // return getEventById({
+  //   id: params.eventId
+  // }).then(function(event) {
+  //   return dbUtil.createNewObjectByAutoId(ref, {
+  //     id: params.eventId,
+  //     title: event.title || event.summary,
+  //     timestamp: new Date().getTime(),
+  //     member: params.member,
+  //     response: params.response
+  //   });
+  // });
 }
 
 // EXPORTS
