@@ -84,9 +84,12 @@ function sendMessage(p, str, isChannel) {
 		isChannel));
 }
 
-function listen() {
+function listen(onMessage) {
 	console.log(TAG + "Listening");
-	_init();
+	_init(function(data) {
+		console.log(TAG + "Data: ", data);
+		onMessage(data);
+	});
 	return Promise.resolve(true);
 }
 
@@ -102,3 +105,4 @@ module.exports.users = users;
 module.exports.channels = channels;
 module.exports.listen = listen;
 module.exports.send = send;
+module.exports.sendMessage = sendMessage;

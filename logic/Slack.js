@@ -66,7 +66,7 @@ function _doPointChange(text) {
   var operator = "";
   var value = 0;
   var pair = "";
-  return _assertTextValid(text).spread(function(namee, operatorr, valuee) {
+  var p = _assertTextValid(text).spread(function(namee, operatorr, valuee) {
     name = namee;
     operator = operatorr;
     value = valuee;
@@ -117,18 +117,18 @@ function _doPointChange(text) {
     if (operator == "-=") return pair + " lost " + value + " points";
     return pair + " has " + value + " points";
   });
-  return sendMessage(p, SLACK_BOT_CHANNEL, true);
+  sendMessage(p, SLACK_BOT_CHANNEL, true);
 }
 
 function _doChat(message, str, isChannel) {
-  return apiai.chat(message).then(function(res) {
+  var p = apiai.chat(message).then(function(res) {
     if (!res.result || res.result.action == "input.unknown")
       return cleverbot.send(message);
     if (res.result && res.result.fulfillment && res.result.fulfillment.speech)
       return res.result.fulfillment.speech;
     return "Sorry, I would be too savage, if I responded to that :p";
   });
-  return sendMessage(p, str, isChannel);
+  sendMessage(p, str, isChannel);
 }
 
 function _onMessage(data) {
