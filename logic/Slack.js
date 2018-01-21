@@ -6,7 +6,8 @@ var cleverbot = require("../util/cleverbot.js");
 var bigLittleContestLogic = require("./BigLittleContest.js");
 
 // CONSTANTS
-const SLACK_BOT_CHANNEL = process.env.SLACK_CHANNEL;
+const SLACK_BOT_CHANNEL1 = process.env.SLACK_CHANNEL1;
+const SLACK_BOT_CHANNEL2 = process.env.SLACK_CHANNEL2;
 const SLACK_BOT_TS_HIT_LENGTH = 1000;
 const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
@@ -58,7 +59,7 @@ function _doLeaderBoard() {
     });
     return result;
   });
-  sendMessage(p, SLACK_BOT_CHANNEL, true);
+  sendMessage(p, SLACK_BOT_CHANNEL1, true);
 }
 
 function _doPointChange(text) {
@@ -117,10 +118,15 @@ function _doPointChange(text) {
     if (operator == "-=") return pair + " lost " + value + " points";
     return pair + " has " + value + " points";
   });
-  sendMessage(p, SLACK_BOT_CHANNEL, true);
+  sendMessage(p, SLACK_BOT_CHANNEL1, true);
 }
 
 function _doChat(message, str, isChannel) {
+  if (isChannel && str != SLACK_BOT_CHANNEL2) {
+    sendMessage(Promise.resolve("Sorry, you can only talk to me at #" +
+      SLACK_BOT_CHANNEL2), str, true);
+    return;
+  }
   var p = apiai.chat(message).then(function(res) {
     if (!res.result || res.result.action == "input.unknown")
       return cleverbot.send(message);
@@ -146,7 +152,7 @@ function _onMessage(data) {
       _doPointChange(text);
     } else if (data.user != IVP_ID && data.text.startsWith("assign")) {
       sendMessage(Promise.resolve("Bruh, only IVP can assign points"),
-        SLACK_BOT_CHANNEL, true);
+        SLACK_BOT_CHANNEL1, true);
     } else if (data.text.startsWith("mdbot") || data.text.startsWith("mdbbot") ||
       data.text.startsWith("mdb bot")) {
       var message = data.text.trim();
@@ -164,10 +170,6 @@ function _onMessage(data) {
       else str = channel.name;
 
       _doChat(message, str, isChannel);
-    } else if (data.text == "leviboard") {
-      sendMessage(Promise.resolve("Dammit Levi, just move back to Kansas"),
-        SLACK_BOT_CHANNEL,
-        true);
     }
   }
 }
