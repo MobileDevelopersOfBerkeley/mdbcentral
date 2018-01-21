@@ -5,32 +5,77 @@ const dbUtil = require("../util/firebase/db.js");
 const ref = dbUtil.refs.scoreRef;
 const nullScoreStr = " - ";
 
-// METHODS
-function get(params) {
-  return dbUtil.getObjectsByFields(ref, {
-    member: params.member,
-    assignmentId: params.assignmentId
-  }).then(function(scores) {
-    if (scores.length > 0) return scores[0];
-    return {
-      score: nullScoreStr
-    };
+// HELPERS
+function _filterByKeys(scores, ref, field) {
+  return dbUtil.getAll(ref).then(function(objs) {
+    var keys = objs.map(function(o) {
+      return o._key;
+    });
+    return scores.filter(function(score) {
+      return keys.indexOf(score[field]) >= 0;
+    });
   });
 }
 
+function _filterArchived(scores) {
+  return scores.filter(function(score) {
+    return score.archived !== true;
+  });
+}
+
+function _populateScoreInfo(score) {
+  return dbUtil.getByKey(dbUtil.refs.assignmentRef, score.assignmentId)
+    .then(function(a) {
+      score.assignment_name = a.name;
+      score.due = a.due;
+      score.link = a.link;
+      return dbUtil.getByKey(dbUtil.refs.memberRef, score.member);
+    }).then(function(m) {
+      score.member_name = m.name;
+      return score;
+    });
+}
+
+function _deep(scores) {
+  scores = _filterArchived(scores);
+  return _filterByKeys(scores, dbUtil.refs.assignmentRef, "assignmentId")
+    .then(function(sList) {
+      scores = sList;
+      return _filterByKeys(scores, dbUtil.refs.memberRef, "member")
+    }).then(function(sList) {
+      scores = sList;
+      return Promise.all(scores.map(_populateScoreInfo)).then(function() {
+        return scores;
+      });
+    });
+}
+
+// METHODS
+function getAllDeep() {
+  return dbUtil.getAll(ref).then(_deep);
+}
+
+function getByMemberDeep(params) {
+  return dbUtil.getObjectsByFields(ref, {
+    member: params.member
+  }).then(_deep);
+}
+
 function set(params) {
-  return get({
-    member: params.member,
+  return dbUtil.getObjectsByFields(ref, {
+    member: params.memberId,
     assignmentId: params.assignmentId
-  }).then(function(score) {
-    if (score.score == nullScoreStr) {
+  }).then(function(scores) {
+    scores = _filterArchived(scores);
+    if (scores.length == 0) {
       return dbUtil.createNewObjectByAutoId(ref, {
-        assignmentId: params.assignmentId,
         score: params.score,
-        member: params.member
+        archived: false,
+        member: params.memberId,
+        assignmentId: params.assignmentId
       });
     }
-    return dbUtil.updateObject(ref, score._key, {
+    return dbUtil.updateObject(ref, scores[0]._key, {
       score: params.score,
       archived: false
     });
@@ -44,6 +89,7 @@ function archive(params) {
 }
 
 // EXPORTS
+module.exports.getAllDeep = getAllDeep;
+module.exports.getByMemberDeep = getByMemberDeep;
 module.exports.archive = archive;
-module.exports.get = get;
 module.exports.set = set;

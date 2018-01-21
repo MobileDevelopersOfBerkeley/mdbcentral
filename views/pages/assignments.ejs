@@ -15,14 +15,14 @@
                                 <th>Due</th>
                             </thead>
                             <tbody>
-                                <% for (var i = 0; i < assignments.length; i++) { %>
-                                  <% var assignment = assignments[i]; %>
+                                <% for (var i = 0; i < scores.length; i++) { %>
+                                  <% var score = scores[i]; %>
                                   <tr>
-                                      <td><a href="<%- assignment.link %>" target="_blank">
-                                        <%- assignment.name %>
+                                      <td><a href="<%- score.link %>" target="_blank">
+                                        <%- score.assignment_name %>
                                       </a></td>
-                                      <td><%- assignment.score %></td>
-                                      <td><%- assignment.due %></td>
+                                      <td><%- score.score %></td>
+                                      <td><%- score.due %></td>
                                   </tr>
                                 <% } %>
                             </tbody>

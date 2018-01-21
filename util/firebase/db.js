@@ -165,12 +165,11 @@ function getObjectsByFields(ref, fieldToVal) {
 	return ref.orderByChild(primaryField).equalTo(primaryVal).once("value")
 		.then(_multipleCallback).then(function(objects) {
 			return objects.filter(function(object) {
-				for (var key in Object.keys(fieldToVal)) {
+				return Object.keys(fieldToVal).reduce(function(bool, key) {
 					var val = fieldToVal[key];
-					if (object[key] !== val)
-						return false;
-				}
-				return true;
+					var objVal = object[key];
+					return bool && objVal == val;
+				}, true);
 			});
 		});
 }

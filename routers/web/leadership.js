@@ -6,6 +6,7 @@ const memberLogic = require("../../logic/Members.js");
 const rolesLogic = require("../../logic/Roles.js");
 const welcomeLogic = require("../../logic/Welcome.js");
 const assignmentsLogic = require("../../logic/Assignments.js");
+const scoreLogic = require("../../logic/Scores.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
 const feedbackLogic = require("../../logic/Feedback.js");
 const githubCacheLogic = require("../../logic/GithubCache.js");
@@ -68,11 +69,10 @@ router.get("/leadership", function(req, res) {
 
     plist.push(assignmentsLogic.getAll().then(function(assignments) {
       data.assignments = assignments;
-      if (assignments.length == 0) return [];
-      return assignmentsLogic.getAllScores();
-    }).then(function(d) {
-      data.scores = d.scores;
-      data.num_scores = d.num_scores;
+    }));
+
+    plist.push(scoreLogic.getAllDeep().then(function(scores) {
+      data.scores = scores;
     }));
 
     plist.push(expectedAbsencesLogic.getAll()

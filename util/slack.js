@@ -9,6 +9,7 @@ const POST_HELLO_MESSAGE = false;
 const SLACK_BOT_HELLO_MESSAGE = config.slackBotHello;
 const SLACK_BOT_NAME = config.slackBotName;
 const ERROR_MESSAGE = config.slackBotErrorMessage;
+const TAG = "MDBot >> ";
 
 // SETUP
 var bot = null;
@@ -52,9 +53,14 @@ function _init(onMessage) {
 }
 
 function _post(str, value, isChannel) {
-	if (isChannel)
-		return bot.postMessageToChannel(str, value, params);
-	return bot.postMessageToUser(str, value, params);
+	if (isChannel) {
+		return bot.postMessageToChannel(str, value, params).then(function() {
+			console.log(TAG + "Sent message to channel " + str + ": \"" + value + "\"");
+		});
+	}
+	return bot.postMessageToUser(str, value, params).then(function() {
+		console.log(TAG + "Sent message to user " + str + ": \"" + value + "\"");
+	});
 }
 
 function _genErrorCallback(str, isChannel) {
@@ -73,17 +79,20 @@ function _genSuccessCallback(str, isChannel) {
 
 // METHODS
 function sendMessage(p, str, isChannel) {
+	console.log(TAG + "Sending message to " + str);
 	return p.then(_genSuccessCallback(str, isChannel)).catch(_genErrorCallback(str,
 		isChannel));
 }
 
 function listen() {
-	console.log("slack bot listening");
+	console.log(TAG + "Listening");
 	_init();
 	return Promise.resolve(true);
 }
 
 function send(channel, message) {
+	console.log(TAG + "One time send to " + channel +
+		" saying \"" + message + "\"");
 	_init();
 	return bot.postMessageToChannel(channel, message, params);
 }
