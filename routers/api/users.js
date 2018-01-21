@@ -15,7 +15,6 @@ const upload = multer({
 // HELPERS
 function _doCreate(req, res) {
   req.body.profileImage = req.file;
-  req.checkBody("stripeToken", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkParams("canSignUp", routerUtil.errors.canNotSignUpMessage).canSignUp();
   req.checkBody("name", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("githubUsername", routerUtil.errors.missingErrorMessage).notEmpty();

@@ -77,10 +77,10 @@ function create(params) {
         photoURL: url
       });
     }).then(function() {
-      return _setupAccount(params.stripeToken);
+      if (params.stripeToken)
+        return _setupAccount(params.stripeToken);
     }).then(function(accountId) {
-      return dbUtil.createNewObject(ref, {
-        accountId: accountId,
+      var vals = {
         name: params.name,
         email: params.email,
         profileImage: url,
@@ -89,7 +89,9 @@ function create(params) {
         roleId: params.roleId,
         newMember: params.newMember,
         githubUsername: params.githubUsername.toLowerCase()
-      }, authData.uid);
+      };
+      if (accountId) vals.accountId = accountId;
+      return dbUtil.createNewObject(ref, vals, authData.uid);
     }).catch(function(error) {
       if (!authData) return Promise.reject(error);
       return authUtil.deleteAuthAccount(authData.uid).then(function() {
@@ -145,14 +147,15 @@ function update(params) {
   }
 
   plist.push(dbUtil.getByKey(ref, params.member).then(function(member) {
-    if (member.accountId)
+    if (member.accountId && params.stripeToken)
       return stripeUtil.updateAccountCard(member.accountId, params.stripeToken);
-    return _setupAccount(params.stripeToken)
-      .then(function(accountId) {
-        return dbUtil.updateObject(ref, params.member, {
-          accountId: accountId
+    else if (params.stripeToken)
+      return _setupAccount(params.stripeToken)
+        .then(function(accountId) {
+          return dbUtil.updateObject(ref, params.member, {
+            accountId: accountId
+          });
         });
-      });
   }));
 
   plist.push(dbUtil.updateObject(ref, params.member, {
