@@ -4,7 +4,9 @@ function _setCookie(name, val) {
 
 function signin() {
   var code = $("#code").val().trim();
-  window.location.href = "http://legacy-dashboard.welcomeme.io/signin/" + code;
+  // TODO: implement this w/o Welcome API
+  alert("SHREYA PLZ IMPLEMENT ME!!!");
+  // window.location.href = "http://legacy-dashboard.welcomeme.io/signin/" + code;
 }
 
 function logout() {
