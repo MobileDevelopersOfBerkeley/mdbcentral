@@ -77,21 +77,23 @@ function formatLineData(...dataList) {
   return [xVals, yVals];
 }
 
-function timeToString(time) {
+function timeToString(time, short) {
   var d = new Date();
   d.setTime(time);
-  return dateToString(d);
+  return dateToString(d, short);
 }
 
 function parseBool(val) {
   return val === "true" || val === true ? true : false
 }
 
-function dateToString(date) {
+function dateToString(date, short) {
   var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
-  return date.getDate() + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
+  var val = date.getDate() + " " + monthNames[date.getMonth()];
+  if (short) return val;
+  return val + " " + date.getFullYear();
 }
 
 function getProjectedPoints(data, shiftConstant) {

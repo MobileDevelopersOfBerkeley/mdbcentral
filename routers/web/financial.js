@@ -40,7 +40,7 @@ router.get("/financial", function(req, res) {
         var cat = report.category;
         var projection = report.projection;
         var ts = date.getTime();
-        var x = util.timeToString(ts);
+        var x = util.timeToString(ts, true);
         if (y > 0)
           totalIncome[cat] += y;
         else if (y < 0) {
@@ -97,7 +97,7 @@ router.get("/financial", function(req, res) {
       d = util.getProjectedPoints(projSpending, 2);
       d = util.formatLineData(d);
       d[0] = d[0].map(function(point) {
-        return util.timeToString(point);
+        return util.timeToString(point, true);
       });
       data.graphs.push({
         elementId: "proj_spending_graph",
