@@ -49,7 +49,7 @@ router.get("/financial", function(req, res) {
             spending.push([x, y]);
             projSpending.push([ts, y]);
           } else {
-            futureSpending.push([ts, y]);
+            futureSpending.push([x, y]);
           }
         }
         balanceTotal += y;
