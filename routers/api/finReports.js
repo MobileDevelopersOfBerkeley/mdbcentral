@@ -25,9 +25,7 @@ router.post("/finReports", function(req, res) {
   req.checkBody("desc", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("date", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("category", routerUtil.errors.missingErrorMessage).notEmpty();
-  req.checkBody("projection", routerUtil.errors.missingErrorMessage).notEmpty();
-  req.checkBody("projection", routerUtil.errors.formatErrorMessage).isValidBool();
-  req.body.projection = util.parseBool(req.body.projection);
+  req.body.projection = req.body.projection != null ? true : false;
   return routerUtil.completeRequest(req, res, finReportLogic.create,
     "/financial");
 });

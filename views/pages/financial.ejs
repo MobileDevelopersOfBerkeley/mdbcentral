@@ -121,6 +121,7 @@
                                 <th>Category</th>
                                 <th>Description</th>
                                 <th>Amount</th>
+                                <th>Projection?</th>
                                 <th>Date Submitted</th>
                                 <% if (leadership === true) { %>
                                   <th>Delete?</th>
@@ -133,6 +134,7 @@
                                       <td><%- report.category %></td>
                                       <td><%- report.desc %></td>
                                       <td><%- report.dollars %></td>
+                                      <td><%- report.projection === true ? "Yes" : "No" %></td>
                                       <td><%- report.date %></td>
                                       <% if (leadership === true) { %>
                                         <td>
@@ -197,7 +199,6 @@
                                 <div class="form-group">
                                   <label>Projection?</label>
                                   <input type="checkbox" name="projection" value="true">
-                                  <input type='hidden' name='projection' value='false'>
                                 </div>
                               </div>
                             </div>
