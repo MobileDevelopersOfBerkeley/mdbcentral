@@ -1,6 +1,7 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const routerUtil = require("../../util/router.js");
+const util = require("../../util/util.js");
 const dbUtil = require("../../util/firebase/db.js");
 const finReportLogic = require("../../logic/FinReports.js");
 
@@ -24,6 +25,9 @@ router.post("/finReports", function(req, res) {
   req.checkBody("desc", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("date", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("category", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkBody("projection", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkBody("projection", routerUtil.errors.formatErrorMessage).isValidBool();
+  req.body.projection = util.parseBool(req.body.projection);
   return routerUtil.completeRequest(req, res, finReportLogic.create,
     "/financial");
 });

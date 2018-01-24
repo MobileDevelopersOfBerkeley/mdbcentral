@@ -181,16 +181,23 @@
                               </div>
                             </div>
                             <div class="row">
-                              <div class="col-md-6">
+                              <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Date</label>
                                     <input type="text" name="date" value="<%- getCurrDateStr() %>" class="form-control" required />
                                 </div>
                               </div>
-                              <div class="col-md-6">
+                              <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Description</label>
                                     <input type="text" name="desc" placeholder="explain what you are reporting" class="form-control" required />
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label>Projection?</label>
+                                  <input type="checkbox" name="projection" value="true">
+                                  <input type='hidden' name='projection' value='false'>
                                 </div>
                               </div>
                             </div>

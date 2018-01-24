@@ -38,22 +38,22 @@ router.get("/financial", function(req, res) {
         var y = report.dollars;
         var date = new Date(report.date);
         var cat = report.category;
+        var projection = report.projection;
         var ts = date.getTime();
         var x = util.timeToString(ts);
-        if (ts > today.getTime() &&
-          util.differentDay(date, today) && y < 0) {
-          futureSpending.push([x, y]);
-        } else {
-          if (y > 0)
-            totalIncome[cat] += y;
-          else if (y < 0) {
-            totalSpending[cat] += y * -1;
+        if (y > 0)
+          totalIncome[cat] += y;
+        else if (y < 0) {
+          totalSpending[cat] += y * -1;
+          if (projection !== true) {
             spending.push([x, y]);
             projSpending.push([ts, y]);
+          } else {
+            futureSpending.push([ts, y]);
           }
-          balanceTotal += y;
-          balance.push([x, balanceTotal]);
         }
+        balanceTotal += y;
+        balance.push([x, balanceTotal]);
       });
       balance = util.aggregateByX(balance);
       spending = util.aggregateByX(spending);
