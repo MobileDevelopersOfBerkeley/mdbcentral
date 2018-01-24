@@ -10,7 +10,8 @@ function create(params) {
     desc: params.desc,
     date: params.date,
     dollars: params.dollars,
-    category: params.category
+    category: params.category,
+    projection: params.projection
   });
 }
 
