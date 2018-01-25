@@ -34,6 +34,7 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 28. Leaders can add/remove leadership status
 29. Leaders can add/remove financial reports
 30. Leaders can archive old scores
+31. Leaders can view/edit sign in code
 
 ## Environment Variables
 - FIREBASE_PROJECT_ID

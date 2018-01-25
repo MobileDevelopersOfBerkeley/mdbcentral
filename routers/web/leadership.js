@@ -13,6 +13,7 @@ const paymentRequestLogic = require("../../logic/PaymentRequests.js");
 const finReportLogic = require("../../logic/FinReports.js");
 const semesterStartLogic = require("../../logic/SemesterStart.js");
 const canSignUpLogic = require("../../logic/CanSignUp.js");
+const signInCodeLogic = require("../../logic/SignInCode.js");
 
 // HELPERS
 function _roleIdsToString(roles, roleIds) {
@@ -42,6 +43,10 @@ router.get("/leadership", function(req, res) {
     var totalRoles = {};
     var userLines = {};
     var total = 0;
+
+    plist.push(signInCodeLogic.get().then(function(code) {
+      data.code = code;
+    }));
 
     plist.push(canSignUpLogic.get().then(function(bool) {
       data.canSignUp = bool;
