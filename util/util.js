@@ -77,9 +77,10 @@ function formatLineData(...dataList) {
   return [xVals, yVals];
 }
 
-function timeToString(time, short) {
+function timeToString(time, short, long) {
   var d = new Date();
   d.setTime(time);
+  if (long) return d.toLocaleString();
   return dateToString(d, short);
 }
 

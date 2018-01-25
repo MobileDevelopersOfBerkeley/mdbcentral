@@ -5,6 +5,7 @@ const helper = require("../helper.js");
 const memberLogic = require("../../logic/Members.js");
 const paymentRequestLogic = require("../../logic/PaymentRequests.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
+const eventLogic = require("../../logic/Events.js");
 
 // METHODS
 router.get("/", function(req, res) {
@@ -47,11 +48,13 @@ router.get("/home", function(req, res) {
       data.role = role;
     }));
 
-    // TODO: implement this w/o Welcome API
-    // plist.push(welcomeLogic.getEvent().then(function(event) {
-    //   data.event = event.title || event.summary;
-    //   data.eventId = event.id;
-    // }));
+    plist.push(eventLogic.getByToday().then(function(event) {
+      data.event = event.title;
+      data.eventId = event._key;
+    }).catch(function(error) {
+      data.event = null;
+      data.eventId = null;
+    }));
 
     // TODO: implement this w/o Welcome API
     // plist.push(welcomeLogic.listAbsences({

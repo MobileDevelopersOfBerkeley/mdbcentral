@@ -14,7 +14,7 @@
           <%- JSON.stringify(graph.yData) %>
         );
     <% } %>
-    loadGCal();
+    loadGCal(<%- JSON.stringify(events) %>);
     showPDF('.pdf');
     <% if (currPage == "login") { %>
     setupStripeInput("signUpForm", "signUpForm-card", "signUpForm-errors", signup);

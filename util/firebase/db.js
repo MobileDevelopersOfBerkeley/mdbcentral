@@ -15,6 +15,7 @@ refs.expectedAbsenceRef = rootRef.child("ExpectedAbsences");
 refs.feedbackRef = rootRef.child("Feedback");
 refs.paymentRequestRef = rootRef.child("PaymentRequests");
 refs.finReportRef = rootRef.child("FinReports");
+refs.eventsRef = rootRef.child("Events");
 refs.semesterStartRef = rootRef.child("semesterStart");
 refs.canSignUpRef = rootRef.child("canSignUp");
 refs.signInCodeRef = rootRef.child("signInCode");

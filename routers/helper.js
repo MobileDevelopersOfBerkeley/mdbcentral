@@ -2,6 +2,7 @@
 const util = require("../util/util.js");
 const rolesLogic = require("../logic/Roles.js");
 const memberLogic = require("../logic/Members.js");
+const eventLogic = require("../logic/Events.js");
 
 // HELPERS
 function _getLiTag(currPage) {
@@ -62,6 +63,9 @@ function genData(currPage, uid) {
       data.firstname = _getFirstName(user.name);
       data.leadership = user.leadership === true;
       data.user = user;
+      return eventLogic.getAll();
+    }).then(function(events) {
+      data.events = events;
       return data;
     });
   });

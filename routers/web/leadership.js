@@ -11,6 +11,7 @@ const feedbackLogic = require("../../logic/Feedback.js");
 const githubCacheLogic = require("../../logic/GithubCache.js");
 const paymentRequestLogic = require("../../logic/PaymentRequests.js");
 const finReportLogic = require("../../logic/FinReports.js");
+const eventLogic = require("../../logic/Events.js");
 const semesterStartLogic = require("../../logic/SemesterStart.js");
 const canSignUpLogic = require("../../logic/CanSignUp.js");
 const signInCodeLogic = require("../../logic/SignInCode.js");
@@ -44,6 +45,12 @@ router.get("/leadership", function(req, res) {
     var userLines = {};
     var total = 0;
 
+    plist.push(eventLogic.getByToday().then(function(event) {
+      data.closestEventId = event._key
+    }).catch(function(error) {
+      data.closestEventId = null;
+    }));
+
     plist.push(signInCodeLogic.get().then(function(code) {
       data.code = code;
     }));
@@ -54,21 +61,11 @@ router.get("/leadership", function(req, res) {
 
     plist.push(semesterStartLogic.get().then(function(semesterStart) {
       data.semesterStart = semesterStart;
-      // TODO: implement this w/o Welcome API
-      return Promise.resolve([]);
-      // return welcomeLogic.getEventsSoFar(semesterStart);
-    }).then(function(events) {
-      data.events = events;
     }));
 
     plist.push(paymentRequestLogic.getAll().then(function(requests) {
       data.requests = requests;
     }));
-
-    // TODO: implement this w/o Welcome API
-    // plist.push(welcomeLogic.getEvent().then(function(event) {
-    //   data.closestEventId = event.id;
-    // }))
 
     plist.push(feedbackLogic.getAll().then(function(feedbacks) {
       data.feedbacks = feedbacks;

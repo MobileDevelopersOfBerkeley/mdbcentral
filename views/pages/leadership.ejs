@@ -237,6 +237,82 @@
             </div>
         </div>
         <div class="row">
+          <div class="col-md-6">
+              <div class="card">
+                  <div class="header">
+                      <h4 class="title">Create Event</h4>
+                      <p class="category pull-left">Create events for the semester here</p>
+                  </div>
+                  <div class="content">
+                    <form action="/events" method="post">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="form-group">
+                                      <label>Title</label>
+                                      <input required type="text" class="form-control" placeholder="Hackshop #1" value="" name="title">
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Start Date</label>
+                                      <input required type="text" class="form-control" placeholder="1/17/17" value="" name="startDate">
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Start Time</label>
+                                      <input required type="text" class="form-control" placeholder="08:03 AM" value="" name="startTime">
+                                  </div>
+                                  <div class="form-group">
+                                      <label>End Date</label>
+                                      <input required type="text" class="form-control" placeholder="1/17/17" value="" name="endDate">
+                                  </div>
+                                  <div class="form-group">
+                                      <label>End Time</label>
+                                      <input required type="text" class="form-control" placeholder="09:03 AM" value="" name="endTime">
+                                  </div>
+                              </div>
+                          </div>
+                          <button type="submit" class="btn btn-info btn-fill pull-right">Create</button>
+                          <div class="clearfix"></div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Events</h4>
+                        <p class="category pull-left">View of all events</p>
+                        <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('events')" id="eventsToggle">Hide</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>End Time</th>
+                                <th>Delete?</th>
+                            </thead>
+                            <tbody id="events">
+                                <% for (var i = 0; i < events.length; i++) { %>
+                                  <% var event = events[i]; %>
+                                  <tr>
+                                    <td><%- event.title %></td>
+                                    <td><%- timeToString(event.timestamp, false, true) %></td>
+                                    <td><%- timeToString(event.endTimestamp, false, true) %></td>
+                                    <td>
+                                      <form action="/events/<%- event._key %>" method="post">
+                                        <button style="margin-left: 10px" type="submit">
+                                          <i class="fa fa-trash"></i>
+                                        </button>
+                                      </form>
+                                    </td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="header">

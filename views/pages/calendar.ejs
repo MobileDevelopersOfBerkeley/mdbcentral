@@ -31,12 +31,12 @@
                                         <select form="expectedAbsenceForm" name="eventId" class="form-control" required>
                                           <% for(var i = 0; i < events.length; i++) { %>
                                             <% var event = events[i]; %>
-                                            <% if (event.id == closestEventId) { %>
-                                                <option value="<%- event.id %>" selected="1">
+                                            <% if (event._key == closestEventId) { %>
+                                                <option value="<%- event._key %>" selected="1">
                                             <% } else { %>
-                                                <option value="<%- event.id %>">
+                                                <option value="<%- event._key %>">
                                             <% } %>
-                                            <%- event.title || event.summary %>
+                                            <%- event.title %>
                                             </option>
                                           <% } %>
                                         </select>
@@ -68,12 +68,12 @@
                                         <select form="feedbackForm" name="eventId" class="form-control" required>
                                           <% for(var i = 0; i < events.length; i++) { %>
                                             <% var event = events[i]; %>
-                                            <% if (event.id == closestEventId) { %>
-                                                <option value="<%- event.id %>" selected="1">
+                                            <% if (event._key == closestEventId) { %>
+                                                <option value="<%- event._key %>" selected="1">
                                             <% } else { %>
-                                                <option value="<%- event.id %>">
+                                                <option value="<%- event._key %>">
                                             <% } %>
-                                            <%- event.title || event.summary %>
+                                            <%- event.title %>
                                             </option>
                                           <% } %>
                                         </select>
