@@ -419,6 +419,38 @@
           <div class="col-md-12">
             <div class="card">
                 <div class="header">
+                    <h4 class="title">Attendance Overview</h4>
+                    <p class="category pull-left">View of attendance summary for each member</p>
+                    <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('attendance')" id="attendanceToggle">Hide</p>
+                </div>
+                <div class="content table-responsive table-full-width">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                          <th>Profile</th>
+                          <th>Member</th>
+                          <th>Attendances</th>
+                          <th>Absences</th>
+                        </thead>
+                        <tbody id="attendance">
+                          <% for (var i = 0; i < members.length; i++) { %>
+                            <% var member = members[i]; %>
+                            <tr>
+                              <td><img src="<%- member.profileImage %>" class="image-circle"></td>
+                              <td><%- member.name %></td>
+                              <td><%- attendanceData[member._key].signIns.length %></td>
+                              <td><%- attendanceData[member._key].absences.length %></td>
+                            </tr>
+                          <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+                <div class="header">
                     <h4 class="title">Payments</h4>
                     <p class="category pull-left">View of all payment requests made</p>
                     <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('payment')" id="paymentToggle">Hide</p>

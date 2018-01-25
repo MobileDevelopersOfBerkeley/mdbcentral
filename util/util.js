@@ -1,9 +1,17 @@
 // DEPENDENCIES
 const regression = require("regression");
+const stringSimilarity = require("string-similarity");
 
 // PROTOTYPES
 String.prototype.includes = function(str) {
   return this.indexOf(str) >= 0;
+}
+
+String.prototype.similar = function(str) {
+  var me = this.toLowerCase();
+  var other = str.toLowerCase();
+  if (me.startsWith(other) || me.endsWith(other)) return true;
+  return stringSimilarity.compareTwoStrings(me, other) >= .7;
 }
 
 // METHODS

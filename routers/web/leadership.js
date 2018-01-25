@@ -15,6 +15,7 @@ const eventLogic = require("../../logic/Events.js");
 const semesterStartLogic = require("../../logic/SemesterStart.js");
 const canSignUpLogic = require("../../logic/CanSignUp.js");
 const signInCodeLogic = require("../../logic/SignInCode.js");
+const signInLogic = require("../../logic/SignIns.js");
 
 // HELPERS
 function _roleIdsToString(roles, roleIds) {
@@ -44,6 +45,10 @@ router.get("/leadership", function(req, res) {
     var totalRoles = {};
     var userLines = {};
     var total = 0;
+
+    plist.push(signInLogic.getAllAttendance().then(function(x) {
+      data.attendanceData = x;
+    }));
 
     plist.push(eventLogic.getByToday().then(function(event) {
       data.closestEventId = event._key

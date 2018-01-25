@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
+const util = require("../util/util.js");
 const eventLogic = require("../logic/Events.js");
 const memberLogic = require("../logic/Members.js");
 
@@ -12,6 +13,49 @@ function create(params) {
     eventId: params.eventId,
     member: params.member,
     code: params.code
+  });
+}
+
+function getAttendanceByEvent(params) {
+  return eventLogic.getAll().then(function(events) {
+    var eList = events.filter(function(event) {
+      return event.title.similar(params.title);
+    });
+    if (eList.length == 0) return Promise.reject(new Error(
+      "no event with title similar to " + params.title));
+    var eventKey = events[0]._key;
+    return getAllAttendance().then(function(data) {
+      Object.keys(data).forEach(function(member) {
+        var dat = data[member];
+        var signIns = dat.signIns;
+        var absences = dat.absences;
+        data[member] = {
+          signIns: signIns.filter(function(signIn) {
+            return eventKey == signIn.eventId;
+          }),
+          absences: absences.filter(function(event) {
+            return eventKey == event._key;
+          })
+        };
+      });
+      return data;
+    });
+  });
+}
+
+function getAttendanceByName(params) {
+  return memberLogic.getAll().then(function(members) {
+    var mList = members.filter(function(member) {
+      return member.name.similar(params.name);
+    });
+    if (mList.length == 0) return Promise.reject(new Error(
+      "no member with name similar to " + params.name));
+    var member = members[0]._key;
+    return getAllAttendance().then(function(data) {
+      var x = {};
+      x[member] = data[member];
+      return x;
+    });
   });
 }
 
@@ -51,3 +95,5 @@ function getAllAttendance() {
 // EXPORTS
 module.exports.create = create;
 module.exports.getAllAttendance = getAllAttendance;
+module.exports.getAttendanceByEvent = getAttendanceByEvent;
+module.exports.getAttendanceByName = getAttendanceByName;
