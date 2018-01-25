@@ -5,6 +5,7 @@ const util = require("../util.js");
 // REFS
 const rootRef = firebase.database().ref();
 const refs = {};
+refs.signInRef = rootRef.child("SignIns");
 refs.memberRef = rootRef.child("Members");
 refs.githubCacheRef = rootRef.child("GithubCache");
 refs.bigLittleRef = rootRef.child("BigLittleContest");

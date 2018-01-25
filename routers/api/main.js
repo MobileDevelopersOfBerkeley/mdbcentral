@@ -13,9 +13,11 @@ const eventRouter = require("./events.js");
 const semesterStartRouter = require("./semesterStart.js");
 const canSignUpRouter = require("./canSignUp.js");
 const signInCodeRouter = require("./signInCode.js");
+const signInRouter = require("./signIns.js");
 
 // ROUTES
 router.use(slackRouter);
+router.use(signInRouter);
 router.use(expectedAbsencesRouter);
 router.use(feedbackRouter);
 router.use(usersRouter);

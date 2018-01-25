@@ -34,6 +34,7 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 28. Leaders can view/edit sign in code
 29. Leaders can edit events happening during the semester
 30. Users can view events in a calendar view
+31. Users can sign in to events
 
 ## Environment Variables
 - FIREBASE_PROJECT_ID

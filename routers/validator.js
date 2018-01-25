@@ -4,8 +4,11 @@ const isUrl = require('is-url');
 const fs = require("fs");
 const dbUtil = require("../util/firebase/db.js");
 const canSignUp = require("../logic/CanSignUp.js").get;
+const util = require("../util/util.js");
 const githubUtil = require("../util/github.js");
 const memberLogic = require("../logic/Members.js");
+const signInCodeLogic = require("../logic/SignInCode.js");
+const eventLogic = require("../logic/Events.js");
 const config = require("../config.json");
 
 // HELPERS
@@ -17,6 +20,8 @@ function _promiseBoolTrue(fn) {
       } else {
         reject();
       }
+    }).catch(function(error) {
+      reject();
     });
   });
 }
@@ -24,6 +29,31 @@ function _promiseBoolTrue(fn) {
 // EXPORTS
 module.exports = expressValidator({
   customValidators: {
+    codeIsCorrect: function(param) {
+      return _promiseBoolTrue(function() {
+        return signInCodeLogic.get().then(function(code) {
+          return code == param;
+        });
+      });
+    },
+    eventHappening: function(param) {
+      return _promiseBoolTrue(function() {
+        return eventLogic.getByToday().then(function(event) {
+          var startDate = new Date();
+          startDate.setTime(event.timestamp);
+          var today = new Date();
+          return !util.differentDay(today, startDate) && today.getTime() <=
+            event.endTimestamp;
+        });
+      });
+    },
+    codeIsSet: function(param) {
+      return _promiseBoolTrue(function() {
+        return signInCodeLogic.get().then(function(code) {
+          return code != "" && code.length > 0;
+        });
+      });
+    },
     isLeadership: function(param) {
       return _promiseBoolTrue(function() {
         return memberLogic.isLeadership({
