@@ -2,13 +2,6 @@ function _setCookie(name, val) {
   document.cookie = name + "=" + val + "; path=/";
 }
 
-function signin() {
-  var code = $("#code").val().trim();
-  // TODO: implement this w/o Welcome API
-  alert("SHREYA PLZ IMPLEMENT ME!!!");
-  // window.location.href = "http://legacy-dashboard.welcomeme.io/signin/" + code;
-}
-
 function logout() {
   firebase.auth().signOut().then(function() {
     _setCookie("member", "");

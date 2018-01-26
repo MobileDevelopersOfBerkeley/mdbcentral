@@ -2,6 +2,7 @@
 const dbUtil = require("../util/firebase/db.js");
 const util = require("../util/util.js");
 const memberLogic = require("./Members.js");
+const eventLogic = require("./Events.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.expectedAbsenceRef;
@@ -44,19 +45,17 @@ function create(params) {
         "you have already submitted an expected absence for this event"
       ))
     }
-    // TODO: implement this w/o Welcome API
-    return Promise.reject(new Error("SHREYA PLZ IMPLEMENT ME"));
-    // return welcomeLogic.getById({
-    //   id: params.eventId
-    // }).then(function(event) {
-    //   return dbUtil.createNewObjectByAutoId(ref, {
-    //     id: params.eventId,
-    //     reason: params.reason,
-    //     member: params.member,
-    //     timestamp: new Date().getTime(),
-    //     title: event.title || event.summary
-    //   });
-    // });
+    return eventLogic.getById({
+      id: params.eventId
+    }).then(function(event) {
+      return dbUtil.createNewObjectByAutoId(ref, {
+        id: params.eventId,
+        reason: params.reason,
+        member: params.member,
+        timestamp: new Date().getTime(),
+        title: event.title
+      });
+    });
   });
 }
 

@@ -1,6 +1,7 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase/db.js");
 const memberLogic = require("./Members.js");
+const eventLogic = require("./Events.js");
 
 // CONSTANTS
 const ref = dbUtil.refs.feedbackRef;
@@ -25,19 +26,17 @@ function getAll() {
 }
 
 function create(params) {
-  // TODO: implement this w/o Welcome API
-  return Promise.reject(new Error("SHREYA PLZ IMPLEMENT ME"));
-  // return getEventById({
-  //   id: params.eventId
-  // }).then(function(event) {
-  //   return dbUtil.createNewObjectByAutoId(ref, {
-  //     id: params.eventId,
-  //     title: event.title || event.summary,
-  //     timestamp: new Date().getTime(),
-  //     member: params.member,
-  //     response: params.response
-  //   });
-  // });
+  return eventLogic.getById({
+    id: params.eventId
+  }).then(function(event) {
+    return dbUtil.createNewObjectByAutoId(ref, {
+      id: params.eventId,
+      title: event.title,
+      timestamp: new Date().getTime(),
+      member: params.member,
+      response: params.response
+    });
+  });
 }
 
 // EXPORTS

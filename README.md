@@ -4,36 +4,37 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 
 ## Features
 
-1. Leaders can track attendnace via legacy welcome dashboard (http://legacy-dashboard.welcomeme.io)
-2. Mdbot slack bot: handles big little program points and leaderboard, also fun bot to chat with on #random
-3. Users sign in via legacy welcome api
-4. Users can see attendance overview
-5. Users can see useful links to mdb resources (top nav bar)
-6. Users can edit profile info
-7. Users can see calendar of all events via Google Calendar API
-8. Users cans submit expected absences
-9. Users can submit feedback
-10. Users can view scored assignments
-11. Users can see membership handbook and bunches of other helpful docs
-12. Leaders can see analytics on user metadata
-13. Leaders can set scores and create assignments w/ links to documentation
-14. Leaders can view expected absences
-15. Leaders can view assignments and scores
-16. Leaders can view feedback
-17. Users can submit reimbursement requests
-18. Users can see all payment history (incoming and outgoing)
-19. Users can approve charge requests
-20. Users can edit payment info at any time (secured via stripe and HTTPS)
-21. Leaders can toggle a master switch to allow users to signup
-22. Leaders can set the date the semester starts for the club
-23. Leaders can create charge requests
-24. Leaders can see all payment history for the whole club (including receipts of reimbursement requests)
-25. Users can see balance over time of the club bank
-26. Leaders can use GET route to run analysis on financial reports
-27. Users can see spending, future spending, and projected spending over time
-28. Leaders can add/remove leadership status
-29. Leaders can add/remove financial reports
-30. Leaders can archive old scores
+1. Mdbot slack bot: handles big little program points and leaderboard, also fun bot to chat with on #random
+2. Users can see attendance overview
+3. Users can see useful links to mdb resources (top nav bar)
+4. Users can edit profile info
+5. Users cans submit expected absences
+6. Users can submit feedback
+7. Users can view scored assignments
+8. Users can see membership handbook and bunches of other helpful docs
+9. Leaders can see analytics on user metadata
+10. Leaders can set scores and create assignments w/ links to documentation
+11. Leaders can view expected absences
+12. Leaders can view assignments and scores
+13. Leaders can view feedback
+14. Users can submit reimbursement requests
+15. Users can see all payment history (incoming and outgoing)
+16. Users can approve charge requests
+17. Users can edit payment info at any time (secured via stripe and HTTPS)
+18. Leaders can toggle a master switch to allow users to signup
+19. Leaders can set the date the semester starts for the club
+20. Leaders can create charge requests
+21. Leaders can see all payment history for the whole club (including receipts of reimbursement requests)
+22. Users can see balance over time of the club bank
+23. Leaders can use GET route to run analysis on financial reports
+24. Users can see spending, future spending, and projected spending over time
+25. Leaders can add/remove leadership status
+26. Leaders can add/remove financial reports
+27. Leaders can archive old scores
+28. Leaders can view/edit sign in code
+29. Leaders can edit events happening during the semester
+30. Users can view events in a calendar view
+31. Users can sign in to events
 
 ## Environment Variables
 - FIREBASE_PROJECT_ID
