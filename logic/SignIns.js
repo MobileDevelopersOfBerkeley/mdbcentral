@@ -9,10 +9,12 @@ const ref = dbUtil.refs.signInRef;
 
 // METHODS
 function create(params) {
-  return dbUtil.createNewObjectByAutoId(ref, {
-    eventId: params.eventId,
-    member: params.member,
-    code: params.code
+  return eventLogic.getByToday().then(function(event) {
+    return dbUtil.createNewObjectByAutoId(ref, {
+      eventId: event._key,
+      member: params.member,
+      code: params.code
+    });
   });
 }
 

@@ -77,8 +77,11 @@ router.get("/home", function(req, res) {
         var signin = data.signins[i];
         signin.type = "Attended";
         var date = new Date();
-        date.setTime(signin.timestamp);
+        date.setTime(signin.lastUpdated);
         signin.date = util.dateToString(date);
+        signin.title = data.events.filter(function(event) {
+          return signin.eventId == event._key;
+        })[0].title;
         attendances.push(signin);
       }
       for (var i = 0; i < data.absences.length; i++) {
@@ -92,9 +95,13 @@ router.get("/home", function(req, res) {
       for (var i = 0; i < data.expectedAbsences.length; i++) {
         var expectedAbsence = data.expectedAbsences[i];
         expectedAbsence.type = "Expected Absent";
+        var event = data.events.filter(function(event) {
+          return event._key == expectedAbsence.id;
+        });
         var date = new Date();
-        date.setTime(expectedAbsence.timestamp);
+        date.setTime(event.timestamp);
         expectedAbsence.date = util.dateToString(date);
+        expectedAbsence.title = event.title;
         attendances.push(expectedAbsence);
       }
       data.absencesLeft = absencesLeft;

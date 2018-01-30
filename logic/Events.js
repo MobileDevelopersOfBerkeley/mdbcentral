@@ -33,9 +33,8 @@ function getByToday() {
     var data = events.reduce(function(tuple, currE) {
       var e = tuple[0];
       var diff = tuple[1];
-      if (!e) return [currE, diff];
-      var currDiff = Math.abs(event.timestamp - today);
-      if (currDiff < diff) return [currE, currDiff];
+      var currDiff = Math.abs(currE.timestamp - today);
+      if (!e || currDiff < diff) return [currE, currDiff];
       return tuple;
     }, [null, Number.MAX_VALUE]);
     if (data[0] != null) return data[0];
