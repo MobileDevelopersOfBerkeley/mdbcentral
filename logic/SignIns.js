@@ -77,7 +77,10 @@ function getAllAttendance() {
     members.forEach(function(member) {
       member = member._key;
       var sList = signIns.filter(function(signIn) {
-        return signIn.member == member;
+        var e = events.filter(function(event) {
+          return event._key == signIn.eventId;
+        });
+        return signIn.member == member && e.length > 0;
       });
       var attendedEKeyList = sList.map(function(signIn) {
         return signIn.eventId;
