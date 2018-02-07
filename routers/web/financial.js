@@ -3,6 +3,9 @@ const router = require("express").Router();
 const util = require("../../util/util.js");
 const helper = require("../helper.js");
 const finReportLogic = require("../../logic/FinReports.js");
+const githubCacheLogic = require("../../logic/GithubCache.js");
+const memberLogic = require("../../logic/Members.js");
+const rolesLogic = require("../../logic/Roles.js");
 
 // METHODS
 router.get("/financial", function(req, res) {
@@ -105,7 +108,118 @@ router.get("/financial", function(req, res) {
         xData: d[0],
         yData: d[1]
       })
-      res.render("index", data);
+      return githubCacheLogic.getUserLines().then(function(
+        userLiness) {
+        userLines = userLiness || {};
+        return memberLogic.getAll();
+      }).then(function(mList) {
+        members = mList || [];
+        members.forEach(function(member) {
+          for (var username in userLines) {
+            if (member.githubUsername == username) {
+              member.totalLines = userLines[username];
+              break;
+            }
+          }
+        });
+
+        data.members = members;
+        total = members.length;
+
+        var totalYears = {};
+        var totalMajors = {};
+        totalRoles = {};
+        members.forEach(function(member) {
+          if (member.year in totalYears)
+            totalYears[member.year] += 1;
+          else totalYears[member.year] = 1;
+          if (member.roleId in totalRoles)
+            totalRoles[member.roleId] += 1;
+          else totalRoles[member.roleId] = 1;
+          var major = member.major.trim().toLowerCase();
+          var majors = [];
+          if (major.includes(",")) {
+            majors = major.split(",");
+          } else if (major.includes("/")) {
+            majors = major.split("/");
+          } else if (major.includes("+")) {
+            majors = major.split("+");
+          } else {
+            majors.push(major);
+          }
+          majors.forEach(function(major) {
+            major = major.trim();
+            if (major.includes("electric")) major =
+              "eecs";
+            else if (major.includes("computer science"))
+              major = "cs";
+            else if (major.includes("business")) major =
+              "business";
+            else if (major.includes("engineering"))
+              major =
+              "engineering";
+            else if (major.includes("math") || major.includes(
+                "stat"))
+              major = "math";
+            if (major in totalMajors) totalMajors[major] +=
+              1;
+            else totalMajors[major] = 1;
+          });
+        });
+
+        var d = util.genPieData(totalYears, true);
+        data.graphs.push({
+          elementId: "year_pie",
+          type: "pie",
+          xData: d[0],
+          yData: d[1]
+        })
+        d = util.genPieData(totalMajors);
+        data.graphs.push({
+          elementId: "major_pie",
+          type: "pie",
+          xData: d[0],
+          yData: d[1]
+        });
+        return rolesLogic.get();
+      }).then(function(roles) {
+        data.roles = roles;
+        var formattedTotalRoles = {
+          "Leaders": 0,
+          "DevCore": 0,
+          "Web": 0,
+          "Market": 0,
+          "Explor": 0
+        };
+        for (var roleId in totalRoles) {
+          var roleName = roles[roleId].title;
+          var num = totalRoles[roleId];
+          if (roleName.includes("VP") || roleName.includes(
+              "Director") ||
+            roleName.includes("President") || roleName.includes(
+              "Advisor"))
+            formattedTotalRoles["Leaders"] += num;
+          else if (roleName.includes("Android") || roleName.includes(
+              "iOS") ||
+            roleName.includes("Contract"))
+            formattedTotalRoles["DevCore"] += num;
+          else if (roleName.includes("Web"))
+            formattedTotalRoles["Web"] += num;
+          else if (roleName.includes("Market"))
+            formattedTotalRoles["Market"] += num;
+          else if (roleName.includes("Explor"))
+            formattedTotalRoles["Explor"] += num;
+        }
+        var d = util.genPieData(formattedTotalRoles, true);
+        data.graphs.push({
+          elementId: "role_pie",
+          type: "pie",
+          xData: d[0],
+          yData: d[1]
+        })
+      }).then(function() {
+        res.render("index", data);
+      });
     });
   });
 });

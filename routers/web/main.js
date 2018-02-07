@@ -8,9 +8,11 @@ const leadershipRouter = require("./leadership.js");
 const loginRouter = require("./login.js");
 const policiesRouter = require("./policies.js");
 const profileRouter = require("./profile.js");
+const attendanceRouter = require("./attendance.js");
 
 // ROUTES
 router.use(assignmentRouter);
+router.use(attendanceRouter);
 router.use(calendarRouter);
 router.use(financialRouter);
 router.use(homeRouter);

@@ -6,6 +6,7 @@ const memberLogic = require("../../logic/Members.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
 const eventLogic = require("../../logic/Events.js");
 const signInLogic = require("../../logic/SignIns.js");
+const canSignUpLogic = require("../../logic/CanSignUp.js");
 
 // METHODS
 router.get("/", function(req, res) {
@@ -28,6 +29,9 @@ router.get("/home", function(req, res) {
     var plist = [];
     var num_expected;
 
+    plist.push(canSignUpLogic.get().then(function(bool) {
+      data.canSignUp = bool;
+    }));
     plist.push(expectedAbsencesLogic.getByUid({
       member: id
     }).then(function(expectedAbsences) {

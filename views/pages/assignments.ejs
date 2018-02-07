@@ -31,5 +31,160 @@
                 </div>
             </div>
         </div>
+        <% if (leadership) { %>
+        <div class="row">
+          <div class="col-md-6">
+              <div class="card">
+                  <div class="header">
+                      <h4 class="title">Set Scores</h4>
+                      <p class="category">Form for instructors/graders to set scores for assignments</p>
+                  </div>
+                  <div class="content">
+                      <form action="/scores" method="post" id="scoresForm">
+                          <div class="row">
+                              <div class="col-md-12">
+                                  <div class="form-group">
+                                      <label>Member</label>
+                                      <select form="scoresForm" name="memberId" required>
+                                          <% for (var i = 0; i < members.length; i++) { %>
+                                            <% var user = members[i]; %>
+                                            <option value="<%- user._key %>"><%- user.name %></option>
+                                          <% } %>
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Assignment</label>
+                                      <select form="scoresForm" name="assignmentId" required>
+                                        <% for (var i = 0; i < assignments.length; i++) { %>
+                                          <% var assignment = assignments[i]; %>
+                                          <option value="<%- assignment._key %>"><%- assignment.name %></option>
+                                        <% } %>
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Score</label>
+                                      <input required type="text" class="form-control" placeholder="10/10" value="" name="score">
+                                  </div>
+                              </div>
+                          </div>
+                          <button type="submit" class="btn btn-info btn-fill pull-right">Set</button>
+                          <div class="clearfix"></div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Create Assignments</h4>
+                    <p class="category">Form for instructors/graders to create assignments</p>
+                </div>
+                <div class="content">
+                    <form action="/assignments" method="post" id="assignmentsForm">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Due</label>
+                                    <input required type="text" class="form-control" placeholder="1/17/17" value="" name="due">
+                                </div>
+                                <div class="form-group">
+                                    <label>Documentation Link</label>
+                                    <input required type="text" class="form-control" placeholder="http://google.com" value="" name="link">
+                                </div>
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input required type="text" class="form-control" placeholder="Android Mini Proj 1" value="" name="name">
+                                </div>
+                                <div class="form-group">
+                                    <select form="assignmentsForm" required multiple class="form-control" name="roleIds">
+                                      <% for (var i = 0; i < roles.length; i++) { %>
+                                        <% var role = roles[i]; %>
+                                        <option value="<%- i %>"><%- role.title %></option>
+                                      <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-info btn-fill pull-right">Create</button>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Assignment Overview</h4>
+                        <p class="category pull-left">View of all assignments created</p>
+                        <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('assignments')" id="assignmentsToggle">Hide</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Due</th>
+                                <th>Link</th>
+                                <th>Roles</th>
+                            </thead>
+                            <tbody id="assignments">
+                                <% for (var i = 0; i < assignments.length; i++) { %>
+                                  <% var assignment = assignments[i]; %>
+                                  <tr>
+                                    <td><%- assignment.name %></td>
+                                    <td><%- assignment.due %></td>
+                                    <td><a href="<%- assignment.link %>" target="_blank"><%- assignment.link %></a></td>
+                                    <td><%- roleIdsToString(roles, assignment.roleIds) %></td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Score Overview</h4>
+                        <p class="category pull-left">View of scores for all assignments for all members</p>
+                        <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('scores')" id="scoresToggle">Hide</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Assignment Name</th>
+                                <th>Member Name</th>
+                                <th>Score</th>
+                                <th>Due</th>
+                                <th>Archive</th>
+                            </thead>
+                            <tbody id="scores">
+                                <% for (var i = 0; i < allscores.length; i++) { %>
+                                  <% var score = allscores[i]; %>
+                                  <tr>
+                                    <td><%- score.assignment_name %></td>
+                                    <td><%- score.member_name %></td>
+                                    <td><%- score.score %></td>
+                                    <td><%- score.due %></td>
+                                    <td>
+                                      <form action="/scores/<%- score._key %>" method="post">
+                                        <input type="hidden" name="archive" value="true">
+                                        <button style="margin-left: 10px" type="submit">
+                                          <i class="fa fa-archive"></i>
+                                        </button>
+                                      </form>
+                                    </td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
     </div>
 </div>
