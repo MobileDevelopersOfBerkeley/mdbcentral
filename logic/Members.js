@@ -165,7 +165,23 @@ function getMaxAbsences(params) {
 }
 
 function deleteById(params) {
-  return Promise.reject(new Error("TESTING"));
+  function deleteByMember(ref, field) {
+    return dbUtil.getAll(ref).then(function(aList) {
+      return Promise.all(aList.map(function(a) {
+        if (a[field] == params.id)
+          return dbUtil.remove(ref, a._key);
+        return Promise.resolve(true);
+      }));
+    });
+  }
+  return dbUtil.remove(ref, params.id).then(function() {
+    return Promise.all([
+      deleteByMember(dbUtil.refs.expectedAbsenceRef, "member"),
+      deleteByMember(dbUtil.refs.feedbackRef, "member"),
+      deleteByMember(dbUtil.refs.scoreRef, "member"),
+      deleteByMember(dbUtil.refs.signInRef, "member")
+    ]);
+  });
 }
 
 // EXPORTS
