@@ -3,23 +3,11 @@ const storageUtil = require("../util/firebase/storage.js");
 const dbUtil = require("../util/firebase/db.js");
 const authUtil = require("../util/firebase/auth.js");
 const githubUtil = require("../util/github.js");
-const stripeUtil = require("../util/stripe.js");
 const getGithubCache = require("./GithubCache.js").get;
 const getRoleByUid = require("./Roles.js").getByUid;
 
 // CONSTANTS
 const ref = dbUtil.refs.memberRef;
-
-// HELPERS
-function _setupAccount(stripeToken) {
-  var accountId;
-  return stripeUtil.createAccount().then(function(accId) {
-    accountId = accId;
-    return stripeUtil.updateAccountCard(accountId, stripeToken);
-  }).then(function() {
-    return accountId;
-  });
-}
 
 // METHODS
 function isLeadership(params) {
@@ -77,10 +65,7 @@ function create(params) {
         photoURL: url
       });
     }).then(function() {
-      if (params.stripeToken)
-        return _setupAccount(params.stripeToken);
-    }).then(function(accountId) {
-      var vals = {
+      return dbUtil.createNewObject(ref, {
         name: params.name,
         email: params.email,
         profileImage: url,
@@ -89,9 +74,7 @@ function create(params) {
         roleId: params.roleId,
         newMember: params.newMember,
         githubUsername: params.githubUsername.toLowerCase()
-      };
-      if (accountId) vals.accountId = accountId;
-      return dbUtil.createNewObject(ref, vals, authData.uid);
+      }, authData.uid);
     }).catch(function(error) {
       if (!authData) return Promise.reject(error);
       return authUtil.deleteAuthAccount(authData.uid).then(function() {
@@ -146,18 +129,6 @@ function update(params) {
     }));
   }
 
-  plist.push(dbUtil.getByKey(ref, params.member).then(function(member) {
-    if (member.accountId && params.stripeToken)
-      return stripeUtil.updateAccountCard(member.accountId, params.stripeToken);
-    else if (params.stripeToken)
-      return _setupAccount(params.stripeToken)
-        .then(function(accountId) {
-          return dbUtil.updateObject(ref, params.member, {
-            accountId: accountId
-          });
-        });
-  }));
-
   plist.push(dbUtil.updateObject(ref, params.member, {
     name: params.name,
     email: params.email,
@@ -190,36 +161,6 @@ function getMaxAbsences(params) {
         if (!snapshot.exists()) return 0;
         return snapshot.val();
       });
-  });
-}
-
-function charge(params) {
-  return dbUtil.getByKey(ref, params.member).then(function(member) {
-    if (!member.accountId) {
-      return Promise.reject(new Error(
-        "Can't charge user! They have not entered their payment information on mdbcentral yet!"
-      ));
-    }
-    return stripeUtil.charge(member.accountId, params.dollars, params.desc);
-  });
-}
-
-function transfer(params) {
-  return dbUtil.getByKey(ref, params.member).then(function(member) {
-    if (!member.accountId) {
-      return Promise.reject(new Error(
-        "Can't transfer money to user! They have not entered their payment information on mdbcentral yet!"
-      ));
-    }
-    return stripeUtil.transfer(member.accountId, params.dollars, params.type);
-  });
-
-}
-
-function getCardInfo(params) {
-  return dbUtil.getByKey(ref, params.member).then(function(member) {
-    if (!member.accountId) return null;
-    return stripeUtil.getCard(member.accountId);
   });
 }
 

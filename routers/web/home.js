@@ -3,7 +3,6 @@ const router = require("express").Router();
 const util = require("../../util/util.js");
 const helper = require("../helper.js");
 const memberLogic = require("../../logic/Members.js");
-const paymentRequestLogic = require("../../logic/PaymentRequests.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
 const eventLogic = require("../../logic/Events.js");
 const signInLogic = require("../../logic/SignIns.js");
@@ -28,12 +27,6 @@ router.get("/home", function(req, res) {
   }).then(function(member) {
     var plist = [];
     var num_expected;
-
-    plist.push(paymentRequestLogic.getByMember({
-      member: id
-    }).then(function(requests) {
-      data.requests = requests;
-    }));
 
     plist.push(expectedAbsencesLogic.getByUid({
       member: id

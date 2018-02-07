@@ -103,23 +103,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                  <label for="updateForm-card">New credit or debit card</label>
-                                  <div id="updateForm-card"></div>
-                                  <div id="updateForm-errors" role="alert"></div>
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="cardInfo">Card Info</label>
-                                  <% if (!cardInfo) { %>
-                                    <p id="cardInfo"> You have not set your card info yet. </p>
-                                  <% } else { %>
-                                    <p id="cardInfo">Brand: <%- cardInfo.brand %></p>
-                                    <p>Type: <%- cardInfo.funding %></p>
-                                    <p>Last 4: <%- cardInfo.last4 %></p>
-                                  <% } %>
-                                </div>
-                            </div>
                             <button type="submit" class="btn btn-info btn-fill pull-right">Update Profile</button>
                             <div class="clearfix"></div>
                         </form>

@@ -9,7 +9,6 @@ const scoreLogic = require("../../logic/Scores.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
 const feedbackLogic = require("../../logic/Feedback.js");
 const githubCacheLogic = require("../../logic/GithubCache.js");
-const paymentRequestLogic = require("../../logic/PaymentRequests.js");
 const finReportLogic = require("../../logic/FinReports.js");
 const eventLogic = require("../../logic/Events.js");
 const semesterStartLogic = require("../../logic/SemesterStart.js");
@@ -66,10 +65,6 @@ router.get("/leadership", function(req, res) {
 
     plist.push(semesterStartLogic.get().then(function(semesterStart) {
       data.semesterStart = semesterStart;
-    }));
-
-    plist.push(paymentRequestLogic.getAll().then(function(requests) {
-      data.requests = requests;
     }));
 
     plist.push(feedbackLogic.getAll().then(function(feedbacks) {

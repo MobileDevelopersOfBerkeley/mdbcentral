@@ -18,23 +18,20 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 12. Leaders can view assignments and scores
 13. Leaders can view feedback
 14. Users can submit reimbursement requests
-15. Users can see all payment history (incoming and outgoing)
-16. Users can approve charge requests
-17. Users can edit payment info at any time (secured via stripe and HTTPS)
-18. Leaders can toggle a master switch to allow users to signup
-19. Leaders can set the date the semester starts for the club
-20. Leaders can create charge requests
-21. Leaders can see all payment history for the whole club (including receipts of reimbursement requests)
-22. Users can see balance over time of the club bank
-23. Leaders can use GET route to run analysis on financial reports
-24. Users can see spending, future spending, and projected spending over time
-25. Leaders can add/remove leadership status
-26. Leaders can add/remove financial reports
-27. Leaders can archive old scores
-28. Leaders can view/edit sign in code
-29. Leaders can edit events happening during the semester
-30. Users can view events in a calendar view
-31. Users can sign in to events
+15. Users can approve charge requests
+16. Leaders can toggle a master switch to allow users to signup
+17. Leaders can set the date the semester starts for the club
+18. Leaders can create charge requests
+19. Users can see balance over time of the club bank
+20. Leaders can use GET route to run analysis on financial reports
+21. Users can see spending, future spending, and projected spending over time
+22. Leaders can add/remove leadership status
+23. Leaders can add/remove financial reports
+24. Leaders can archive old scores
+25. Leaders can view/edit sign in code
+26. Leaders can edit events happening during the semester
+27. Users can view events in a calendar view
+28. Users can sign in to events
 
 ## Environment Variables
 - FIREBASE_PROJECT_ID
@@ -53,8 +50,6 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 - SLACK_CHANNEL
 - SLACK_TOKEN
 - SLACK_IVP_ID
-- STRIPE_SECRET_KEY
-- STRIPE_PUB_KEY
 - FIREBASE_API_KEY
 - FIREBASE_AUTH_DOMAIN
 - ENV

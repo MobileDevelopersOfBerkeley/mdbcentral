@@ -122,40 +122,6 @@
                         </form>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="header">
-                        <h4 class="title">Create Charge Request</h4>
-                        <p class="category">Send request to members to charge them</p>
-                    </div>
-                    <div class="content">
-                        <form action="/paymentRequests" method="post" id="chargeForm">
-                            <input type="hidden" value="true" name="charge">
-                            <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group">
-                                      <label>Amount ($)</label>
-                                      <input required type="number" step="0.01" class="form-control" placeholder="40.50" value="" name="dollars">
-                                  </div>
-                                  <div class="form-group">
-                                      <label>Message</label>
-                                      <input required type="text" class="form-control" placeholder="Description of the charge" value="" name="message">
-                                  </div>
-                                  <div class="form-group">
-                                      <label>Member</label>
-                                      <select form="chargeForm" name="members" multiple required>
-                                          <% for (var i = 0; i < members.length; i++) { %>
-                                            <% var user = members[i]; %>
-                                            <option value="<%- user._key %>"><%- user.name %></option>
-                                          <% } %>
-                                      </select>
-                                  </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-info btn-fill pull-right">Send</button>
-                            <div class="clearfix"></div>
-                        </form>
-                    </div>
-                </div>
             </div>
             <div class="col-md-6">
               <div class="card">
@@ -485,72 +451,6 @@
                               <td><%- member.name %></td>
                               <td><%- attendanceData[member._key].signIns.length %></td>
                               <td><%- attendanceData[member._key].absences.length %></td>
-                            </tr>
-                          <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card">
-                <div class="header">
-                    <h4 class="title">Payments</h4>
-                    <p class="category pull-left">View of all payment requests made</p>
-                    <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('payment')" id="paymentToggle">Hide</p>
-                </div>
-                <div class="content table-responsive table-full-width">
-                    <table class="table table-hover table-striped">
-                        <thead>
-                          <th>Member</th>
-                          <th>Type</th>
-                          <th>Completed?</th>
-                          <th>Amount ($)</th>
-                          <th>Message</th>
-                          <th>Date</th>
-                          <th>Complete</th>
-                        </thead>
-                        <tbody id="payment">
-                          <% for (var i = 0; i < requests.length; i++) { %>
-                            <% var request = requests[i]; %>
-                            <tr>
-                                <% if (request.members) { %>
-                                  <td><%- getMemberNames(members, request.members) %></td>
-                                <% } else { %>
-                                  <td><%- getMemberName(members, request.member) %></td>
-                                <% } %>
-                                <td><%- request.type %></td>
-                                <% if (request.completed === true) { %>
-                                  <td class="text-success">Yes
-                                <% } else { %>
-                                  <td class="text-danger">No
-                                <% } %>
-                                </td>
-                                <td><%- request.dollars %></td>
-                                <td>
-                                <% if (request.type == "reimbursement") { %>
-                                  <% url = request.imageUrl %>
-                                  <% include ../partials/modal-image %>
-                                <% } %>
-                                <%- request.message %>
-                                </td>
-                                <td><%- timeToString(request.lastUpdated) %></td>
-                                <td>
-                                  <% if (request.completed !== true && request.type == "reimbursement") { %>
-                                    <form action="/paymentRequests/<%- request._key %>" method="post">
-                                      <input type="hidden" name="reimbursement" value="true">
-                                      <button style="margin-left: 10px" type="submit">
-                                        <i class="fa fa-check"></i>
-                                      </button>
-                                    </form>
-                                  <% } else if (request.complete === true) { %>
-                                    No action required.
-                                  <% } else { %>
-                                    Waiting for member approval...
-                                  <% } %>
-                                </td>
                             </tr>
                           <% } %>
                         </tbody>

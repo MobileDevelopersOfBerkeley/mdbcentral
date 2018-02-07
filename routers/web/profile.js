@@ -13,11 +13,6 @@ router.get("/profile", function(req, res) {
   var data;
   helper.genData("profile", member).then(function(d) {
     data = d;
-    return memberLogic.getCardInfo({
-      member: member
-    });
-  }).then(function(card) {
-    data.cardInfo = card;
     res.render("index", data);
   });
 });
