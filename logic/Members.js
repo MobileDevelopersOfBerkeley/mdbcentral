@@ -164,7 +164,12 @@ function getMaxAbsences(params) {
   });
 }
 
+function deleteById(params) {
+  return Promise.reject(new Error("TESTING"));
+}
+
 // EXPORTS
+module.exports.deleteById = deleteById;
 module.exports.removeLeader = removeLeader;
 module.exports.addLeader = addLeader;
 module.exports.isLeadership = isLeadership;

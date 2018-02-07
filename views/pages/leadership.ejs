@@ -442,6 +442,7 @@
                           <th>Member</th>
                           <th>Attendances</th>
                           <th>Absences</th>
+                          <th>Delete?</th>
                         </thead>
                         <tbody id="attendance">
                           <% for (var i = 0; i < members.length; i++) { %>
@@ -451,6 +452,13 @@
                               <td><%- member.name %></td>
                               <td><%- attendanceData[member._key].signIns.length %></td>
                               <td><%- attendanceData[member._key].absences.length %></td>
+                              <td>
+                                <form action="/users/<%- member._key %>" method="post">
+                                  <button style="margin-left: 10px" type="submit">
+                                    <i class="fa fa-trash"></i>
+                                  </button>
+                                </form>
+                              </td>
                             </tr>
                           <% } %>
                         </tbody>
