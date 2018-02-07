@@ -30,7 +30,14 @@ function _doCreate(req, res) {
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
-  return routerUtil.completeRequest(req, res, memberLogic.create);
+  return routerUtil.completeRequest(req, res, function(params) {
+    return memberLogic.create(params).then(function(member) {
+      res.cookie('member', member._key, {
+        maxAge: 900000,
+        httpOnly: false
+      });
+    });
+  }, "/home");
 }
 
 function _doUpdate(req, res) {
@@ -51,7 +58,7 @@ function _doUpdate(req, res) {
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
-  return routerUtil.completeRequest(req, res, memberLogic.update);
+  return routerUtil.completeRequest(req, res, memberLogic.update, "/profile");
 }
 
 // METHODS
