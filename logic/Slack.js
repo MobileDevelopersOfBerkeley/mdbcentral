@@ -4,6 +4,9 @@ var slackUtil = require("../util/slack.js");
 var apiai = require("../util/apiai.js");
 var cleverbot = require("../util/cleverbot.js");
 var bigLittleContestLogic = require("./BigLittleContest.js");
+var jira = require("jira");
+
+// TODO: setup jira module with api keys
 
 // CONSTANTS
 const SLACK_BOT_CHANNEL1 = process.env.SLACK_CHANNEL1;
@@ -145,7 +148,9 @@ function _onMessage(data) {
     tsHits.push(data.ts);
     if (tsHits.length > SLACK_BOT_TS_HIT_LENGTH) tsHits = [];
     data.text = data.text.trim().toLowerCase();
-    if (data.text == "leaderboard") {
+    if (data.type == "???") {
+      _onJIRATask(data);
+    } else if (data.text == "leaderboard") {
       _doLeaderBoard();
     } else if (data.user == IVP_ID && data.text.startsWith("assign")) {
       var text = data.text.replace("assign", "").trim();
@@ -173,6 +178,33 @@ function _onMessage(data) {
     }
   }
 }
+
+var dueDates = {}; // task-id to due date string
+
+function _onJIRATask(data) {
+  // TODO:
+  // https://www.npmjs.com/package/jira
+  // parse the task
+  // get the task id
+  var taskId;
+  // get the due date
+  var dueDate;
+  dueDates[taskId] = dueDate;
+}
+
+setInterval(function() {
+  Object.keys(dueDates).forEach(function(taskId) {
+    var dueDate = dueDates[taskId];
+    var today = new Date();
+    var date = new Date(dueDate);
+    if (date.getDate() - today.getDate() <= 1 && date.getMonth() ==
+      today.getMonth() && date.getFullYear() == today.getFullYear()) {
+      sendMessage(Promise.resolve("SHREYA IS REMDING YOU TO DO task: " +
+          taskId),
+        "#jira", true);
+    }
+  });
+}, 1000 * 60 * 60 * 24);
 
 // METHODS
 function listen() {
