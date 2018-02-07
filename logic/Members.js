@@ -167,9 +167,6 @@ function getMaxAbsences(params) {
 // EXPORTS
 module.exports.removeLeader = removeLeader;
 module.exports.addLeader = addLeader;
-module.exports.getCardInfo = getCardInfo;
-module.exports.charge = charge;
-module.exports.transfer = transfer;
 module.exports.isLeadership = isLeadership;
 module.exports.getById = getById;
 module.exports.getAll = getAll;
