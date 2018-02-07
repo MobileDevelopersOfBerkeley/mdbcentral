@@ -18,10 +18,6 @@
       loadGCal(<%- JSON.stringify(events) %>);
     <% } else if (currPage == "policies") { %>
       showPDF('.pdf');
-    <% } else if (currPage == "login") { %>
-      setupStripeInput("signUpForm", "signUpForm-card", "signUpForm-errors", signup);
-    <% } else if (currPage == "profile") { %>
-      setupStripeInput("updateForm", "updateForm-card", "updateForm-errors", updateProfile);
     <% } else if (currPage == "leadership") { %>
       toggleCard('expectedAbsences');
       toggleCard('assignments');
