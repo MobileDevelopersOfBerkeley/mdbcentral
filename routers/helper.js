@@ -71,5 +71,39 @@ function genData(currPage, uid) {
   });
 }
 
+function getMembers(data) {
+  return memberLogic.getAll().then(function(members) {
+    data.members = members.sort(function(a, b) {
+      var textA = a.name.toUpperCase();
+      var textB = b.name.toUpperCase();
+      return (textA < textB) ? -1 : (textA > textB) ?
+        1 : 0;
+    });
+  })
+}
+
+function isLoggedIn(req, res, next) {
+  if (!req.cookies.member) {
+    res.redirect("/login");
+    return;
+  }
+  next();
+}
+
+function isLeadership(req, res, next) {
+  var id = req.cookies.member;
+  memberLogic.getById({
+    id: id
+  }).then(function(member) {
+    if (member.leadership === true) next();
+    else res.redirect("/home");
+  }).catch(function(error) {
+    res.redirect("/home");
+  });
+}
+
 // EXPORTS
+module.exports.isLeadership = isLeadership;
+module.exports.getMembers = getMembers;
+module.exports.isLoggedIn = isLoggedIn;
 module.exports.genData = genData;

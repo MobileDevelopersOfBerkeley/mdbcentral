@@ -1,5 +1,5 @@
 // DEPENDENCIES
-const dbUtil = require("../util/firebase/db.js");
+const dbUtil = require("../util/firebase.js").db;
 const util = require("../util/util.js");
 const memberLogic = require("./Members.js");
 const eventLogic = require("./Events.js");
@@ -27,17 +27,17 @@ function getAll() {
 }
 
 function getByUid(params) {
-  return dbUtil.getObjectsByFields(ref, {
+  return dbUtil.getByFields(ref, {
     member: params.member
   });
 }
 
 function deleteById(params) {
-  return dbUtil.remove(ref, params.id);
+  return dbUtil.deleteByKey(ref, params.id);
 }
 
 function create(params) {
-  return dbUtil.getObjectsByFields(ref, {
+  return dbUtil.getByFields(ref, {
     member: params.member
   }).then(function(expectedAbsences) {
     if (expectedAbsences.length > 0) {
@@ -48,7 +48,7 @@ function create(params) {
     return eventLogic.getById({
       id: params.eventId
     }).then(function(event) {
-      return dbUtil.createNewObjectByAutoId(ref, {
+      return dbUtil.createByAutoKey(ref, {
         id: params.eventId,
         reason: params.reason,
         member: params.member,

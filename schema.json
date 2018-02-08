@@ -1,0 +1,16 @@
+{
+  "signInRef": "SignIns",
+  "memberRef": "Members",
+  "githubCacheRef": "GithubCache",
+  "bigLittleRef": "BigLittleContest",
+  "assignmentRef": "Assignments",
+  "scoreRef": "Scores",
+  "roleRef": "Roles",
+  "expectedAbsenceRef": "ExpectedAbsences",
+  "feedbackRef": "Feedback",
+  "finReportRef": "FinReports",
+  "eventsRef": "Events",
+  "semesterStartRef": "semesterStart",
+  "canSignUpRef": "canSignUp",
+  "signInCodeRef": "signInCode"
+}

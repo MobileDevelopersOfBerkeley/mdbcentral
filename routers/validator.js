@@ -2,7 +2,7 @@
 const expressValidator = require('express-validator');
 const isUrl = require('is-url');
 const fs = require("fs");
-const dbUtil = require("../util/firebase/db.js");
+const dbUtil = require("../util/firebase.js").db;
 const canSignUp = require("../logic/CanSignUp.js").get;
 const util = require("../util/util.js");
 const githubUtil = require("../util/github.js");
@@ -113,7 +113,7 @@ module.exports = expressValidator({
     },
     keyExistsInDB: function(param, ref) {
       return _promiseBoolTrue(function() {
-        return dbUtil.checkIfAllKeysExist(ref, [param]);
+        return dbUtil.keysExist(ref, [param]);
       });
     },
     isTrue: function(param) {

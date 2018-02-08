@@ -1,12 +1,12 @@
 // DEPENDENCIES
-const dbUtil = require("../util/firebase/db.js");
+const dbUtil = require("../util/firebase.js").db;
 
 // CONSTANTS
 const ref = dbUtil.refs.assignmentRef;
 
 // METHODS
 function create(params) {
-  return dbUtil.createNewObjectByAutoId(ref, {
+  return dbUtil.createByAutoKey(ref, {
     due: params.due,
     link: params.link,
     name: params.name,

@@ -1,5 +1,5 @@
 // DEPENDENCIES
-const dbUtil = require("../util/firebase/db.js");
+const dbUtil = require("../util/firebase.js").db;
 
 // CONSTANTS
 const ref = dbUtil.refs.eventsRef;
@@ -12,7 +12,7 @@ function _getTimestamp(dateStr, timeStr) {
 
 // METHODS
 function create(params) {
-  return dbUtil.createNewObjectByAutoId(ref, {
+  return dbUtil.createByAutoKey(ref, {
     timestamp: _getTimestamp(params.startDate, params.startTime),
     title: params.title,
     endTimestamp: _getTimestamp(params.endDate, params.endTime),
@@ -20,7 +20,7 @@ function create(params) {
 }
 
 function deleteById(params) {
-  return dbUtil.remove(ref, params.id);
+  return dbUtil.deleteByKey(ref, params.id);
 }
 
 function getAll() {

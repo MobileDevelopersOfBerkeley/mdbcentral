@@ -17,10 +17,18 @@
             <p>Events</p>
         </a>
     </li>
+    <% if (leadership) { %>
+      <%- getLiTag("attendance") %>
+          <a href="/attendance">
+              <i class="pe-7s-wine"></i>
+              <p>Attendance</p>
+          </a>
+      </li>
+    <% } %>
     <%- getLiTag("financial") %>
         <a href="/financial">
-            <i class="pe-7s-cash"></i>
-            <p>Financial Report</p>
+            <i class="pe-7s-graph1"></i>
+            <p>Finance & Analytics</p>
         </a>
     </li>
     <%- getLiTag("assignments") %>

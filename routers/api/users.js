@@ -2,7 +2,7 @@
 const multer = require('multer');
 const router = require("express").Router();
 const routerUtil = require("../../util/router.js");
-const dbUtil = require("../../util/firebase/db.js");
+const dbUtil = require("../../util/firebase.js").db;
 const util = require("../../util/util.js");
 const memberLogic = require("../../logic/Members.js");
 
@@ -30,7 +30,14 @@ function _doCreate(req, res) {
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
-  return routerUtil.completeRequest(req, res, memberLogic.create);
+  return routerUtil.completeRequest(req, res, function(params) {
+    return memberLogic.create(params).then(function(member) {
+      res.cookie('member', member._key, {
+        maxAge: 900000,
+        httpOnly: false
+      });
+    });
+  }, "/home");
 }
 
 function _doUpdate(req, res) {
@@ -51,7 +58,7 @@ function _doUpdate(req, res) {
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
   req.checkBody("newMember", routerUtil.errors.formatErrorMessage).isValidBool();
   req.body.newMember = util.parseBool(req.body.newMember);
-  return routerUtil.completeRequest(req, res, memberLogic.update);
+  return routerUtil.completeRequest(req, res, memberLogic.update, "/profile");
 }
 
 // METHODS
@@ -62,6 +69,18 @@ router.post("/users", upload.single('profileImage'), function(req, res) {
   } else {
     _doCreate(req, res);
   }
+});
+
+router.post("/users/:id", function(req, res) {
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
+    .keyExistsInDB(dbUtil.refs.memberRef);
+  req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
+  req.checkParams("id", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkParams("id", routerUtil.errors.dbErrorMessage)
+    .keyExistsInDB(dbUtil.refs.memberRef);
+  return routerUtil.completeRequest(req, res, memberLogic.deleteById,
+    "/leadership");
 });
 
 // EXPORTS

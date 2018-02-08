@@ -1,5 +1,5 @@
 // DEPENDENCIES
-const dbUtil = require("../util/firebase/db.js");
+const dbUtil = require("../util/firebase.js").db;
 const memberLogic = require("./Members.js");
 const eventLogic = require("./Events.js");
 
@@ -11,7 +11,7 @@ function getAll() {
   var result = [];
   return memberLogic.getAll().then(function(users) {
     return Promise.all(users.map(function(user) {
-      return dbUtil.getObjectsByFields(ref, {
+      return dbUtil.getByFields(ref, {
         member: user._key
       }).then(function(feedbacks) {
         feedbacks.forEach(function(feedback) {
@@ -29,7 +29,7 @@ function create(params) {
   return eventLogic.getById({
     id: params.eventId
   }).then(function(event) {
-    return dbUtil.createNewObjectByAutoId(ref, {
+    return dbUtil.createByAutoKey(ref, {
       id: params.eventId,
       title: event.title,
       timestamp: new Date().getTime(),
