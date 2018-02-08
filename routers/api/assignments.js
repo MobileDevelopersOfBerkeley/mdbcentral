@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const routerUtil = require("../../util/router.js");
-const dbUtil = require("../../util/firebase/db.js");
+const dbUtil = require("../../util/firebase.js").db;
 const assignmentLogic = require("../../logic/Assignments.js");
 
 // METHODS

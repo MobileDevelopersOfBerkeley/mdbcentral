@@ -1,5 +1,5 @@
 // DEPENDENCIES
-const dbUtil = require("../util/firebase/db.js");
+const dbUtil = require("../util/firebase.js").db;
 const util = require("../util/util.js");
 const eventLogic = require("../logic/Events.js");
 const memberLogic = require("../logic/Members.js");
@@ -10,7 +10,7 @@ const ref = dbUtil.refs.signInRef;
 // METHODS
 function create(params) {
   return eventLogic.getByToday().then(function(event) {
-    return dbUtil.createNewObjectByAutoId(ref, {
+    return dbUtil.createByAutoKey(ref, {
       eventId: event._key,
       member: params.member,
       code: params.code

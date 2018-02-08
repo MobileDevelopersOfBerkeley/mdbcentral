@@ -1,7 +1,9 @@
 // DEPENDENCIES
 const firebase = require("firebase-admin");
+const firebaseUtil = require("firebase-admin-util");
+const schema = require("../schema.json");
 
-// SETUP
+// INITIALIZE
 firebase.initializeApp({
   credential: firebase.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
@@ -13,4 +15,4 @@ firebase.initializeApp({
 });
 
 // EXPORTS
-module.exports = firebase;
+module.exports = firebaseUtil(firebase, schema);

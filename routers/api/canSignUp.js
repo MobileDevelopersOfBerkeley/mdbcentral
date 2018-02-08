@@ -2,7 +2,7 @@
 const router = require("express").Router();
 const util = require("../../util/util.js");
 const routerUtil = require("../../util/router.js");
-const dbUtil = require("../../util/firebase/db.js");
+const dbUtil = require("../../util/firebase.js").db;
 const canSignUpLogic = require("../../logic/CanSignUp.js");
 
 // METHODS

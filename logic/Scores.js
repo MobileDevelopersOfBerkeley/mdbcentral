@@ -1,5 +1,5 @@
 // DEPENDENCIES
-const dbUtil = require("../util/firebase/db.js");
+const dbUtil = require("../util/firebase.js").db;
 
 // CONSTANTS
 const ref = dbUtil.refs.scoreRef;
@@ -56,26 +56,26 @@ function getAllDeep() {
 }
 
 function getByMemberDeep(params) {
-  return dbUtil.getObjectsByFields(ref, {
+  return dbUtil.getByFields(ref, {
     member: params.member
   }).then(_deep);
 }
 
 function set(params) {
-  return dbUtil.getObjectsByFields(ref, {
+  return dbUtil.getByFields(ref, {
     member: params.memberId,
     assignmentId: params.assignmentId
   }).then(function(scores) {
     scores = _filterArchived(scores);
     if (scores.length == 0) {
-      return dbUtil.createNewObjectByAutoId(ref, {
+      return dbUtil.createByAutoKey(ref, {
         score: params.score,
         archived: false,
         member: params.memberId,
         assignmentId: params.assignmentId
       });
     }
-    return dbUtil.updateObject(ref, scores[0]._key, {
+    return dbUtil.updateByKey(ref, scores[0]._key, {
       score: params.score,
       archived: false
     });
@@ -83,7 +83,7 @@ function set(params) {
 }
 
 function archive(params) {
-  return dbUtil.updateObject(ref, score._key, {
+  return dbUtil.updateByKey(ref, score._key, {
     archived: true
   });
 }

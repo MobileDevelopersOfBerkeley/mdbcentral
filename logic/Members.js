@@ -1,7 +1,8 @@
 // DEPENDENCIES
-const storageUtil = require("../util/firebase/storage.js");
-const dbUtil = require("../util/firebase/db.js");
-const authUtil = require("../util/firebase/auth.js");
+const firebaseUtil = require("../util/firebase.js");
+const storageUtil = firebaseUtil.storage;
+const dbUtil = firebaseUtil.db;
+const authUtil = firebaseUtil.auth;
 const githubUtil = require("../util/github.js");
 const getGithubCache = require("./GithubCache.js").get;
 const getRoleByUid = require("./Roles.js").getByUid;
@@ -19,7 +20,7 @@ function isLeadership(params) {
 }
 
 function addLeader(params) {
-  return dbUtil.updateObject(ref, params.id, {
+  return dbUtil.updateByKey(ref, params.id, {
     leadership: true
   });
 }
@@ -34,7 +35,7 @@ function removeLeader(params) {
     else if (leaders == 1)
       return Promise.reject(new Error(
         "Can't remove yourself as leader! You are only leader left."));
-    return dbUtil.updateObject(ref, params.id, {
+    return dbUtil.updateByKey(ref, params.id, {
       leadership: false
     });
   });
@@ -65,7 +66,7 @@ function create(params) {
         photoURL: url
       });
     }).then(function() {
-      return dbUtil.createNewObject(ref, {
+      return dbUtil.createByManualKey(ref, authData.uid, {
         name: params.name,
         email: params.email,
         profileImage: url,
@@ -74,7 +75,7 @@ function create(params) {
         roleId: params.roleId,
         newMember: params.newMember,
         githubUsername: params.githubUsername.toLowerCase()
-      }, authData.uid);
+      });
     }).catch(function(error) {
       if (!authData) return Promise.reject(error);
       return authUtil.deleteAuthAccount(authData.uid).then(function() {
@@ -89,10 +90,10 @@ function updateEffortRatings() {
     return Promise.all(Object.keys(usernameToEffortRating)
       .map(function(username) {
         var effortRating = usernameToEffortRating[username];
-        return dbUtil.getObjectsByFields(ref, {
+        return dbUtil.getByFields(ref, {
           githubUsername: username
         }).then(function(user) {
-          return dbUtil.updateObject(ref, user._key, {
+          return dbUtil.updateByKey(ref, user._key, {
             effortRating: effortRating
           });
         });
@@ -117,7 +118,7 @@ function update(params) {
         displayName: params.name
       });
     }).then(function() {
-      return dbUtil.updateObject(ref, params.member, {
+      return dbUtil.updateByKey(ref, params.member, {
         profileImage: url
       });
     }));
@@ -129,7 +130,7 @@ function update(params) {
     }));
   }
 
-  plist.push(dbUtil.updateObject(ref, params.member, {
+  plist.push(dbUtil.updateByKey(ref, params.member, {
     name: params.name,
     email: params.email,
     major: params.major,
@@ -169,12 +170,12 @@ function deleteById(params) {
     return dbUtil.getAll(ref).then(function(aList) {
       return Promise.all(aList.map(function(a) {
         if (a[field] == params.id)
-          return dbUtil.remove(ref, a._key);
+          return dbUtil.deleteByKey(ref, a._key);
         return Promise.resolve(true);
       }));
     });
   }
-  return dbUtil.remove(ref, params.id).then(function() {
+  return dbUtil.deleteByKey(ref, params.id).then(function() {
     return Promise.all([
       deleteByMember(dbUtil.refs.expectedAbsenceRef, "member"),
       deleteByMember(dbUtil.refs.feedbackRef, "member"),
