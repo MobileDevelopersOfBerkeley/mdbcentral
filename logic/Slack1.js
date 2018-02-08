@@ -1,24 +1,22 @@
 // DEPENDENCIES
 var similarity = require("string-similarity");
-var slackUtil = require("../util/slack.js");
+var bot1 = require("../util/slack.js").bot1;
 var apiai = require("../util/apiai.js");
 var cleverbot = require("../util/cleverbot.js");
 var bigLittleContestLogic = require("./BigLittleContest.js");
-var jira = require("jira");
-
-// TODO: setup jira module with api keys
 
 // CONSTANTS
-const SLACK_BOT_CHANNEL1 = process.env.SLACK_CHANNEL1;
-const SLACK_BOT_CHANNEL2 = process.env.SLACK_CHANNEL2;
+const SLACK_BOT_CHANNEL1 = process.env.SLACK_BOT1_CHANNEL1;
+const SLACK_BOT_CHANNEL2 = process.env.SLACK_BOT1_CHANNEL2;
 const SLACK_BOT_TS_HIT_LENGTH = 1000;
 const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
 const STRING_SIMILARITY_RATIO_THRESH = .7;
-const tsHits = [];
-const users = slackUtil.users;
-const channels = slackUtil.channels;
-const sendMessage = slackUtil.sendMessage;
+
+// GLOBALS
+var tsHits = [];
+var users = {};
+var channels = {};
 
 // PROTOTYPES
 if (!Promise.prototype.spread) {
@@ -52,7 +50,7 @@ function _assertTextValid() {
 }
 
 function _doLeaderBoard() {
-  var p = bigLittleContestLogic.get().then(function(leaderboard) {
+  bigLittleContestLogic.get().then(function(leaderboard) {
     var result = "";
     var place = 1;
     leaderboard.forEach(function(item) {
@@ -60,9 +58,8 @@ function _doLeaderBoard() {
         " points " + newLineStr;
       place += 1;
     });
-    return result;
+    bot1.sendToChannel(SLACK_BOT_CHANNEL1, result);
   });
-  sendMessage(p, SLACK_BOT_CHANNEL1, true);
 }
 
 function _doPointChange(text) {
@@ -119,15 +116,15 @@ function _doPointChange(text) {
   }).then(function() {
     if (operator == "+=") return pair + " got " + value + " points";
     if (operator == "-=") return pair + " lost " + value + " points";
-    return pair + " has " + value + " points";
+    var message = pair + " has " + value + " points";
+    bot1.sendToChannel(SLACK_BOT_CHANNEL1, message);
   });
-  sendMessage(p, SLACK_BOT_CHANNEL1, true);
 }
 
 function _doChat(message, str, isChannel) {
   if (isChannel && str != SLACK_BOT_CHANNEL2) {
-    sendMessage(Promise.resolve("Sorry, you can only talk to me at #" +
-      SLACK_BOT_CHANNEL2), str, true);
+    bot1.sendToChannel(str, "Sorry, you can only talk to me at #" +
+      SLACK_BOT_CHANNEL2);
     return;
   }
   var p = apiai.chat(message).then(function(res) {
@@ -137,7 +134,10 @@ function _doChat(message, str, isChannel) {
       return res.result.fulfillment.speech;
     return "Sorry, I would be too savage, if I responded to that :p";
   });
-  sendMessage(p, str, isChannel);
+  if (isChannel)
+    bot1.sendToChannel(str, message);
+  else
+    bot1.sendToUser(str, message);
 }
 
 function _onMessage(data) {
@@ -148,16 +148,13 @@ function _onMessage(data) {
     tsHits.push(data.ts);
     if (tsHits.length > SLACK_BOT_TS_HIT_LENGTH) tsHits = [];
     data.text = data.text.trim().toLowerCase();
-    if (data.type == "???") {
-      _onJIRATask(data);
-    } else if (data.text == "leaderboard") {
+    if (data.text == "leaderboard") {
       _doLeaderBoard();
     } else if (data.user == IVP_ID && data.text.startsWith("assign")) {
       var text = data.text.replace("assign", "").trim();
       _doPointChange(text);
     } else if (data.user != IVP_ID && data.text.startsWith("assign")) {
-      sendMessage(Promise.resolve("Bruh, only IVP can assign points"),
-        SLACK_BOT_CHANNEL1, true);
+      bot1.sendToChannel(SLACK_BOT_CHANNEL1, "Bruh, only IVP can assign points");
     } else if (data.text.startsWith("mdbot") || data.text.startsWith("mdbbot") ||
       data.text.startsWith("mdb bot")) {
       var message = data.text.trim();
@@ -179,36 +176,18 @@ function _onMessage(data) {
   }
 }
 
-var dueDates = {}; // task-id to due date string
-
-function _onJIRATask(data) {
-  // TODO:
-  // https://www.npmjs.com/package/jira
-  // parse the task
-  // get the task id
-  var taskId;
-  // get the due date
-  var dueDate;
-  dueDates[taskId] = dueDate;
-}
-
-setInterval(function() {
-  Object.keys(dueDates).forEach(function(taskId) {
-    var dueDate = dueDates[taskId];
-    var today = new Date();
-    var date = new Date(dueDate);
-    if (date.getDate() - today.getDate() <= 1 && date.getMonth() ==
-      today.getMonth() && date.getFullYear() == today.getFullYear()) {
-      sendMessage(Promise.resolve("SHREYA IS REMDING YOU TO DO task: " +
-          taskId),
-        "#jira", true);
-    }
-  });
-}, 1000 * 60 * 60 * 24);
-
 // METHODS
-function listen() {
-  slackUtil.listen(_onMessage);
+function listen(successCb, errorCb) {
+  bot1.getUsers().then(function(u) {
+    users = u;
+    return bot1.getChannels();
+  }).then(function(c) {
+    channels = c;
+    bot1.setMessageFn(_onMessage);
+    successCb();
+  }).catch(function(error) {
+    errorCb();
+  });
 }
 
 // EXPORTS
