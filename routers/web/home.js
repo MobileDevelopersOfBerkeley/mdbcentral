@@ -46,31 +46,8 @@ function _getAttendance(data, id) {
     data.signins = attendance.signIns;
 
     // TODO: implement max absence policies
-    const max_absences = 5;
-    var num_absences = data.absences.length;
+    data.maxAbsences = 5;
 
-    var absencesLeft = undefined;
-    if (max_absences >= num_absences) {
-      absencesLeft = "Left: " + (max_absences -
-        num_absences);
-    } else {
-      absencesLeft = "Over: " + ((max_absences -
-          num_absences) *
-        -1);
-    }
-
-    data.graphs.push({
-      elementId: "attendance_overview_bar",
-      type: "bar",
-      xData: ['Absences',
-        'Inluding Expected', 'Max Absences'
-      ],
-      yData: [
-        [num_absences, num_absences + num_expected,
-          max_absences
-        ]
-      ]
-    });
     var attendances = [];
     for (var i = 0; i < data.signins.length; i++) {
       var signin = data.signins[i];
@@ -103,7 +80,6 @@ function _getAttendance(data, id) {
       expectedAbsence.title = event.title;
       attendances.push(expectedAbsence);
     }
-    data.absencesLeft = absencesLeft;
     data.attendances = attendances.sort(function(a, b) {
       return a.timestamp - b.timestamp;
     });
