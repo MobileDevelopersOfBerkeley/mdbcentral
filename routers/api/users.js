@@ -80,7 +80,7 @@ router.post("/users/:id", function(req, res) {
   req.checkParams("id", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
   return routerUtil.completeRequest(req, res, memberLogic.deleteById,
-    "/leadership");
+    "/attendance");
 });
 
 // EXPORTS

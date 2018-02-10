@@ -13,8 +13,7 @@ router.post("/canSignUp", function(req, res) {
   req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
   req.checkBody("bool", routerUtil.errors.missingErrorMessage).notEmpty();
   req.body.bool = util.parseBool(req.body.bool);
-  return routerUtil.completeRequest(req, res, canSignUpLogic.set,
-    "/leadership");
+  return routerUtil.completeRequest(req, res, canSignUpLogic.set, "/home");
 });
 
 // EXPORTS

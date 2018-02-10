@@ -19,7 +19,7 @@ router.post("/assignments", function(req, res) {
   req.checkBody("roleIds", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("roleIds", routerUtil.errors.formatErrorMessage).isValidNumberArr();
   return routerUtil.completeRequest(req, res, assignmentLogic.create,
-    "/leadership");
+    "/assignments");
 });
 
 // EXPORTS

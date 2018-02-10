@@ -16,7 +16,7 @@ router.post("/events", function(req, res) {
   req.checkBody("startTime", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("endTime", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, eventLogic.create,
-    "/leadership");
+    "/calendar");
 });
 
 router.post("/events/:id", function(req, res) {
@@ -28,7 +28,7 @@ router.post("/events/:id", function(req, res) {
   req.checkParams("id", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.eventsRef);
   return routerUtil.completeRequest(req, res, eventLogic.deleteById,
-    "/leadership");
+    "/calendar");
 });
 
 // EXPORTS

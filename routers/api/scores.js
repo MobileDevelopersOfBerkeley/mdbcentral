@@ -18,7 +18,7 @@ router.post("/scores", function(req, res) {
     .keyExistsInDB(dbUtil.refs.assignmentRef);
   req.checkBody("score", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, scoresLogic.set,
-    "/leadership");
+    "/assignments");
 });
 
 router.post("/scores/:id", function(req, res) {
@@ -30,7 +30,7 @@ router.post("/scores/:id", function(req, res) {
   req.checkParams("id", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.scoreRef);
   return routerUtil.completeRequest(req, res, scoresLogic.archive,
-    "/leadership");
+    "/assignments");
 });
 
 // EXPORTS

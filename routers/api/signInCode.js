@@ -12,7 +12,7 @@ router.post("/signInCode", function(req, res) {
   req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
   req.checkBody("code", routerUtil.errors.missingErrorMessage).notEmpty();
   return routerUtil.completeRequest(req, res, signInCodeLogic.set,
-    "/leadership");
+    "/attendance");
 });
 
 // EXPORTS

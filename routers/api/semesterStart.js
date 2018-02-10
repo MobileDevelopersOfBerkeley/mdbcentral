@@ -13,7 +13,7 @@ router.post("/semesterStart", function(req, res) {
   req.checkBody("date", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("date", routerUtil.errors.formatErrorMessage).isValidDate();
   return routerUtil.completeRequest(req, res, semesterStartLogic.set,
-    "/leadership");
+    "/calendar");
 });
 
 // EXPORTS
