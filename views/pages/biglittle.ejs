@@ -1,0 +1,31 @@
+<div class="content page">
+    <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Leaderboard</h4>
+                        <p class="category pull-left">View leaderboard for big little program</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Pair</th>
+                                <th>Points</th>
+                            </thead>
+                            <tbody>
+                                <% for (var i = 0; i < pairs.length; i++) { %>
+                                  <% var pair = pairs[i]; %>
+                                  <tr>
+                                    <td><%- pair.name %></td>
+                                    <td><%- pair.points %></td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
