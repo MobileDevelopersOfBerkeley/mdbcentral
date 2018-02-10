@@ -178,12 +178,11 @@ function _onMessage(data) {
 
 // METHODS
 function listen(successCb, errorCb) {
-  bot1.getUsers().then(function(u) {
-    users = u;
-    return bot1.getChannels();
-  }).then(function(c) {
-    channels = c;
+  bot1.start().then(function() {
+    users = bot1.getUsers();
+    channels = bot1.getChannels();
     bot1.setMessageFn(_onMessage);
+  }).then(function(c) {
     successCb();
   }).catch(function(error) {
     errorCb();

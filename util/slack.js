@@ -14,10 +14,10 @@ const PARAMS = {
 
 // HELPERS
 function _getObjs(bot, data, dataKey, fnName, objName) {
-	var objs = {};
-	return bot[fnName]().then(function(data) {
-		for (var i = 0; i < data[objName].length; i++) {
-			var obj = data[objName][i];
+	return bot[fnName]().then(function(dat) {
+		var objs = {};
+		for (var i = 0; i < dat[objName].length; i++) {
+			var obj = dat[objName][i];
 			objs[obj.id] = obj;
 		}
 		data[dataKey] = objs;
@@ -32,29 +32,32 @@ function _getUsers(bot, data) {
 	return _getObjs(bot, data, "users", "getUsers", "members");
 }
 
+function _start(bot, data) {
+	return new Promise(function(resolve, reject) {
+		bot.on('start', function() {
+			resolve(Promise.all([
+				_getChannels(bot, data),
+				_getUsers(bot, data)
+			]));
+		});
+	});
+}
+
 function _Bot(token) {
 	var bot = new SlackBot({
 		token: token,
 		name: SLACK_BOT_NAME
 	});
 	var data = {};
-	var p;
-	bot.on('start', function() {
-		p = Promise.all([
-			_getChannels(bot, data),
-			_getUsers(bot, data)
-		]);
-	});
 	return {
+		start: function() {
+			return _start(bot, data);
+		},
 		getUsers: function() {
-			return p.then(function() {
-				return data.users;
-			});
+			return data.users;
 		},
 		getChannels: function() {
-			return p.then(function() {
-				return data.channels;
-			});
+			return data.channels;
 		},
 		setMessageFn: function(fn) {
 			bot.on('message', fn);

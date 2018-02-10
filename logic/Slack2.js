@@ -66,12 +66,11 @@ setInterval(function() {
 
 // METHODS
 function listen(successCb, errorCb) {
-  bot2.getUsers().then(function(u) {
-    users = u;
-    return bot2.getChannels();
-  }).then(function(c) {
-    channels = c;
+  bot2.start().then(function() {
+    users = bot2.getUsers();
+    channels = bot2.getChannels();
     bot2.setMessageFn(_onMessage);
+  }).then(function(c) {
     successCb();
   }).catch(function(error) {
     errorCb();
