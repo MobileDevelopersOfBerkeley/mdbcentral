@@ -1,4 +1,5 @@
 // DEPENDENCIES
+const getUnixTS = require("../util/util.js").getUnixTS;
 const dbUtil = require("../util/firebase.js").db;
 const memberLogic = require("./Members.js");
 const eventLogic = require("./Events.js");
@@ -32,7 +33,7 @@ function create(params) {
     return dbUtil.createByAutoKey(ref, {
       id: params.eventId,
       title: event.title,
-      timestamp: new Date().getTime(),
+      timestamp: getUnixTS(),
       member: params.member,
       response: params.response
     });

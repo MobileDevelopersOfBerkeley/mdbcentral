@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const dbUtil = require("../util/firebase.js").db;
+const getUnixTS = require("../util/util.js").getUnixTS;
 
 // CONSTANTS
 const ref = dbUtil.refs.eventsRef;
@@ -7,7 +8,7 @@ const ref = dbUtil.refs.eventsRef;
 // HELPERS
 
 function _getTimestamp(dateStr, timeStr) {
-  return new Date(dateStr + " " + timeStr).getTime();
+  return new Date(dateStr + " " + timeStr + " PST").getTime();
 }
 
 // METHODS
@@ -28,7 +29,7 @@ function getAll() {
 }
 
 function getByToday() {
-  var today = new Date().getTime();
+  var today = getUnixTS();
   return getAll().then(function(events) {;
     var data = events.reduce(function(tuple, currE) {
       var e = tuple[0];

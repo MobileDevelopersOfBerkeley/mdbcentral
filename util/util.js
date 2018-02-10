@@ -15,6 +15,10 @@ String.prototype.similar = function(str) {
 }
 
 // METHODS
+function getUnixTS() {
+  return new Date().getTime();
+}
+
 function genPieData(x, noStr) {
   var total = Object.keys(x).map(function(key) {
     return x[key];
@@ -134,3 +138,4 @@ module.exports.differentDay = differentDay;
 module.exports.aggregateByX = aggregateByX;
 module.exports.formatLineData = formatLineData;
 module.exports.timeToString = timeToString;
+module.exports.getUnixTS = getUnixTS;

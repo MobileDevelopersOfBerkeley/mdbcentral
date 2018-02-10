@@ -64,7 +64,7 @@ function getAttendanceByName(params) {
 function getAllAttendance() {
   var events, members;
   return eventLogic.getAll().then(function(eList) {
-    var today = new Date().getTime();
+    var today = util.getUnixTS();
     events = eList.filter(function(event) {
       return event.timestamp <= today;
     });
