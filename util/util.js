@@ -92,7 +92,11 @@ function formatLineData(...dataList) {
 function timeToString(time, short, long) {
   var d = new Date();
   d.setTime(time);
-  if (long) return d.toLocaleString();
+  if (long) {
+    return d.toLocaleString("en-En", {
+      timeZone: "America/Los_Angeles"
+    });
+  }
   return dateToString(d, short);
 }
 
@@ -101,7 +105,8 @@ function parseBool(val) {
 }
 
 function dateToString(date, short) {
-  var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  var monthNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
   var val = date.getDate() + " " + monthNames[date.getMonth()];
