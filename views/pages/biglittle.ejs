@@ -1,0 +1,91 @@
+<div class="content page">
+    <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Leaderboard</h4>
+                        <p class="category pull-left">View leaderboard for big little program</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>#</th>
+                                <th>Pair</th>
+                                <th>Points</th>
+                            </thead>
+                            <tbody>
+                                <% for (var i = 0; i < sortedPairs.length; i++) { %>
+                                  <% var pair = sortedPairs[i]; %>
+                                  <tr>
+                                    <td><%- (i + 1) %></td>
+                                    <td><%- pair.name %></td>
+                                    <td><%- pair.points %></td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% if (leadership) { %>
+          <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Edit Pairs</h4>
+                        <p class="category pull-left">Edit pairs in the contest</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                      <form action="/bigLittle/names" method="post">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Pair</th>
+                            </thead>
+                            <tbody>
+                                <% for (var i = 0; i < pairs.length; i++) { %>
+                                  <% var pair = pairs[i]; %>
+                                  <tr>
+                                    <td><input type="text" name="names" value="<%- pair.name %>" /></td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <button type="submit">Save</button>
+                      </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Edit Points</h4>
+                        <p class="category pull-left">Edit points for each pair</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                      <form action="/bigLittle/points" method="post">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <th>Pair</th>
+                                <th>Points</th>
+                            </thead>
+                            <tbody>
+                                <% for (var i = 0; i < pairs.length; i++) { %>
+                                  <% var pair = pairs[i]; %>
+                                  <tr>
+                                    <td><%- pair.name %></td>
+                                    <td><input type="number" name="points" value="<%- pair.points %>" /></td>
+                                  </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <button type="submit">Save</button>
+                      </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+        <% } %>
+    </div>
+</div>

@@ -13,8 +13,10 @@ const canSignUpRouter = require("./canSignUp.js");
 const signInCodeRouter = require("./signInCode.js");
 const signInRouter = require("./signIns.js");
 const attendanceRouter = require("./attendance.js");
+const bigLittleRouter = require("./bigLittle.js");
 
 // ROUTES
+router.use(bigLittleRouter);
 router.use(signInRouter);
 router.use(expectedAbsencesRouter);
 router.use(feedbackRouter);
