@@ -1,5 +1,4 @@
 {
-  "leadershipTaskIdsRef": "LeadershipTaskIds",
   "signInRef": "SignIns",
   "memberRef": "Members",
   "githubCacheRef": "GithubCache",
