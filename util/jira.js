@@ -8,7 +8,7 @@ var jira = new JiraApi(
   process.env.JIRA_PORT,
   process.env.JIRA_USERNAME,
   process.env.JIRA_PASSWORD,
-  '2.0.alpha1'
+  '2'
 );
 
 // METHODS
@@ -16,7 +16,11 @@ function getTask(taskId) {
   return new Promise(function(resolve, reject) {
     jira.findIssue(taskId, function(error, issue) {
       if (error) reject(error);
-      else resolve(issue);
+      else resolve({
+        id: taskId,
+        dueDate: task.fields.duedate,
+        recipient: task.fields.assignee.displayName
+      });
     });
   })
 }
