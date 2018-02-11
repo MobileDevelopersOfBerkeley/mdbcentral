@@ -5,14 +5,18 @@ function loadGCal(events) {
       center: 'title',
       right: 'month,basicWeek,basicDay'
     },
-    defaultDate: new Date().toString(),
+    defaultDate: new Date().toLocaleString("en-En", {
+      timeZone: "America/Los_Angeles"
+    }),
     navLinks: true,
     editable: false,
     eventLimit: true,
     events: events.map(function(event) {
       var d = new Date();
       d.setTime(event.timestamp);
-      event.start = d.toString();
+      event.start = d.toLocaleString("en-En", {
+        timeZone: "America/Los_Angeles"
+      });
       return event;
     })
   });
