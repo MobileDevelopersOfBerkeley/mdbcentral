@@ -4,9 +4,9 @@ const getUnixTS = require("../util/util.js").getUnixTS;
 
 // CONSTANTS
 const ref = dbUtil.refs.eventsRef;
+const todayEventErr = "Could not find event that takes attendance";
 
 // HELPERS
-
 function _getTimestamp(dateStr, timeStr) {
   return new Date(dateStr + " " + timeStr + " PST").getTime();
 }
@@ -14,6 +14,7 @@ function _getTimestamp(dateStr, timeStr) {
 // METHODS
 function create(params) {
   return dbUtil.createByAutoKey(ref, {
+    attendance: params.attendance,
     timestamp: _getTimestamp(params.startDate, params.startTime),
     title: params.title,
     endTimestamp: _getTimestamp(params.endDate, params.endTime),
@@ -38,8 +39,8 @@ function getByToday() {
       if (!e || currDiff < diff) return [currE, currDiff];
       return tuple;
     }, [null, Number.MAX_VALUE]);
-    if (data[0] != null) return data[0];
-    return Promise.reject(new Error("Could not find event"));
+    if (data[0] != null && data[0].attendance === true) return data[0];
+    return Promise.reject(new Error(todayEventErr));
   });
 }
 

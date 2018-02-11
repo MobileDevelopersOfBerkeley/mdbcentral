@@ -74,7 +74,7 @@ function getAllAttendance() {
   return eventLogic.getAll().then(function(eList) {
     var today = util.getUnixTS();
     events = eList.filter(function(event) {
-      return event.timestamp <= today;
+      return event.timestamp <= today && event.attendance === true;
     });
     return memberLogic.getAll();
   }).then(function(mList) {
