@@ -1,6 +1,5 @@
 // DEPENDENCIES
 const router = require("express").Router();
-const slackRouter = require("./slack.js");
 const expectedAbsencesRouter = require("./expectedAbsences.js");
 const feedbackRouter = require("./feedback.js");
 const usersRouter = require("./users.js");
@@ -16,7 +15,6 @@ const signInRouter = require("./signIns.js");
 const attendanceRouter = require("./attendance.js");
 
 // ROUTES
-router.use(slackRouter);
 router.use(signInRouter);
 router.use(expectedAbsencesRouter);
 router.use(feedbackRouter);

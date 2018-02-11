@@ -6,13 +6,13 @@ const ref = dbUtil.refs.signInCodeRef;
 
 // METHODS
 function get() {
-  return ref.once("value").then(function(snapshot) {
-    return snapshot.val() || "";
+  return dbUtil.getRaw(ref).then(function(code) {
+    return code || "";
   });
 }
 
 function set(params) {
-  return ref.set(params.code);
+  return dbUtil.setRaw(ref, params.code);
 }
 
 // EXPORTS

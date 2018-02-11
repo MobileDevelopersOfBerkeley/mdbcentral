@@ -9,9 +9,7 @@
   "gmailSubjectPrefix": "[MDB] ",
 
   "slackBotName": "MDBot",
-  "slackBotHello": "Hello! I'm MDBot!!! Prepare to get savaged :p",
   "slackBotImage": "https://avatars.slack-edge.com/2017-03-16/154560287617_f5e4a785dda2912be9f9_72.jpg",
-  "slackBotErrorMessage": "Something went wrong, call up the VP of Dev.",
 
   "docs": [
     "/docs/AttendancePolicy.pdf",
