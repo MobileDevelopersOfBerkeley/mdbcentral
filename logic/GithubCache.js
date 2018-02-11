@@ -7,15 +7,15 @@ const ref = dbUtil.refs.githubCacheRef;
 
 // METHODS
 function get() {
-  return ref.once("value").then(function(snapshot) {
-    if (!snapshot.exists()) return {};
-    return JSON.parse(snapshot.val());
+  return dbUtil.getRaw(ref).then(function(cache) {
+    if (!cache) return {};
+    return JSON.parse(cache);
   });
 }
 
 function update() {
   return githubUtil.getCache().then(function(cache) {
-    return ref.set(JSON.stringify(cache, null, 2));
+    return dbUtil.setRaw(ref, JSON.parse(snapshot.val()));
   });
 }
 

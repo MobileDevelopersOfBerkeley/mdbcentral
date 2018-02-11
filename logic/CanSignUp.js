@@ -6,13 +6,13 @@ const ref = dbUtil.refs.canSignUpRef;
 
 // METHODS
 function get() {
-  return ref.once("value").then(function(snapshot) {
-    return snapshot.exists() && snapshot.val() === true;
+  return dbUtil.getRaw(ref).then(function(bool) {
+    return bool != null && bool === true;
   });
 }
 
 function set(params) {
-  return ref.set(params.bool);
+  return dbUtil.setRaw(ref, params.bool);
 }
 
 // EXPORTS
