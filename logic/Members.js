@@ -174,7 +174,9 @@ function deleteById(params) {
       }));
     });
   }
-  return dbUtil.deleteByKey(ref, params.id).then(function() {
+  return authUtil.deleteAuthAccount(params.id).then(function() {
+    return dbUtil.deleteByKey(ref, params.id);
+  }).then(function() {
     return Promise.all([
       deleteByMember(dbUtil.refs.expectedAbsenceRef, "member"),
       deleteByMember(dbUtil.refs.feedbackRef, "member"),

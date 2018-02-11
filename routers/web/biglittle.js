@@ -9,6 +9,11 @@ router.get("/bigLittle", helper.isLoggedIn, function(req, res) {
   var data;
   helper.genData("bigLittle", member).then(function(d) {
     data = d;
+    return bigLittleLogic.get({
+      sorted: true
+    });
+  }).then(function(sortedPairs) {
+    data.sortedPairs = sortedPairs;
     return bigLittleLogic.get();
   }).then(function(pairs) {
     data.pairs = pairs;
