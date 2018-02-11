@@ -157,11 +157,10 @@ function getMaxAbsences(params) {
   return getById({
     id: params.id
   }).then(function(user) {
-    return dbUtil.refs.roleRef.child(user.roleId).child("maxAbsences")
-      .once("value").then(function(snapshot) {
-        if (!snapshot.exists()) return 0;
-        return snapshot.val();
-      });
+    var r = dbUtil.refs.roleRef.child(user.roleId).child("maxAbsences");
+    return dbUtil.getRaw(r).then(function(maxAbsences) {
+      return maxAbsences || 0;
+    });
   });
 }
 

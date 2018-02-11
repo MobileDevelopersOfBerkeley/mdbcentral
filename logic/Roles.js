@@ -6,19 +6,16 @@ const ref = dbUtil.refs.roleRef;
 
 // METHODS
 function getByUid(params) {
-  return ref.child(params.roleId).child("title").once("value")
-    .then(function(snapshot) {
-      if (!snapshot.exists()) return "NULL";
-      return snapshot.val();
-    }).catch(function(error) {
-      return "NULL";
-    });
+  var r = ref.child(params.roleId).child("title");
+  return dbUtil.getRaw(r).then(function(title) {
+    return title || "NULL";
+  }).catch(function(error) {
+    return "NULL";
+  });
 }
 
 function get() {
-  return ref.once("value").then(function(snapshot) {
-    return snapshot.val();
-  });
+  return dbUtil.getRaw(ref);
 }
 
 // EXPORTS

@@ -32,6 +32,7 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 26. Leaders can edit events happening during the semester
 27. Users can view events in a calendar view
 28. Users can sign in to events
+29. Mdbot slack bot: reminds leadership of tasks on the leadership slack
 
 ## Environment Variables
 - FIREBASE_PROJECT_ID
@@ -47,9 +48,12 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 - GITHUB_ORG_ID
 - GMAIL_PASSWORD
 - GMAIL_EMAIL
-- SLACK_CHANNEL
-- SLACK_TOKEN
+- SLACK_BOT1_CHANNEL1
+- SLACK_BOT1_CHANNEL2
 - SLACK_IVP_ID
+- SLACK_BOT2_CHANNEL1
+- SLACK_TOKEN1
+- SLACK_TOKEN2
 - FIREBASE_API_KEY
 - FIREBASE_AUTH_DOMAIN
 - ENV

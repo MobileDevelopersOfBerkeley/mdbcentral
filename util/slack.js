@@ -3,106 +3,74 @@ var SlackBot = require('slackbots');
 const config = require("../config.json");
 
 // CONSTANTS
-const SLACK_BOT_TOKEN = process.env.SLACK_TOKEN;
+const SLACK_BOT_1_TOKEN = process.env.SLACK_TOKEN1;
+const SLACK_BOT_2_TOKEN = process.env.SLACK_TOKEN2;
 const SLACK_BOT_IMAGE = config.slackBotImage;
-const POST_HELLO_MESSAGE = false;
-const SLACK_BOT_HELLO_MESSAGE = config.slackBotHello;
 const SLACK_BOT_NAME = config.slackBotName;
-const ERROR_MESSAGE = config.slackBotErrorMessage;
-const TAG = "MDBot >> ";
-
-// SETUP
-var bot = null;
-var params = {
+const PARAMS = {
 	slackbot: true,
 	icon_url: SLACK_BOT_IMAGE
 };
-var users = {};
-var channels = {};
 
-// HELPER
-function _start() {
-	bot.getChannels().then(function(data) {
-		for (var i = 0; i < data.channels.length; i++) {
-			var channel = data.channels[i];
-			channels[channel.id] = channel;
+// HELPERS
+function _getObjs(bot, data, dataKey, fnName, objName) {
+	return bot[fnName]().then(function(dat) {
+		var objs = {};
+		for (var i = 0; i < dat[objName].length; i++) {
+			var obj = dat[objName][i];
+			objs[obj.id] = obj;
 		}
-		return bot.getUsers();
-	}).then(function(data) {
-		for (var i = 0; i < data.members.length; i++) {
-			var user = data.members[i];
-			users[user.id] = user;
-		}
-		if (POST_HELLO_MESSAGE === true) {
-			return sendMessage(Promise.resolve(SLACK_BOT_HELLO_MESSAGE), "general",
-				true);
-		}
+		data[dataKey] = objs;
 	});
 }
 
-function _init(onMessage) {
-	if (!bot) {
-		bot = new SlackBot({
-			token: SLACK_BOT_TOKEN,
-			name: SLACK_BOT_NAME
+function _getChannels(bot, data) {
+	return _getObjs(bot, data, "channels", "getChannels", "channels");
+}
+
+function _getUsers(bot, data) {
+	return _getObjs(bot, data, "users", "getUsers", "members");
+}
+
+function _start(bot, data) {
+	return new Promise(function(resolve, reject) {
+		bot.on('start', function() {
+			resolve(Promise.all([
+				_getChannels(bot, data),
+				_getUsers(bot, data)
+			]));
 		});
-		bot.on('start', _start);
-		if (onMessage)
-			bot.on('message', onMessage);
-	}
-}
-
-function _post(str, value, isChannel) {
-	if (isChannel) {
-		return bot.postMessageToChannel(str, value, params).then(function() {
-			console.log(TAG + "Sent message to channel " + str + ": \"" + value + "\"");
-		});
-	}
-	return bot.postMessageToUser(str, value, params).then(function() {
-		console.log(TAG + "Sent message to user " + str + ": \"" + value + "\"");
 	});
 }
 
-function _genErrorCallback(str, isChannel) {
-	function errorCallback(error) {
-		return _post(str, ERROR_MESSAGE, isChannel);
-	}
-	return errorCallback
-}
-
-function _genSuccessCallback(str, isChannel) {
-	function successCallback(x) {
-		return _post(str, x, isChannel);
-	}
-	return successCallback;
-}
-
-// METHODS
-function sendMessage(p, str, isChannel) {
-	console.log(TAG + "Sending message to " + str);
-	return p.then(_genSuccessCallback(str, isChannel)).catch(_genErrorCallback(str,
-		isChannel));
-}
-
-function listen(onMessage) {
-	console.log(TAG + "Listening");
-	_init(function(data) {
-		console.log(TAG + "Data: ", data);
-		onMessage(data);
+function _Bot(token) {
+	var bot = new SlackBot({
+		token: token,
+		name: SLACK_BOT_NAME
 	});
-	return Promise.resolve(true);
-}
-
-function send(channel, message) {
-	console.log(TAG + "One time send to " + channel +
-		" saying \"" + message + "\"");
-	_init();
-	return bot.postMessageToChannel(channel, message, params);
+	var data = {};
+	return {
+		start: function() {
+			return _start(bot, data);
+		},
+		getUsers: function() {
+			return data.users;
+		},
+		getChannels: function() {
+			return data.channels;
+		},
+		setMessageFn: function(fn) {
+			bot.on('message', fn);
+		},
+		sendToUser: function(user, message) {
+			return bot.postMessageToUser(user, message, PARAMS);
+		},
+		sendToChannel: function(channel, message) {
+			return bot.postMessageToChannel(channel, message, PARAMS);
+		}
+	}
 }
 
 // EXPORTS
-module.exports.users = users;
-module.exports.channels = channels;
-module.exports.listen = listen;
-module.exports.send = send;
-module.exports.sendMessage = sendMessage;
+module.exports.bot1 = _Bot(SLACK_BOT_1_TOKEN);
+module.exports.bot2 = _Bot(SLACK_BOT_2_TOKEN);
