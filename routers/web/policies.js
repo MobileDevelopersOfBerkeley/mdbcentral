@@ -19,11 +19,7 @@ router.get("/policies", function(req, res) {
   res.redirect("/policies/1");
 });
 
-router.get("/policies/:id", function(req, res) {
-  if (!req.cookies.member) {
-    res.redirect("/login");
-    return;
-  }
+router.get("/policies/:id", helper.isLoggedIn, function(req, res) {
   var member = req.cookies.member;
   helper.genData("policies", member).then(function(data) {
     data.docPath = _getDocById(req.params.id);

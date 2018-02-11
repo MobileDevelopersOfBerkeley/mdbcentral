@@ -9,8 +9,10 @@ const loginRouter = require("./login.js");
 const policiesRouter = require("./policies.js");
 const profileRouter = require("./profile.js");
 const attendanceRouter = require("./attendance.js");
+const bigLittleRouter = require("./biglittle.js");
 
 // ROUTES
+router.use(bigLittleRouter);
 router.use(assignmentRouter);
 router.use(attendanceRouter);
 router.use(calendarRouter);

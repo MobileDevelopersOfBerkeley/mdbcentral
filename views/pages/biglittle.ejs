@@ -10,6 +10,7 @@
                     <div class="content table-responsive table-full-width">
                         <table class="table table-hover table-striped">
                             <thead>
+                                <th>#</th>
                                 <th>Pair</th>
                                 <th>Points</th>
                             </thead>
@@ -17,6 +18,7 @@
                                 <% for (var i = 0; i < pairs.length; i++) { %>
                                   <% var pair = pairs[i]; %>
                                   <tr>
+                                    <td><%- (i + 1) %></td>
                                     <td><%- pair.name %></td>
                                     <td><%- pair.points %></td>
                                   </tr>

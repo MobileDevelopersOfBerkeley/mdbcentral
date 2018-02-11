@@ -10,7 +10,7 @@ function get() {
   return dbUtil.getAll(ref).then(function(pairs) {
     if (pairs.length == 0) return Promise.reject(new Error(noContestErr));
     return pairs.sort(function(pair1, pair2) {
-      return pair1.points - pair2.points;
+      return pair2.points - pair1.points;
     });
   });
 }
