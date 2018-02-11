@@ -26,7 +26,7 @@ router.post("/signIns/manual", function(req, res) {
     .keyExistsInDB(dbUtil.refs.memberRef);
   req.checkBody("eventId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("eventId", routerUtil.errors.dbErrorMessage)
-    .keyExistsInDB(dbUtil.refs.eventRef);
+    .keyExistsInDB(dbUtil.refs.eventsRef);
   req.body.code = "manual";
   req.body.member = req.body.id;
   return routerUtil.completeRequest(req, res, signInLogic.createManual,

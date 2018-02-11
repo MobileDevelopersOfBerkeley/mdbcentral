@@ -19,7 +19,6 @@ function create(params) {
 }
 
 function createManual(params) {
-  return Promise.reject(new Error("TESTING: " + JSON.stringify(params, null, 2)));
   return dbUtil.createByAutoKey(ref, {
     eventId: params.eventId,
     member: params.member,
