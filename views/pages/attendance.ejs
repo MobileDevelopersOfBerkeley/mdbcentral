@@ -25,7 +25,45 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
+          <div class="card">
+              <div class="header">
+                  <h4 class="title">Manual Sign In</h4>
+                  <p class="category pull-left">Create sign in object on behalf of member</p>
+              </div>
+              <div class="content">
+                <form action="/signIns/manual" method="post" id="manualForm">
+                  <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Member</label>
+                            <select form="manualForm" name="id" class="form-control" required>
+                              <% for (var i = 0; i < members.length; i++) { %>
+                                <% var member = members[i]; %>
+                                <option value="<%- member._key %>"><%- member.name %></option>
+                              <% } %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Event</label>
+                            <select form="manualForm" name="eventId" class="form-control" required>
+                              <% for (var i = 0; i < events.length; i++) { %>
+                                <% var event = events[i]; %>
+                                <option value="<%- event._key %>"><%- event.title %></option>
+                              <% } %>
+                            </select>
+                        </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-info btn-fill pull-right">Create</button>
+                  <div class="clearfix"></div>
+                </form>
+              </div>
+          </div>
+        </div>
+        <div class="col-md-4">
           <div class="card">
               <div class="header">
                   <h4 class="title">Attendance By Name</h4>
@@ -47,7 +85,7 @@
               </div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="card">
               <div class="header">
                   <h4 class="title">Attendance By Event</h4>

@@ -18,6 +18,14 @@ function create(params) {
   });
 }
 
+function createManual(params) {
+  return dbUtil.createByAutoKey(ref, {
+    eventId: params.eventId,
+    member: params.member,
+    code: params.code
+  });
+}
+
 function getAttendanceByEvent(params) {
   return eventLogic.getAll().then(function(events) {
     var eList = events.filter(function(event) {
@@ -98,6 +106,7 @@ function getAllAttendance() {
 }
 
 // EXPORTS
+module.exports.createManual = createManual;
 module.exports.create = create;
 module.exports.getAllAttendance = getAllAttendance;
 module.exports.getAttendanceByEvent = getAttendanceByEvent;
