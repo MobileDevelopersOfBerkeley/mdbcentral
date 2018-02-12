@@ -2,16 +2,23 @@
 var similarity = require("string-similarity");
 var bot1 = require("../util/slack.js").bot1;
 var apiai = require("../util/apiai.js");
+var util = require("../util/util.js");
 var cleverbot = require("../util/cleverbot.js");
+var runOnceADay = require("../util/task.js").runOnceADay;
 var bigLittleContestLogic = require("./BigLittleContest.js");
+var eventsLogic = require("./Events.js");
 
 // CONSTANTS
 const SLACK_BOT_CHANNEL1 = process.env.SLACK_BOT1_CHANNEL1;
 const SLACK_BOT_CHANNEL2 = process.env.SLACK_BOT1_CHANNEL2;
+const SLACK_BOT_CHANNEL3 = process.env.SLACK_BOT1_CHANNEL3;
 const SLACK_BOT_TS_HIT_LENGTH = 1000;
 const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
 const STRING_SIMILARITY_RATIO_THRESH = .7;
+const DAYS_AHEAD = 1;
+const HOUR_OF_DAY = 9;
+const REMIND_NON_ATTENDANCE_EVENTS = false;
 
 // GLOBALS
 var tsHits = [];
@@ -176,12 +183,38 @@ function _onMessage(data) {
   }
 }
 
+function _sendReminders() {
+  return eventsLogic.getAll().then(function(events) {
+    var today = new Date();
+    if (REMIND_NON_ATTENDANCE_EVENTS !== true) {
+      events = events.filter(function(event) {
+        return event.attendance === true;
+      });
+    }
+    events.map(function(event) {
+      var d = new Date();
+      d.setTime(event.timestamp);
+      event._daysApart = util.daysApart(today, d);
+      return event;
+    }).filter(function(event) {
+      return event._daysApart <= DAYS_AHEAD;
+    }).forEach(function(event) {
+      bot2.sendToChannel(
+        SLACK_BOT_CHANNEL3,
+        "@channel *" + event.title +
+        "* is coming up in " + event._daysApart + " days"
+      )
+    });
+  });
+}
+
 // METHODS
 function listen(successCb, errorCb) {
   bot1.start().then(function() {
     users = bot1.getUsers();
     channels = bot1.getChannels();
     bot1.setMessageFn(_onMessage);
+    runOnceADay(HOUR_OF_DAY, _sendReminders);
   }).then(function(c) {
     successCb();
   }).catch(function(error) {

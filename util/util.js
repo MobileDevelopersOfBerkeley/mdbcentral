@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const regression = require("regression");
+const moment = require("moment");
 const stringSimilarity = require("string-similarity");
 
 // PROTOTYPES
@@ -17,6 +18,10 @@ String.prototype.similar = function(str) {
 // METHODS
 function getUnixTS() {
   return new Date().getTime();
+}
+
+function daysApart(dStart, dEnd) {
+  return moment(dStart).diff(moment(dEnd), 'days');
 }
 
 function genPieData(x, noStr) {
@@ -114,11 +119,6 @@ function dateToString(date, short) {
   return val + " " + date.getFullYear();
 }
 
-function dayDiff(date1, date2) {
-  var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-  return Math.ceil(timeDiff / (1000 * 3600 * 24));
-}
-
 function getProjectedPoints(data, shiftConstant) {
   shiftConstant = shiftConstant || 2;
   var xVals = data.map(function(point) {
@@ -140,7 +140,7 @@ function getProjectedPoints(data, shiftConstant) {
 }
 
 // EXPORTS
-module.exports.dayDiff = dayDiff;
+module.exports.daysApart = daysApart;
 module.exports.getProjectedPoints = getProjectedPoints;
 module.exports.dateToString = dateToString;
 module.exports.parseBool = parseBool;
