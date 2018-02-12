@@ -3,8 +3,6 @@ const firebaseUtil = require("../util/firebase.js");
 const storageUtil = firebaseUtil.storage;
 const dbUtil = firebaseUtil.db;
 const authUtil = firebaseUtil.auth;
-const githubUtil = require("../util/github.js");
-const getGithubCache = require("./GithubCache.js").get;
 const getRoleByUid = require("./Roles.js").getByUid;
 
 // CONSTANTS
@@ -82,23 +80,6 @@ function create(params) {
         return Promise.reject(error);
       });
     });
-}
-
-function updateEffortRatings() {
-  return getGithubCache().then(function(cache) {
-    var usernameToEffortRating = githubUtil.listEffortRatings(cache);
-    return Promise.all(Object.keys(usernameToEffortRating)
-      .map(function(username) {
-        var effortRating = usernameToEffortRating[username];
-        return dbUtil.getByFields(ref, {
-          githubUsername: username
-        }).then(function(user) {
-          return dbUtil.updateByKey(ref, user._key, {
-            effortRating: effortRating
-          });
-        });
-      }));
-  });
 }
 
 function update(params) {
@@ -196,5 +177,4 @@ module.exports.getAll = getAll;
 module.exports.getRole = getRole;
 module.exports.update = update;
 module.exports.create = create;
-module.exports.updateEffortRatings = updateEffortRatings;
 module.exports.getMaxAbsences = getMaxAbsences;
