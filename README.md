@@ -33,6 +33,7 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 27. Users can view events in a calendar view
 28. Users can sign in to events
 29. Mdbot slack bot: reminds leadership of tasks on the leadership slack
+30. Mdbot scrapes github org to track performance of members in the club
 
 ## Environment Variables
 - FIREBASE_PROJECT_ID
@@ -43,9 +44,7 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 - APIAI_KEY
 - APIAI_SESSION_ID
 - CLEVERBOT_KEY
-- GITHUB_CLIENT_SECRET
-- GITHUB_CLIENT_ID
-- GITHUB_ORG_ID
+- GITHUB_TOKEN
 - GMAIL_PASSWORD
 - GMAIL_EMAIL
 - SLACK_BOT1_CHANNEL1
