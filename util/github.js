@@ -31,7 +31,7 @@ github.authenticate({
 function _isValidFileName(filename) {
   if (filename.indexOf(".") < 0) return false;
   var x = filename.split(".");
-  var ext = x[x.length - 1];
+  var ext = x[x.length - 1].trim().toLowerCase();
   return sourceCodeExts.indexOf(ext) >= 0;
 }
 
