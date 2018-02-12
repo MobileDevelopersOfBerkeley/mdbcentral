@@ -50,6 +50,7 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 - GMAIL_EMAIL
 - SLACK_BOT1_CHANNEL1
 - SLACK_BOT1_CHANNEL2
+- SLACK_BOT1_CHANNEL3
 - SLACK_IVP_ID
 - SLACK_BOT2_CHANNEL1
 - SLACK_TOKEN1
