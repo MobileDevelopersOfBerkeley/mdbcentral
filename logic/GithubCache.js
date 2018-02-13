@@ -43,7 +43,7 @@ function _setEffortRatings(cache) {
 }
 
 function _set() {
-  return githubUtil.getStats().then(function(stats) {
+  return githubUtil.getStats(org_id).then(function(stats) {
     return dbUtil.setRaw(ref, JSON.stringify(stats));
   });
 }
@@ -58,8 +58,7 @@ function get() {
 }
 
 function listen(successCb) {
-  // TODO: uncomment this when ready
-  // runOnceADay(hour_of_day, _set);
+  runOnceADay(hour_of_day, _set);
   successCb();
 }
 

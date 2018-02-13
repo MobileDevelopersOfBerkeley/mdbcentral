@@ -9,7 +9,14 @@ const sourceCodeExts = [
   "js", "ejs", "html", "py", "css", "swift",
   "c", "cpp", "h", "java"
 ];
-const maxLinesConsideredPerFile = 5000;
+const ignoreFolders = [
+  "node_modules", "bower_components"
+];
+const ignoreExts = [
+  "md"
+];
+const maxLinesConsideredPerFile = 1000;
+const maxLinesConsideredPerCommit = 2000;
 
 // SETUP
 var github = new GitHubApi({
@@ -32,11 +39,15 @@ function _isValidFileName(filename) {
   if (filename.indexOf(".") < 0) return false;
   var x = filename.split(".");
   var ext = x[x.length - 1].trim().toLowerCase();
-  return sourceCodeExts.indexOf(ext) >= 0;
+  if (filename.indexOf("/") >= 0) {
+    var folder = filename.split("/")[0];
+    if (ignoreFolders.indexOf(folder) >= 0) return false;
+  }
+  return ignoreExts.indexOf(ext) < 0 && sourceCodeExts.indexOf(ext) >= 0;
 }
 
 function _getFileTotal(file) {
-  return file.additions + file.deletions + file.changes;
+  return file.additions + file.changes;
 }
 
 function _isValidFile(file) {
@@ -56,7 +67,7 @@ function _getCommits(org, repoName) {
         repo: repoName,
         sha: commit.sha
       }).then(function(res) {
-        commits.push(res.data.commit);
+        commits.push(res.data);
       });
     }));
   }).then(function() {
@@ -84,18 +95,14 @@ function _getRepoStats(org, repoName) {
   return _getCommits(org, repoName).then(function(commits) {
     var stats = {};
     commits.forEach(function(commit) {
+      if (!commit.author) return false;
       var username = commit.author.login;
-      // TODO: remove this when done testing
-      if (!commit.files) {
-        console.log(commit);
-        console.log(1);
-        process.exit(0);
-      }
       var total = commit.files.filter(_isValidFile)
         .reduce(function(sum, file) {
           sum += _getFileTotal(file);
           return sum;
         }, 0);
+      if (total > maxLinesConsideredPerCommit) return false;
       if (Object.keys(stats).indexOf(username) < 0)
         stats[username] = 0;
       stats[username] += total;
@@ -122,6 +129,8 @@ function getStats(org) {
         });
       });
     }));
+  }).then(function() {
+    return stats;
   });
 }
 
@@ -138,10 +147,3 @@ function isValidUsername(username) {
 // EXPORTS
 module.exports.getStats = getStats;
 module.exports.isValidUsername = isValidUsername;
-
-// TODO: remove this when done testing
-getStats("MobileDevelopersOfBerkeley").then(function() {
-  console.log(stats);
-}).catch(function(error) {
-  console.log(error);
-});
