@@ -7,7 +7,7 @@ const router = require("./routers/main.js");
 const validator = require('./routers/validator.js');
 const slack1 = require("./logic/Slack1.js");
 const slack2 = require("./logic/Slack2.js");
-const githubCache = reqiure("./logic/GithubCache.js");
+const githubCache = require("./logic/GithubCache.js");
 const config = require("./config.json");
 
 // CONSTANTS
