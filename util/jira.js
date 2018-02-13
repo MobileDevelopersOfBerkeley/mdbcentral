@@ -41,7 +41,6 @@ function _getTask(taskId) {
 function getTasks() {
   return new Promise(function(resolve, reject) {
     jira.searchJira("", {}, function(error, data) {
-      var today = new Date();
       if (error) reject(error);
       else resolve(Promise.all(data.issues.map(function(issue) {
         return _getTask(issue.key);

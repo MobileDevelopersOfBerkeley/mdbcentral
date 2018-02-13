@@ -2,8 +2,7 @@
   "devPort": 8080,
 
   "userAgent": "mdbcentral",
-
-  "effortRating3Lines": 1000,
+  "githubOrgId": "MobileDevelopersOfBerkeley",
 
   "gmailFromStr": "\"MDB Leadership Bot\" <contact@mobiledevsberkeley.org>",
   "gmailSubjectPrefix": "[MDB] ",

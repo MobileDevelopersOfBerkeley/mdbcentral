@@ -1,73 +1,67 @@
 // DEPENDENCIES
+const stats = require("stats-lite");
 const githubUtil = require("../util/github.js");
 const dbUtil = require("../util/firebase.js").db;
+const config = require("../config.json");
+const runOnceADay = require("../util/task.js").runOnceADay;
 
 // CONSTANTS
 const ref = dbUtil.refs.githubCacheRef;
+const org_id = config.githubOrgId;
+const effortRating_3_lines = 1000;
+const hour_of_day = 9;
+
+// HELPERS
+function _setEffortRatings(cache) {
+  cache.effortRatings = {};
+  Object.keys(cache.repoStats).forEach(function(repo_name) {
+    var usernameToLines = cache.repoStats[repo_name];
+    var values = Object.keys(usernameToLines).map(function(username) {
+      return usernameToLines[username];
+    });
+    var effortRating_1 = stats.percentile(values, 0.1);
+    var effortRating_2 = stats.percentile(values, 0.3);
+    var effortRating_3 = stats.percentile(values, 0.5);
+    var effortRating_4 = stats.percentile(values, 0.7);
+    Object.keys(usernameToLines).forEach(function(username) {
+      var lines = usernameToLines[username];
+      var effortRating = undefined;
+      if (lines <= effortRating_1) effortRating = 1;
+      else if (lines <= effortRating_2) effortRating = 2;
+      else if (lines <= effortRating_3) effortRating = 3;
+      else if (lines <= effortRating_4) effortRating = 4;
+      else effortRating = 5;
+      if (lines >= effortRating_3_lines && effortRating < 3)
+        effortRating = 3;
+      if (Object.keys(cache.effortRatings).indexOf(username) < 0)
+        cache.effortRatings[username] = 0;
+      cache.effortRatings[username] =
+        Math.max(cache.effortRatings[username], effortRating);
+    });
+  });
+  return cache;
+}
+
+function _set() {
+  return githubUtil.getStats(org_id).then(function(stats) {
+    return dbUtil.setRaw(ref, JSON.stringify(stats));
+  });
+}
 
 // METHODS
 function get() {
   return dbUtil.getRaw(ref).then(function(cache) {
     if (!cache) return {};
-    return JSON.parse(cache);
+    cache = JSON.parse(cache);
+    return _setEffortRatings(cache);
   });
 }
 
-function update() {
-  return githubUtil.getCache().then(function(cache) {
-    return dbUtil.setRaw(ref, JSON.parse(snapshot.val()));
-  });
-}
-
-function getUserLines() {
-  return get().then(function(repoNameToUsernameToLines) {
-    var result = {}
-    for (var repoName in repoNameToUsernameToLines) {
-      var usernameToLines = repoNameToUsernameToLines[repoName];
-      for (var username in usernameToLines) {
-        var lines = usernameToLines[username];
-        if (username in result) {
-          result[username] += lines;
-        } else {
-          result[username] = lines;
-        }
-      }
-    }
-    return result;
-  });
-}
-
-function getProjectPercentages() {
-  return get().then(function(repoNameToUsernameToLines) {
-    var projectPercentages = [];
-    for (var repoName in repoNameToUsernameToLines) {
-      var projectPercentage = {
-        id: repoName,
-        name: repoName,
-        percentages: [
-          [],
-          []
-        ]
-      };
-      var userToLinesMap = repoNameToUsernameToLines[repoName];
-      var totalLines = 0;
-      for (var user in userToLinesMap) {
-        totalLines += userToLinesMap[user];
-      }
-      for (var user in userToLinesMap) {
-        var x = Math.ceil((userToLinesMap[user] / totalLines) * 100);
-        if (x == 0) x = 1;
-        projectPercentage.percentages[0].push(user + "(" + x + "%)");
-        projectPercentage.percentages[1].push(x);
-      }
-      projectPercentages.push(projectPercentage);
-    }
-    return projectPercentages;
-  });
+function listen(successCb) {
+  runOnceADay(hour_of_day, _set);
+  successCb();
 }
 
 // EXPORTS
 module.exports.get = get;
-module.exports.update = update;
-module.exports.getUserLines = getUserLines;
-module.exports.getProjectPercentages = getProjectPercentages;
+module.exports.listen = listen;

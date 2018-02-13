@@ -1,6 +1,7 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const routerUtil = require("../../util/router.js");
+const util = require("../../util/util.js");
 const dbUtil = require("../../util/firebase.js").db;
 const eventLogic = require("../../logic/Events.js");
 
