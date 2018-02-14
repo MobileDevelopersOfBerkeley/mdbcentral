@@ -41,9 +41,12 @@ function _getTask(taskId) {
 function getTasks() {
   return new Promise(function(resolve, reject) {
     jira.searchJira("", {}, function(error, data) {
-      if (error) reject(error);
+      if (error) reject(new Error("Can't get all issues: " + error.toString()));
       else resolve(Promise.all(data.issues.map(function(issue) {
-        return _getTask(issue.key);
+        return _getTask(issue.key).catch(function(error) {
+          return new Error("Can't find issue w/ key: " +
+            issue.key);
+        });
       })));
     });
   }).then(function(tasks) {
