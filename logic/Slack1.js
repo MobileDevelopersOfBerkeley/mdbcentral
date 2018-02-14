@@ -199,7 +199,7 @@ function _sendReminders() {
     }).filter(function(event) {
       return event._daysApart <= DAYS_AHEAD;
     }).map(function(event) {
-      return bot2.sendToChannel(
+      return bot1.sendToChannel(
         SLACK_BOT_CHANNEL3,
         "@channel *" + event.title +
         "* is coming up in " + event._daysApart + " days"
