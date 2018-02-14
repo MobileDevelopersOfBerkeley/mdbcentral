@@ -21,7 +21,7 @@ function getUnixTS() {
 }
 
 function daysApart(dStart, dEnd) {
-  return moment(dStart).diff(moment(dEnd), 'days');
+  return moment(dEnd).diff(moment(dStart), 'days');
 }
 
 function genPieData(x, noStr) {

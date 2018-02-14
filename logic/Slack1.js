@@ -205,6 +205,8 @@ function _sendReminders() {
         "* is coming up in " + event._daysApart + " days"
       )
     }));
+  }).catch(function(error) {
+    return bot1.sendToUser("krishnan", error.toString());
   });
 }
 
