@@ -67,9 +67,5 @@ function getTasks() {
   });
 }
 
-getTasks().then(function(tasks) {
-  console.log(tasks);
-});
-
 // EXPORTS
 module.exports.getTasks = getTasks;

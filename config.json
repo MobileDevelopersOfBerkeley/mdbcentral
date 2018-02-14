@@ -10,5 +10,5 @@
   "slackBotName": "MDBot",
   "slackBotImage": "https://avatars.slack-edge.com/2017-03-16/154560287617_f5e4a785dda2912be9f9_72.jpg",
 
-  "startJobsOnBoot": true
+  "startJobsOnBoot": false
 }
