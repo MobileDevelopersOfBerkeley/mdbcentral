@@ -53,7 +53,7 @@ function _getTasksByProjectKey(key) {
     jira.searchJira("project=\"" + key + "\"", {}, function(error, data) {
       if (error) reject(error);
       else resolve(Promise.all(data.issues.map(function(issue) {
-        return _getTask(issue.key);
+        return _getTask(issue.id);
       })));
     });
   })
@@ -77,6 +77,10 @@ function getTasks() {
     });
   });
 }
+
+getTasks().then(function(tasks) {
+  console.log(tasks);
+});
 
 // EXPORTS
 module.exports.getTasks = getTasks;

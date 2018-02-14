@@ -46,7 +46,7 @@ function _set() {
   return githubUtil.getStats(org_id).then(function(stats) {
     return dbUtil.setRaw(ref, JSON.stringify(stats));
   }).catch(function(error) {
-    console.error(error);
+    console.error("Most likeley usage limit exceed for Github API");
   });
 }
 
