@@ -1,15 +1,15 @@
 // DEPENDENCIES
-const JiraApi = require("jira").JiraApi;
+const JiraApi = require("jira-client");
 
 // INITIALIZE
-var jira = new JiraApi(
-  'https',
-  process.env.JIRA_HOST,
-  process.env.JIRA_PORT,
-  process.env.JIRA_USERNAME,
-  process.env.JIRA_PASSWORD,
-  '2'
-);
+var jira = new JiraApi({
+  protocol: 'https',
+  host: process.env.JIRA_HOST,
+  username: process.env.JIRA_USERNAME,
+  password: process.env.JIRA_PASSWORD,
+  apiVersion: '2',
+  strictSSL: true
+});
 
 // HELPERS
 function _formatTask(task) {
@@ -29,34 +29,23 @@ function _formatTask(task) {
 }
 
 function _getTask(taskId) {
-  return new Promise(function(resolve, reject) {
-    jira.findIssue(taskId, function(error, issue) {
-      if (error) reject(error);
-      else resolve(_formatTask(issue));
-    });
-  });
+  return jira.findIssue(taskId).then(_formatTask);
 }
 
 function _getProjectKeys() {
-  return new Promise(function(resolve, reject) {
-    jira.listProjects(function(error, data) {
-      if (error) reject(error);
-      else resolve(data.map(function(d) {
-        return d.key;
-      }));
+  return jira.listProjects().then(function(data) {
+    return data.map(function(d) {
+      return d.key;
     });
   });
 }
 
 function _getTasksByProjectKey(key) {
-  return new Promise(function(resolve, reject) {
-    jira.searchJira("project=\"" + key + "\"", {}, function(error, data) {
-      if (error) reject(error);
-      else resolve(Promise.all(data.issues.map(function(issue) {
-        return _getTask(issue.id);
-      })));
-    });
-  })
+  return jira.searchJira("project=\"" + key + "\"", {}).then(function(data) {
+    return Promise.all(data.issues.map(function(issue) {
+      return _getTask(issue.key);
+    }));
+  });
 }
 
 // METHODS
