@@ -6,7 +6,7 @@ var runOnceADay = require("../util/task.js").runOnceADay;
 
 // CONSTANTS
 const SLACK_CHANNEL = process.env.SLACK_BOT2_CHANNEL1;
-const DAYS_AHEAD = 3;
+const DAYS_AHEAD = 2;
 const HOUR_OF_DAY = 13;
 
 // HELPERS
