@@ -37,19 +37,40 @@ function _getTask(taskId) {
   });
 }
 
-// METHODS
-function getTasks() {
+function _getProjectKeys() {
   return new Promise(function(resolve, reject) {
-    jira.searchJira("", {}, function(error, data) {
-      if (error) reject(new Error("Can't get all issues: " + error.toString()));
+    jira.listProjects(function(error, data) {
+      if (error) reject(error);
+      else resolve(data.map(function(d) {
+        return d.key;
+      }));
+    });
+  });
+}
+
+function _getTasksByProjectKey(key) {
+  return new Promise(function(resolve, reject) {
+    jira.searchJira("project=\"" + key + "\"", {}, function(error, data) {
+      if (error) reject(error);
       else resolve(Promise.all(data.issues.map(function(issue) {
-        return _getTask(issue.key).catch(function(error) {
-          return new Error("Can't find issue w/ key: " +
-            issue.key);
-        });
+        return _getTask(issue.key);
       })));
     });
-  }).then(function(tasks) {
+  })
+}
+
+// METHODS
+function getTasks() {
+  var tasks = [];
+  return _getProjectKeys().then(function(keys) {
+    return Promise.all(keys.map(function(key) {
+      return _getTasksByProjectKey(key).then(function(tList) {
+        tList.forEach(function(t) {
+          tasks.push(t);
+        });
+      });
+    }));
+  }).then(function() {
     var today = new Date();
     return tasks.filter(function(task) {
       return task.dueDate != null && !task.done;
