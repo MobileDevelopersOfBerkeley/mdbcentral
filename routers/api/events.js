@@ -17,8 +17,8 @@ router.post("/events", function(req, res) {
   req.checkBody("startTime", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("endTime", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("attendance", routerUtil.errors.missingErrorMessage).notEmpty();
-  req.checkBody("attendance", routerUtil.errors.formatErrorMessage).isValidBool();
-  req.body.attendance = util.parseBool(req.body.attendance);
+  req.body.attendance = req.body.attendance.trim().toLowerCase() == "yes" ?
+    true : false;
   return routerUtil.completeRequest(req, res, eventLogic.create,
     "/calendar");
 });

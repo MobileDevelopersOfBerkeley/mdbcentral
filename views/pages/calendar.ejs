@@ -147,8 +147,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Attendance?</label>
-                                        <input type="checkbox" name="attendance" checked value="true">
-                                        <input type='hidden' name='attendance' value='false'>
+                                        <input required type="text" class="form-control" value="yes" name="attendance">
                                     </div>
                                 </div>
                             </div>
@@ -171,6 +170,7 @@
                                   <th>Title</th>
                                   <th>Date</th>
                                   <th>End Time</th>
+                                  <th>Attendance?</th>
                                   <th>Delete?</th>
                               </thead>
                               <tbody id="events">
@@ -187,6 +187,7 @@
                                           </button>
                                         </form>
                                       </td>
+                                      <td><%- event.attendance === true ? "Yes" : "No" %></td>
                                     </tr>
                                   <% } %>
                               </tbody>
