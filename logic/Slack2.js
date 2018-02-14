@@ -13,19 +13,21 @@ const HOUR_OF_DAY = 13;
 function _sendReminders() {
   return jira.getTasks().then(function(tasks) {
     var today = new Date();
-    tasks.map(function(task) {
+    return Promise.all(tasks.map(function(task) {
       task._daysApart = util.daysApart(today, task.dueDate);
       return task;
     }).filter(function(task) {
       return task._daysApart <= DAYS_AHEAD;
-    }).forEach(function(task) {
-      bot2.sendToChannel(
+    }).map(function(task) {
+      return bot2.sendToChannel(
         SLACK_CHANNEL,
         "*" + task.recipient + "* you have to finish task *" +
         task.id + "* in *" + task._daysApart +
         " days*: " + task.info
       )
-    });
+    }));
+  }).catch(function(error) {
+    return bot2.sendToUser("krishnan", error.toString());
   });
 }
 

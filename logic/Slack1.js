@@ -191,20 +191,20 @@ function _sendReminders() {
         return event.attendance === true;
       });
     }
-    events.map(function(event) {
+    return Promise.all(events.map(function(event) {
       var d = new Date();
       d.setTime(event.timestamp);
       event._daysApart = util.daysApart(today, d);
       return event;
     }).filter(function(event) {
       return event._daysApart <= DAYS_AHEAD;
-    }).forEach(function(event) {
-      bot2.sendToChannel(
+    }).map(function(event) {
+      return bot2.sendToChannel(
         SLACK_BOT_CHANNEL3,
         "@channel *" + event.title +
         "* is coming up in " + event._daysApart + " days"
       )
-    });
+    }));
   });
 }
 
