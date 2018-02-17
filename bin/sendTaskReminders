@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+var sendReminders = require("../logic/Slack2.js").sendReminders;
+
+sendReminders().then(function() {
+  console.log("Task reminders sent!");
+}).catch(function(error) {
+  console.error(error);
+});

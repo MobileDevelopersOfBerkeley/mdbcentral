@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+var set = require("../logic/GithubCache.js").set;
+
+set().then(function() {
+  console.log("Github cache refreshed!");
+}).catch(function(error) {
+  console.error(error);
+});

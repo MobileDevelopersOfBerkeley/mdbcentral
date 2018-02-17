@@ -2,15 +2,21 @@
 var bot2 = require("../util/slack.js").bot2;
 var jira = require("../util/jira.js");
 var util = require("../util/util.js");
-var runOnceADay = require("../util/task.js").runOnceADay;
 
 // CONSTANTS
 const SLACK_CHANNEL = process.env.SLACK_BOT2_CHANNEL1;
 const DAYS_AHEAD = 2;
-const HOUR_OF_DAY = 13;
 
-// HELPERS
-function _sendReminders() {
+// METHODS
+function listen(successCb, errorCb) {
+  bot2.start().then(function(c) {
+    successCb();
+  }).catch(function(error) {
+    errorCb();
+  });
+}
+
+function sendReminders() {
   return jira.getTasks().then(function(tasks) {
     var today = new Date();
     return Promise.all(tasks.map(function(task) {
@@ -31,16 +37,6 @@ function _sendReminders() {
   });
 }
 
-// METHODS
-function listen(successCb, errorCb) {
-  bot2.start().then(function() {
-    runOnceADay(HOUR_OF_DAY, _sendReminders);
-  }).then(function(c) {
-    successCb();
-  }).catch(function(error) {
-    errorCb();
-  });
-}
-
 // EXPORTS
 module.exports.listen = listen;
+module.exports.sendReminders = sendReminders;

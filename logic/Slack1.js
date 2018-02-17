@@ -4,7 +4,6 @@ var bot1 = require("../util/slack.js").bot1;
 var apiai = require("../util/apiai.js");
 var util = require("../util/util.js");
 var cleverbot = require("../util/cleverbot.js");
-var runOnceADay = require("../util/task.js").runOnceADay;
 var bigLittleContestLogic = require("./BigLittleContest.js");
 var eventsLogic = require("./Events.js");
 
@@ -17,7 +16,6 @@ const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
 const STRING_SIMILARITY_RATIO_THRESH = .7;
 const DAYS_AHEAD = 1;
-const HOUR_OF_DAY = 9;
 const REMIND_NON_ATTENDANCE_EVENTS = false;
 
 // GLOBALS
@@ -183,7 +181,20 @@ function _onMessage(data) {
   }
 }
 
-function _sendReminders() {
+// METHODS
+function listen(successCb, errorCb) {
+  bot1.start().then(function() {
+    users = bot1.getUsers();
+    channels = bot1.getChannels();
+    bot1.setMessageFn(_onMessage);
+  }).then(function(c) {
+    successCb();
+  }).catch(function(error) {
+    errorCb();
+  });
+}
+
+function sendReminders() {
   return eventsLogic.getAll().then(function(events) {
     var today = new Date();
     if (REMIND_NON_ATTENDANCE_EVENTS !== true) {
@@ -210,19 +221,6 @@ function _sendReminders() {
   });
 }
 
-// METHODS
-function listen(successCb, errorCb) {
-  bot1.start().then(function() {
-    users = bot1.getUsers();
-    channels = bot1.getChannels();
-    bot1.setMessageFn(_onMessage);
-    runOnceADay(HOUR_OF_DAY, _sendReminders);
-  }).then(function(c) {
-    successCb();
-  }).catch(function(error) {
-    errorCb();
-  });
-}
-
 // EXPORTS
 module.exports.listen = listen;
+module.exports.sendReminders = sendReminders;

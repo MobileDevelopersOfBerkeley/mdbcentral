@@ -3,13 +3,11 @@ const stats = require("stats-lite");
 const githubUtil = require("../util/github.js");
 const dbUtil = require("../util/firebase.js").db;
 const config = require("../config.json");
-const runOnceADay = require("../util/task.js").runOnceADay;
 
 // CONSTANTS
 const ref = dbUtil.refs.githubCacheRef;
 const org_id = config.githubOrgId;
 const effortRating_3_lines = 1000;
-const hour_of_day = 9;
 
 // HELPERS
 function _setEffortRatings(cache) {
@@ -42,14 +40,6 @@ function _setEffortRatings(cache) {
   return cache;
 }
 
-function _set() {
-  return githubUtil.getStats(org_id).then(function(stats) {
-    return dbUtil.setRaw(ref, JSON.stringify(stats));
-  }).catch(function(error) {
-    console.error("Most likeley usage limit exceed for Github API");
-  });
-}
-
 // METHODS
 function get() {
   return dbUtil.getRaw(ref).then(function(cache) {
@@ -59,11 +49,14 @@ function get() {
   });
 }
 
-function listen(successCb) {
-  runOnceADay(hour_of_day, _set);
-  successCb();
+function set() {
+  return githubUtil.getStats(org_id).then(function(stats) {
+    return dbUtil.setRaw(ref, JSON.stringify(stats));
+  }).catch(function(error) {
+    console.error("Most likeley usage limit exceed for Github API");
+  });
 }
 
 // EXPORTS
 module.exports.get = get;
-module.exports.listen = listen;
+module.exports.set = set;
