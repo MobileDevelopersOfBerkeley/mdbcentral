@@ -3,6 +3,7 @@ const dbUtil = require("../util/firebase.js").db;
 const util = require("../util/util.js");
 const eventLogic = require("../logic/Events.js");
 const memberLogic = require("../logic/Members.js");
+const getSemesterStart = require("../logic/SemesterStart.js").get;
 
 // CONSTANTS
 const ref = dbUtil.refs.signInRef;
@@ -70,11 +71,15 @@ function getAttendanceByName(params) {
 }
 
 function getAllAttendance() {
-  var events, members;
-  return eventLogic.getAll().then(function(eList) {
+  var events, members, semesterStartTS;
+  return getSemesterStart().then(function(ss) {
+    semesterStartTS = new Date(ss).getTime();
+    return eventLogic.getAll()
+  }).then(function(eList) {
     var today = util.getUnixTS();
     events = eList.filter(function(event) {
-      return event.timestamp <= today && event.attendance === true;
+      return event.timestamp <= today && event.attendance === true &&
+        event.timestamp >= semesterStartTS;
     });
     return memberLogic.getAll();
   }).then(function(mList) {
