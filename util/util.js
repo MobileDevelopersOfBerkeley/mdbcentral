@@ -15,13 +15,21 @@ String.prototype.similar = function(str) {
   return stringSimilarity.compareTwoStrings(me, other) >= .7;
 }
 
+function _sameDay(d1, d2) {
+  return d1.getDate() == d2.getDate() &&
+    d1.getMonth() == d2.getMonth() &&
+    d1.getFullYear() == d2.getFullYear();
+}
+
 // METHODS
 function getUnixTS() {
   return new Date().getTime();
 }
 
 function daysApart(dStart, dEnd) {
-  return moment(dEnd).diff(moment(dStart), 'days');
+  var days = moment(dEnd).diff(moment(dStart), 'days');
+  if (days == 0 && !_sameDay(dStart, dEnd)) return 1;
+  return days;
 }
 
 function genPieData(x, noStr) {
