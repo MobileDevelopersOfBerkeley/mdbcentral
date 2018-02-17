@@ -96,7 +96,7 @@ function _getRepoStats(org, repoName) {
     var stats = {};
     commits.forEach(function(commit) {
       if (!commit.author) return false;
-      var username = commit.author.login;
+      var username = commit.author.login.toLowerCase();
       var total = commit.files.filter(_isValidFile)
         .reduce(function(sum, file) {
           sum += _getFileTotal(file);

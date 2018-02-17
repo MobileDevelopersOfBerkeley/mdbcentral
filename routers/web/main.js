@@ -10,8 +10,10 @@ const policiesRouter = require("./policies.js");
 const profileRouter = require("./profile.js");
 const attendanceRouter = require("./attendance.js");
 const bigLittleRouter = require("./biglittle.js");
+const githubRouter = require("./github.js");
 
 // ROUTES
+router.use(githubRouter);
 router.use(bigLittleRouter);
 router.use(assignmentRouter);
 router.use(attendanceRouter);
