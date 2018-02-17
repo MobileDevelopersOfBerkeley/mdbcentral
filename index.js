@@ -7,7 +7,6 @@ const router = require("./routers/main.js");
 const validator = require('./routers/validator.js');
 const slack1 = require("./logic/Slack1.js");
 const slack2 = require("./logic/Slack2.js");
-const githubCache = require("./logic/GithubCache.js");
 const config = require("./config.json");
 
 // CONSTANTS
@@ -43,9 +42,6 @@ slack2.listen(function() {
   console.log("Slack Bot 2 listening");
 }, function() {
   console.log("Slack Bot 2 FATAL ERROR");
-});
-githubCache.listen(function() {
-  console.log("Github Cache updater running");
 });
 app.listen(port, function() {
   console.log("Server listening on port: " + port);
