@@ -3,6 +3,7 @@ const dbUtil = require("../util/firebase.js").db;
 const util = require("../util/util.js");
 const memberLogic = require("./Members.js");
 const eventLogic = require("./Events.js");
+const getSemesterStart = require("./SemesterStart.js").get;
 
 // CONSTANTS
 const ref = dbUtil.refs.expectedAbsenceRef;
@@ -22,7 +23,12 @@ function getAll() {
       })
     }));
   }).then(function() {
-    return result;
+    return getSemesterStart();
+  }).then(function(semesterStart) {
+    var ts = new Date(semesterStart).getTime();
+    return result.filter(function(x) {
+      return x.lastUpdated >= ts;
+    });
   });
 }
 
