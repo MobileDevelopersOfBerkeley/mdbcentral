@@ -5,8 +5,24 @@ const signInLogic = require("../../logic/SignIns.js");
 const signInCodeLogic = require("../../logic/SignInCode.js");
 const memberLogic = require("../../logic/Members.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
+const config = require("../../config.json");
+
+// CONSTANTS
+const newMaxAbsences = config.newMaxAbsences;
+const oldMaxAbsences = config.oldMaxAbsences;
 
 // HELPERS
+function _getColor(attendance, members, memberId) {
+  var numAbsences = attendance[memberId].absences.length;
+  var newMember = members.filter(function(x) {
+    return x._key == memberId;
+  })[0].newMember === true;
+  var maxAbsences = newMember ? newMaxAbsences : oldMaxAbsences;
+  if (numAbsences == 0) return "text-success";
+  if (numAbsences > maxAbsences) return "text-danger";
+  return "text-warning";
+}
+
 function _getAttendance(data) {
   return signInLogic.getAllAttendance().then(function(x) {
     data.attendanceData = x;
@@ -60,6 +76,7 @@ router.get("/attendance", helper.isLoggedIn, helper.isLeadership,
       ]);
       return Promise.all(plist);
     }).then(function() {
+      data.getColor = _getColor;
       res.render("index", data);
     });
   });

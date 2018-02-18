@@ -7,6 +7,11 @@ const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
 const eventLogic = require("../../logic/Events.js");
 const signInLogic = require("../../logic/SignIns.js");
 const canSignUpLogic = require("../../logic/CanSignUp.js");
+const config = require("../../config.json");
+
+// CONSTANTS
+const newMaxAbsences = config.newMaxAbsences;
+const oldMaxAbsences = config.oldMaxAbsences;
 
 // HELPERS
 function _getCanSignUp(data) {
@@ -44,9 +49,8 @@ function _getAttendance(data, id) {
     var attendance = a[id];
     data.absences = attendance.absences;
     data.signins = attendance.signIns;
-
-    // TODO: implement max absence policies
-    data.maxAbsences = 5;
+    data.maxAbsences = data.user.newMember === true ?
+      newMaxAbsences : oldMaxAbsences;
 
     var attendances = [];
     for (var i = 0; i < data.signins.length; i++) {

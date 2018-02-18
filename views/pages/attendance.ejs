@@ -132,7 +132,9 @@
                             <td><img src="<%- member.profileImage %>" class="image-circle"></td>
                             <td><%- member.name %></td>
                             <td><%- attendanceData[member._key].signIns.length %></td>
-                            <td><%- attendanceData[member._key].absences.length %></td>
+                            <td class="<%- getColor(attendanceData, members, member._key) %>">
+                              <%- attendanceData[member._key].absences.length %>
+                            </td>
                             <td>
                               <form action="/users/<%- member._key %>" method="post">
                                 <button style="margin-left: 10px" type="submit">
