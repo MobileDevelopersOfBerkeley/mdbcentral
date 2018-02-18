@@ -149,6 +149,44 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+              <div class="header">
+                  <h4 class="title">Manual sign ins created</h4>
+                  <p class="category pull-left">View of manual signins created by leadership</p>
+                  <p class="category pull-right btn btn-default hide-button" onclick="toggleCard('manualAttendance')" id="manualAttendanceToggle">Hide</p>
+              </div>
+              <div class="content table-responsive table-full-width">
+                  <table class="table table-hover table-striped">
+                      <thead>
+                        <th>Profile</th>
+                        <th>Member</th>
+                        <th>Date</th>
+                        <th>Delete?</th>
+                      </thead>
+                      <tbody id="manualAttendance">
+                        <% for (var i = 0; i < manualSignIns.length; i++) { %>
+                          <% var signIn = manualSignIns[i]; %>
+                          <tr>
+                            <td><img src="<%- signIn.profileImage %>" class="image-circle"></td>
+                            <td><%- signIn.name %></td>
+                            <td><%- timeToString(signIn.lastUpdated) %></td>
+                            <td>
+                              <form action="/signIns/manual/<%- signIn._key %>" method="post">
+                                <button style="margin-left: 10px" type="submit">
+                                  <i class="fa fa-trash"></i>
+                                </button>
+                              </form>
+                            </td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
           <div class="col-md-12">
               <div class="card">
                   <div class="header">

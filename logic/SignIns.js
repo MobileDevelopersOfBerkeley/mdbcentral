@@ -22,9 +22,19 @@ function create(params) {
 function createManual(params) {
   return dbUtil.createByAutoKey(ref, {
     eventId: params.eventId,
-    member: params.member,
+    member: params.id,
     code: params.code
   });
+}
+
+function getAllManual() {
+  return dbUtil.getByFields(ref, {
+    code: "manual"
+  });
+}
+
+function deleteById(params) {
+  return dbUtil.deleteByKey(ref, params.id);
 }
 
 function getAttendanceByEvent(params) {
@@ -111,6 +121,8 @@ function getAllAttendance() {
 }
 
 // EXPORTS
+module.exports.deleteById = deleteById;
+module.exports.getAllManual = getAllManual;
 module.exports.createManual = createManual;
 module.exports.create = create;
 module.exports.getAllAttendance = getAllAttendance;

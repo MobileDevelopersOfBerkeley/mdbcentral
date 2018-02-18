@@ -38,35 +38,8 @@ function toggleCard(elementId) {
   else _showCard(elementId);
 }
 
-function setupStripeInput(formId, inputId, errorId, tokenCallback) {
-  var form = document.getElementById(formId);
-  if (form) {
-    card.mount('#' + inputId);
-    card.addEventListener('change', function(event) {
-      var displayError = document.getElementById(errorId);
-      if (event.error) {
-        displayError.textContent = event.error.message;
-      } else {
-        displayError.textContent = '';
-      }
-    });
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
-      stripe.createToken(card).then(function(result) {
-        if (result.error) {
-          var errorElement = document.getElementById(errorId);
-          errorElement.textContent = result.error.message;
-        } else {
-          tokenCallback(result.token.id);
-        }
-      });
-    });
-  }
-}
-
-function _postUsers(token, cb, isUpdate) {
+function _postUsers(cb, isUpdate) {
   var data = new FormData();
-  data.append('stripeToken', token);
   if (isUpdate) data.append('update', true);
 
   function _getInt(val) {
@@ -134,15 +107,15 @@ function _postUsers(token, cb, isUpdate) {
   });
 }
 
-function signup(token) {
-  _postUsers(token, function(user) {
+function signup() {
+  _postUsers(function(user) {
     _setCookie("member", user._key);
     window.location.href = "/home";
   });
 }
 
-function updateProfile(token) {
-  _postUsers(token, function() {
+function updateProfile() {
+  _postUsers(function() {
     window.location.href = "/profile";
   }, true);
 }

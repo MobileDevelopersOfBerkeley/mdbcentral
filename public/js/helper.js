@@ -1,32 +1,3 @@
-// returns a promise that resolve the link of the file if it was uploaded
-function upload(file) {
-  return new Promise(function(resolve, reject) {
-    // read in file
-    var reader = new FileReader();
-    reader.onload = function(event) {
-      var binary = event.target.result;
-      // generate md5 hash
-      var md5 = CryptoJS.MD5(binary).toString();
-      resolve(md5);
-    };
-    reader.readAsBinaryString(file);
-  }).then(function(hash) {
-    // setup uploadTask to upload file under the generated hash
-    var uploadTask = firebase.storage().ref().child(hash).put(file, {
-      'contentType': file.type
-    });
-    return new Promise(function(resolve, reject) {
-      uploadTask.on('state_changed', null, function(error) {
-        reject(error);
-      }, function() {
-        // resolve url of uploaded file
-        var url = uploadTask.snapshot.metadata.downloadURLs[0];
-        resolve(url);
-      });
-    });
-  });
-}
-
 function getElapsedTime(endDate) {
   var startDate = new Date();
   var different = endDate.getTime() - startDate.getTime();
@@ -65,12 +36,4 @@ function dateToString(date) {
 
 function dateToStringShort(date) {
   return (date.getMonth() + 1) + "/" + date.getDate();
-}
-
-function showErrorModal(message) {
-  showNotification("danger", message);
-}
-
-function showSuccessModal(message) {
-  showNotification("success", message);
 }

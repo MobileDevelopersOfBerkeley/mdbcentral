@@ -31,6 +31,7 @@ app.use(cookieParser());
 app.use("/", router);
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
+app.set('json spaces', 2);
 
 // START SERVER
 slack1.listen(function() {

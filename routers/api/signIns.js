@@ -28,8 +28,19 @@ router.post("/signIns/manual", function(req, res) {
   req.checkBody("eventId", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.eventsRef);
   req.body.code = "manual";
-  req.body.member = req.body.id;
   return routerUtil.completeRequest(req, res, signInLogic.createManual,
+    "/attendance");
+});
+
+router.post("/signIns/manual/:id", function(req, res) {
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
+    .keyExistsInDB(dbUtil.refs.memberRef);
+  req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
+  req.checkParams("id", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkParams("id", routerUtil.errors.dbErrorMessage)
+    .keyExistsInDB(dbUtil.refs.signInRef);
+  return routerUtil.completeRequest(req, res, signInLogic.deleteById,
     "/attendance");
 });
 
