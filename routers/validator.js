@@ -42,8 +42,10 @@ module.exports = expressValidator({
           var startDate = new Date();
           startDate.setTime(event.timestamp);
           var today = new Date();
-          return !util.differentDay(today, startDate) && today.getTime() <=
-            event.endTimestamp;
+          return !util.differentDay(today, startDate) &&
+            today.getTime() <= event.endTimestamp &&
+            today.getTime() >= event.timestamp &&
+            util.minsApart(startDate, today) <= config.maxMinutesTardy;
         });
       });
     },

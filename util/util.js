@@ -32,6 +32,10 @@ function daysApart(dStart, dEnd) {
   return days;
 }
 
+function minsApart(dStart, dEnd) {
+  return moment(dEnd).diff(moment(dStart), 'minutes');
+}
+
 function genPieData(x, noStr) {
   var total = Object.keys(x).map(function(key) {
     return x[key];
@@ -148,6 +152,7 @@ function getProjectedPoints(data, shiftConstant) {
 }
 
 // EXPORTS
+module.exports.minsApart = minsApart;
 module.exports.daysApart = daysApart;
 module.exports.getProjectedPoints = getProjectedPoints;
 module.exports.dateToString = dateToString;
