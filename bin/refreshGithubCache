@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 
-var set = require("../logic/GithubCache.js").set;
-
-console.log("Starting refresh for github cache...");
-set().then(function() {
-  console.log("Success: Github cache refreshed!");
-}).catch(function(error) {
-  console.error("Error: ", error);
-}).then(function() {});
+const run = require("../util/job.js").run;
+const fn = require("../logic/GithubCache.js").set;
+const initLabel = "Starting refresh for github cache...";
+const successLabel = "Github cache refreshed!";
+run(fn, initLabel, successLabel);

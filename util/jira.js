@@ -1,5 +1,6 @@
 // DEPENDENCIES
 const JiraApi = require("jira-client");
+const util = require("./util.js");
 
 // INITIALIZE
 var jira = new JiraApi({
@@ -10,6 +11,11 @@ var jira = new JiraApi({
   apiVersion: '2',
   strictSSL: true
 });
+
+// CONSTANTS
+const DAYS_AHEAD = 2;
+const FIND_ISSUE_TIMEOUT = 60 * 1000;
+const jql = "duedate <= " + DAYS_AHEAD + "d AND status != Done";
 
 // HELPERS
 function _formatTask(task) {
@@ -28,13 +34,27 @@ function _formatTask(task) {
   }
 }
 
+function _formatTasks(tasks) {
+  var today = new Date();
+  return tasks.filter(function(task) {
+    return task.dueDate != null && !task.done;
+  }).map(function(task) {
+    task.daysApart = util.daysApart(today, task.dueDate);
+    return task;
+  });
+}
+
 function _getTask(taskId) {
-  return jira.findIssue(taskId).then(_formatTask);
+  var p = jira.findIssue(taskId).then(_formatTask);
+  return util.timeoutPromise(p, FIND_ISSUE_TIMEOUT).catch(function(error) {
+    return null;
+  });
 }
 
 function _getTaskKeys() {
-  return jira.searchJira("", {}).then(function(x) {
-    return jira.searchJira("", {
+  return jira.searchJira(jql, {}).then(function(x) {
+    if (x.total < x.maxResults) return x;
+    return jira.searchJira(jql, {
       maxResults: x.total
     });
   }).then(function(data) {
@@ -45,18 +65,30 @@ function _getTaskKeys() {
   });
 }
 
-// METHODS
-function getTasks() {
-  return _getTaskKeys().then(function(keys) {
-    return Promise.all(keys.map(function(key) {
-      return _getTask(key);
-    }));
-  }).then(function(tasks) {
-    var today = new Date();
-    return tasks.filter(function(task) {
-      return task.dueDate != null && !task.done;
+function _getTasksByKeys(keys) {
+  var tasks = [];
+  var p = Promise.resolve(true);
+
+  function addTask(key, i) {
+    return _getTask(key).then(function(task) {
+      if (task) tasks.push(task);
+    });
+  }
+
+  keys.forEach(function(key, i, arr) {
+    p = p.then(function() {
+      return addTask(key, i);
     });
   });
+
+  return p.then(function() {
+    return tasks;
+  });
+}
+
+// METHODS
+function getTasks() {
+  return _getTaskKeys().then(_getTasksByKeys).then(_formatTasks);
 }
 
 // EXPORTS

@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 
-var sendReminders = require("../logic/Slack2.js").sendReminders;
-
-console.log("Starting to send task reminders...");
-sendReminders().then(function() {
-  console.log("Success: Task reminders sent!");
-}).catch(function(error) {
-  console.error("Error: ", error);
-});
+const run = require("../util/job.js").run;
+const fn = require("../logic/Slack2.js").sendReminders;
+const initLabel = "Starting to send task reminders...";
+const successLabel = "Task reminders sent!";
+run(fn, initLabel, successLabel);

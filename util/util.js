@@ -33,6 +33,26 @@ function getDist(percentiles, values) {
   });
 }
 
+function timeoutPromise(p, timeout) {
+  return new Promise(function(resolve, reject) {
+    var pending = true;
+    var timedout = false;
+    p.then(function(res) {
+      pending = false;
+      if (!timedout) resolve(res);
+    }).catch(function(error) {
+      pending = false;
+      if (!timedout) reject(error);
+    });
+    setTimeout(function() {
+      if (pending) {
+        timedout = true;
+        reject(new Error("promise timeout"));
+      }
+    }, timeout);
+  });
+}
+
 function getStats(values) {
   return {
     mean: _round2DeciPlaces(stats.mean(values)),
@@ -52,6 +72,10 @@ function daysApart(dStart, dEnd) {
 
 function minsApart(dStart, dEnd) {
   return moment(dEnd).diff(moment(dStart), 'minutes');
+}
+
+function secondsApart(dStart, dEnd) {
+  return moment(dEnd).diff(moment(dStart), 'seconds');
 }
 
 function genPieData(x, noStr) {
@@ -170,6 +194,8 @@ function getProjectedPoints(data, shiftConstant) {
 }
 
 // EXPORTS
+module.exports.timeoutPromise = timeoutPromise;
+module.exports.secondsApart = secondsApart;
 module.exports.getStats = getStats;
 module.exports.getDist = getDist;
 module.exports.minsApart = minsApart;
