@@ -26,9 +26,19 @@ function _promiseBoolTrue(fn) {
   });
 }
 
+function _isValidNumber(param) {
+  var num = +param;
+  return !isNaN(num);
+}
+
 // EXPORTS
 module.exports = expressValidator({
   customValidators: {
+    validScore: function(param) {
+      if (params.indexOf("/") < 0) return false;
+      var x = params.split("/");
+      return x.length == 2 && _isValidNumber(x[0]) && _isValidNumber(x[1]);
+    },
     codeIsCorrect: function(param) {
       return _promiseBoolTrue(function() {
         return signInCodeLogic.get().then(function(code) {
@@ -121,10 +131,7 @@ module.exports = expressValidator({
     isTrue: function(param) {
       return param == "true";
     },
-    isValidNumber: function(param) {
-      var num = +param;
-      return !isNaN(num);
-    },
+    isValidNumber: _isValidNumber,
     isValidNumberArr: function(param) {
       var isValidNumber = function(param) {
         var num = +param;

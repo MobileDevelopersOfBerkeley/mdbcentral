@@ -12,6 +12,8 @@
                             <thead>
                                 <th>Name</th>
                                 <th>Score</th>
+                                <th>Mean</th>
+                                <th>Std Dev</th>
                                 <th>Due</th>
                             </thead>
                             <tbody>
@@ -22,6 +24,8 @@
                                         <%- score.assignment_name %>
                                       </a></td>
                                       <td><%- score.score %></td>
+                                      <td><%- score._mean || "?" %></td>
+                                      <td><%- score._stdev || "?" %></td>
                                       <td><%- score.due %></td>
                                   </tr>
                                 <% } %>
@@ -158,6 +162,8 @@
                                 <th>Assignment Name</th>
                                 <th>Member Name</th>
                                 <th>Score</th>
+                                <th>Mean</th>
+                                <th>Std Dev</th>
                                 <th>Due</th>
                                 <th>Archive</th>
                             </thead>
@@ -168,6 +174,8 @@
                                     <td><%- score.assignment_name %></td>
                                     <td><%- score.member_name %></td>
                                     <td><%- score.score %></td>
+                                    <td><%- score._mean || "?" %></td>
+                                    <td><%- score._stdev || "?" %></td>
                                     <td><%- score.due %></td>
                                     <td>
                                       <form action="/scores/<%- score._key %>" method="post">

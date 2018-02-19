@@ -1,4 +1,5 @@
 // DEPENDENCIES
+const stats = require("stats-lite");
 const regression = require("regression");
 const moment = require("moment");
 const stringSimilarity = require("string-similarity");
@@ -21,7 +22,24 @@ function _sameDay(d1, d2) {
     d1.getFullYear() == d2.getFullYear();
 }
 
+function _round2DeciPlaces(num) {
+  return Math.round(num * 100) / 100;
+}
+
 // METHODS
+function getDist(percentiles, values) {
+  return percentiles.map(function(x) {
+    return stats.percentile(values, x);
+  });
+}
+
+function getStats(values) {
+  return {
+    mean: _round2DeciPlaces(stats.mean(values)),
+    stdev: _round2DeciPlaces(stats.stdev(values))
+  }
+}
+
 function getUnixTS() {
   return new Date().getTime();
 }
@@ -152,6 +170,8 @@ function getProjectedPoints(data, shiftConstant) {
 }
 
 // EXPORTS
+module.exports.getStats = getStats;
+module.exports.getDist = getDist;
 module.exports.minsApart = minsApart;
 module.exports.daysApart = daysApart;
 module.exports.getProjectedPoints = getProjectedPoints;

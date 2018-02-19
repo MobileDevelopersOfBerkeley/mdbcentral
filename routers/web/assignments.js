@@ -1,6 +1,7 @@
 // DEPENDENCIES
 const router = require("express").Router();
 const helper = require("../helper.js");
+const util = require("../../util/util.js");
 const assignmentsLogic = require("../../logic/Assignments.js");
 const scoreLogic = require("../../logic/Scores.js");
 
@@ -19,16 +20,34 @@ function _getAssignments(data) {
   })
 }
 
+function _setStats(scores) {
+  new Set(scores.map(function(x) {
+    return x.assignmentId;
+  })).forEach(function(assignmentId) {
+    var sList = scores.filter(function(x) {
+      return x.assignmentId == assignmentId;
+    });
+    var stats = util.getStats(sList.map(function(x) {
+      return parseInt(x.score.split("/")[0]);
+    }));
+    sList.forEach(function(x) {
+      x._mean = stats.mean;
+      x._stdev = stats.stdev;
+    });
+  });
+  return scores;
+}
+
 function _getScores(data, member) {
   return scoreLogic.getByMemberDeep({
     member: member
-  }).then(function(scores) {
+  }).then(_setStats).then(function(scores) {
     data.scores = scores;
   });
 }
 
 function _getAllScores(data) {
-  return scoreLogic.getAllDeep().then(function(scores) {
+  return scoreLogic.getAllDeep().then(_setStats).then(function(scores) {
     data.allscores = scores;
   });
 }

@@ -1,5 +1,5 @@
 // DEPENDENCIES
-const stats = require("stats-lite");
+const util = require("../util/util.js");
 const githubUtil = require("../util/github.js");
 const dbUtil = require("../util/firebase.js").db;
 const config = require("../config.json");
@@ -17,10 +17,11 @@ function _setEffortRatings(cache) {
     var values = Object.keys(usernameToLines).map(function(username) {
       return usernameToLines[username];
     });
-    var effortRating_1 = stats.percentile(values, 0.1);
-    var effortRating_2 = stats.percentile(values, 0.3);
-    var effortRating_3 = stats.percentile(values, 0.5);
-    var effortRating_4 = stats.percentile(values, 0.7);
+    var x = util.getDist([0.1, 0.3, 0.5, 0.7], values);
+    var effortRating_1 = x[0];
+    var effortRating_2 = x[1];
+    var effortRating_3 = x[2];
+    var effortRating_4 = x[3];
     Object.keys(usernameToLines).forEach(function(username) {
       var lines = usernameToLines[username];
       var effortRating = undefined;

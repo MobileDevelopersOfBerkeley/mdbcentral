@@ -17,6 +17,7 @@ router.post("/scores", function(req, res) {
   req.checkBody("assignmentId", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.assignmentRef);
   req.checkBody("score", routerUtil.errors.missingErrorMessage).notEmpty();
+  req.checkBody("score", routerUtil.errors.formatErrorMessage).validScore();
   return routerUtil.completeRequest(req, res, scoresLogic.set,
     "/assignments");
 });
