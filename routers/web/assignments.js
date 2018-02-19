@@ -25,7 +25,7 @@ function _setStats(scores) {
     return x.assignmentId;
   })).forEach(function(assignmentId) {
     var sList = scores.filter(function(x) {
-      return x.assignmentId == assignmentId;
+      return x.assignmentId == assignmentId && x.archived !== true;
     });
     var stats = util.getStats(sList.map(function(x) {
       return parseInt(x.score.split("/")[0]);
