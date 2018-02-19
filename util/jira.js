@@ -32,34 +32,26 @@ function _getTask(taskId) {
   return jira.findIssue(taskId).then(_formatTask);
 }
 
-function _getProjectKeys() {
-  return jira.listProjects().then(function(data) {
-    return data.map(function(d) {
-      return d.key;
+function _getTaskKeys() {
+  return jira.searchJira("", {}).then(function(x) {
+    return jira.searchJira("", {
+      maxResults: x.total
     });
-  });
-}
-
-function _getTasksByProjectKey(key) {
-  return jira.searchJira("project=\"" + key + "\"", {}).then(function(data) {
-    return Promise.all(data.issues.map(function(issue) {
-      return _getTask(issue.key);
-    }));
+  }).then(function(data) {
+    var tasks = data.issues;
+    return tasks.map(function(task) {
+      return task.key;
+    });
   });
 }
 
 // METHODS
 function getTasks() {
-  var tasks = [];
-  return _getProjectKeys().then(function(keys) {
+  return _getTaskKeys().then(function(keys) {
     return Promise.all(keys.map(function(key) {
-      return _getTasksByProjectKey(key).then(function(tList) {
-        tList.forEach(function(t) {
-          tasks.push(t);
-        });
-      });
+      return _getTask(key);
     }));
-  }).then(function() {
+  }).then(function(tasks) {
     var today = new Date();
     return tasks.filter(function(task) {
       return task.dueDate != null && !task.done;
