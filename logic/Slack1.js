@@ -208,7 +208,7 @@ function sendReminders() {
       event._daysApart = util.daysApart(today, d);
       return event;
     }).filter(function(event) {
-      return event._daysApart <= DAYS_AHEAD;
+      return event._daysApart <= DAYS_AHEAD && event._daysApart >= 0;
     }).map(function(event) {
       return bot1.sendToChannel(
         SLACK_BOT_CHANNEL3,
@@ -216,8 +216,6 @@ function sendReminders() {
         "* is coming up in " + event._daysApart + " days"
       )
     }));
-  }).catch(function(error) {
-    return bot1.sendToUser("krishnan", error.toString());
   });
 }
 

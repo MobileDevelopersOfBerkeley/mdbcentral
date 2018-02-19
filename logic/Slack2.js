@@ -32,8 +32,6 @@ function sendReminders() {
         " days*: " + task.info
       )
     }));
-  }).catch(function(error) {
-    return bot2.sendToUser("krishnan", error.toString());
   });
 }
 
