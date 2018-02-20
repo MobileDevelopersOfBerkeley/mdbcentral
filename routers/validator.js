@@ -35,8 +35,8 @@ function _isValidNumber(param) {
 module.exports = expressValidator({
   customValidators: {
     validScore: function(param) {
-      if (params.indexOf("/") < 0) return false;
-      var x = params.split("/");
+      if (param.indexOf("/") < 0) return false;
+      var x = param.split("/");
       return x.length == 2 && _isValidNumber(x[0]) && _isValidNumber(x[1]);
     },
     codeIsCorrect: function(param) {

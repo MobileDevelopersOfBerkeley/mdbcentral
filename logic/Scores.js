@@ -83,7 +83,7 @@ function set(params) {
 }
 
 function archive(params) {
-  return dbUtil.updateByKey(ref, score._key, {
+  return dbUtil.updateByKey(ref, params.id, {
     archived: true
   });
 }
