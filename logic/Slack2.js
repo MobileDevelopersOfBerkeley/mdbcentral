@@ -2,16 +2,29 @@
 var bot2 = require("../util/slack.js").bot2;
 var jira = require("../util/jira.js");
 var util = require("../util/util.js");
+var signInLogic = require("./SignIns.js");
+var eventLogic = require("./Events.js");
+var memberLogic = require("./Members.js");
 
 // CONSTANTS
-const SLACK_CHANNEL = process.env.SLACK_BOT2_CHANNEL1;
+const SLACK_CHANNEL1 = process.env.SLACK_BOT2_CHANNEL1;
+const SLACK_CHANNEL2 = process.env.SLACK_BOT2_CHANNEL2;
 
 // HELPERS
 function _sendTaskReminder(task) {
   var str = "*" + task.recipient + "* you have to finish task *" +
     task.id + "* in *" + task.daysApart +
     " days*: " + task.info;
-  return bot2.sendToChannel(SLACK_CHANNEL, str)
+  return bot2.sendToChannel(SLACK_CHANNEL1, str)
+}
+
+function _sendAbsenceAlert(memberId, event) {
+  return memberLogic.getById({
+    id: memberId
+  }).then(function(member) {
+    var str = "*" + member.name + "* was absent for " + event.title;
+    return bot2.sendToChannel(SLACK_CHANNEL2, str);
+  });
 }
 
 // METHODS
@@ -45,6 +58,32 @@ function sendReminders() {
   });
 }
 
+function sendAbsenceAlerts() {
+  return eventLogic.getByToday().catch(function(error) {
+    return null;
+  }).then(function(event) {
+    if (!event || event.attendance !== true) return;
+    var d = new Date();
+    d.setTime(event.endTimestamp);
+    var today = new Date();
+    if (!util.sameDay(d, today)) return;
+    return signInLogic.getAttendanceByEvent({
+      title: event.title
+    }).then(function(data) {
+      return util.sequentialChainPromises(Object.keys(data)
+        .map(function(member) {
+          return function() {
+            var aList = data[member].absences;
+            if (aList.length == 0)
+              return Promise.resolve(true);
+            return _sendAbsenceAlert(member, aList[0]);
+          }
+        }));
+    });
+  });
+}
+
 // EXPORTS
 module.exports.listen = listen;
 module.exports.sendReminders = sendReminders;
+module.exports.sendAbsenceAlerts = sendAbsenceAlerts;

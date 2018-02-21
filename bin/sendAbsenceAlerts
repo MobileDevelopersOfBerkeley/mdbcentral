@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+const run = require("../util/job.js").run;
+const fn = require("../logic/Slack2.js").sendAbsenceAlerts;
+const initLabel = "Starting to send absence alerts...";
+const successLabel = "Absence alerts sent!";
+run(fn, initLabel, successLabel);

@@ -16,17 +16,17 @@ String.prototype.similar = function(str) {
   return stringSimilarity.compareTwoStrings(me, other) >= .7;
 }
 
-function _sameDay(d1, d2) {
-  return d1.getDate() == d2.getDate() &&
-    d1.getMonth() == d2.getMonth() &&
-    d1.getFullYear() == d2.getFullYear();
-}
-
 function _round2DeciPlaces(num) {
   return Math.round(num * 100) / 100;
 }
 
 // METHODS
+function sameDay(d1, d2) {
+  return d1.getDate() == d2.getDate() &&
+    d1.getMonth() == d2.getMonth() &&
+    d1.getFullYear() == d2.getFullYear();
+}
+
 function getDist(percentiles, values) {
   return percentiles.map(function(x) {
     return stats.percentile(values, x);
@@ -76,7 +76,7 @@ function getUnixTS() {
 
 function daysApart(dStart, dEnd) {
   var days = moment(dEnd).diff(moment(dStart), 'days');
-  if (days == 0 && !_sameDay(dStart, dEnd)) return 1;
+  if (days == 0 && !sameDay(dStart, dEnd)) return 1;
   return days;
 }
 
@@ -204,6 +204,7 @@ function getProjectedPoints(data, shiftConstant) {
 }
 
 // EXPORTS
+module.exports.sameDay = sameDay;
 module.exports.sequentialChainPromises = sequentialChainPromises;
 module.exports.timeoutPromise = timeoutPromise;
 module.exports.secondsApart = secondsApart;

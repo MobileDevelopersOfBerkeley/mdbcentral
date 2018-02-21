@@ -32,7 +32,7 @@ If you have any features in mind, please submit a pull request :) Also if you fi
 26. Leaders can edit events happening during the semester
 27. Users can view events in a calendar view
 28. Users can sign in to events
-29. Mdbot slack bot: reminds leadership of tasks on the leadership slack
+29. Mdbot slack bot: reminds leadership of tasks on the leadership slack and alerts leadership on members who were absent to events
 30. Mdbot scrapes github org to track performance of members in the club
 
 ## Environment Variables
