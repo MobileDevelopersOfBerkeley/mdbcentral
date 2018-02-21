@@ -67,21 +67,13 @@ function _getTaskKeys() {
 
 function _getTasksByKeys(keys) {
   var tasks = [];
-  var p = Promise.resolve(true);
-
-  function addTask(key, i) {
-    return _getTask(key).then(function(task) {
-      if (task) tasks.push(task);
-    });
-  }
-
-  keys.forEach(function(key, i, arr) {
-    p = p.then(function() {
-      return addTask(key, i);
-    });
-  });
-
-  return p.then(function() {
+  return util.sequentialChainPromises(keys.map(function(key) {
+    return function() {
+      return _getTask(key).then(function(task) {
+        if (task) tasks.push(task);
+      });
+    }
+  })).then(function() {
     return tasks;
   });
 }

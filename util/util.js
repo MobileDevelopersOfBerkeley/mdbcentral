@@ -53,6 +53,16 @@ function timeoutPromise(p, timeout) {
   });
 }
 
+function sequentialChainPromises(pFnList) {
+  var p = Promise.resolve(true);
+  pFnList.forEach(function(pFn) {
+    p = p.then(function() {
+      return pFn();
+    });
+  });
+  return p;
+}
+
 function getStats(values) {
   return {
     mean: _round2DeciPlaces(stats.mean(values)),
@@ -194,6 +204,7 @@ function getProjectedPoints(data, shiftConstant) {
 }
 
 // EXPORTS
+module.exports.sequentialChainPromises = sequentialChainPromises;
 module.exports.timeoutPromise = timeoutPromise;
 module.exports.secondsApart = secondsApart;
 module.exports.getStats = getStats;

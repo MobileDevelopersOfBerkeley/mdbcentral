@@ -1,6 +1,7 @@
 // DEPENDENCIES
 var bot2 = require("../util/slack.js").bot2;
 var jira = require("../util/jira.js");
+var util = require("../util/util.js");
 
 // CONSTANTS
 const SLACK_CHANNEL = process.env.SLACK_BOT2_CHANNEL1;
@@ -11,10 +12,6 @@ function _sendTaskReminder(task) {
     task.id + "* in *" + task.daysApart +
     " days*: " + task.info;
   return bot2.sendToChannel(SLACK_CHANNEL, str)
-}
-
-function _sendAtChannel() {
-  return bot2.sendToChannel(SLACK_CHANNEL, "@channel");
 }
 
 // METHODS
@@ -28,9 +25,23 @@ function listen(successCb, errorCb) {
 
 function sendReminders() {
   return jira.getTasks().then(function(tasks) {
-    var plist = [_sendAtChannel()];
-    plist = plist.concat(tasks.map(_sendTaskReminder));
-    return Promise.all(plist);
+    return util.sequentialChainPromises(tasks.sort(function(a, b) {
+      if (a.daysApart > b.daysApart) return 1;
+      if (a.daysApart < b.daysApart) return -1;
+      return 0;
+    }).sort(function(a, b) {
+      if (a.recipient == "Everyone" && b.recipient != "Everyone")
+        return 2;
+      if (b.recipient == "Everyone" && a.recipient != "Everyone")
+        return -2;
+      if (a.recipient > b.recipient) return 1;
+      if (a.recipient < b.recipient) return -1;
+      return 0;
+    }).map(function(task) {
+      return function() {
+        return _sendTaskReminder(task);
+      }
+    }));
   });
 }
 
