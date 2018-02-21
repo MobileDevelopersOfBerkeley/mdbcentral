@@ -99,11 +99,16 @@ function getAllAttendance() {
     var data = {};
     members.forEach(function(member) {
       member = member._key;
-      var sList = signIns.filter(function(signIn) {
+      var sList = [];
+      signIns.forEach(function(signIn) {
         var e = events.filter(function(event) {
           return event._key == signIn.eventId;
         });
-        return signIn.member == member && e.length > 0;
+        var added = sList.reduce(function(bool, x) {
+          return bool || x.eventId == signIn.eventId;
+        }, false);
+        if (e.length > 0 && !added && signIn.member == member)
+          sList.push(signIn);
       });
       var attendedEKeyList = sList.map(function(signIn) {
         return signIn.eventId;
