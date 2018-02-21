@@ -5,6 +5,7 @@ const util = require("../../util/util.js");
 const signInLogic = require("../../logic/SignIns.js");
 const signInCodeLogic = require("../../logic/SignInCode.js");
 const memberLogic = require("../../logic/Members.js");
+const eventLogic = require("../../logic/Events.js");
 const expectedAbsencesLogic = require("../../logic/ExpectedAbsences.js");
 const rolesLogic = require("../../logic/Roles.js");
 const config = require("../../config.json");
@@ -73,7 +74,6 @@ function _getPie(data, d, elementId, pieBool) {
 }
 
 function _getBar(data, d, elementId) {
-  d = util.formatLineData(d);
   data.graphs.push({
     elementId: elementId,
     type: "bar",
@@ -171,6 +171,117 @@ function _getMemberData(data) {
   });
 }
 
+function _mergeSets(set1, set2) {
+  var result = new Set();
+
+  function addCb(e) {
+    result.add(e);
+  }
+
+  set1.forEach(addCb);
+  set2.forEach(addCb);
+  return result;
+}
+
+function _setToList(set) {
+  var result = [];
+  set.forEach(function(e) {
+    result.push(e);
+  });
+  return result;
+}
+
+function _getX(attendanceData) {
+  var x = Object.keys(attendanceData).reduce(function(x, memberId) {
+    var memberData = attendanceData[memberId];
+    var eventIds1 = new Set(memberData.signIns.map(function(signIn) {
+      return signIn.eventId;
+    }));
+    var eventIds2 = new Set(memberData.absences.map(function(event) {
+      return event._key;
+    }));
+    x = _mergeSets(x, _mergeSets(eventIds1, eventIds2));
+    return x;
+  }, new Set());
+  return _setToList(x);
+}
+
+function _getY(attendanceData, x) {
+  return Object.keys(attendanceData).reduce(function(y, memberId) {
+    var memberData = attendanceData[memberId];
+    var attendances = y[0];
+    var absences = y[1];
+    memberData.absences.forEach(function(event) {
+      var i = x.indexOf(event._key);
+      if (!(i in attendances))
+        attendances[i] = 0;
+      attendances[i] += 1;
+    });
+    memberData.signIns.forEach(function(signIn) {
+      var i = x.indexOf(signIn.eventId);
+      if (!(i in absences))
+        absences[i] = 0;
+      absences[i] += 1;
+    });
+    return y;
+  }, [
+    [],
+    []
+  ]);
+}
+
+function _eventIdsToTitles(events, x) {
+  var dict = events.reduce(function(dict, event) {
+    dict[event._key] = event.title;
+    return dict;
+  }, {});
+  return x.map(function(eventId) {
+    return dict[eventId];
+  });
+}
+
+function _sortByTime(events, x, y) {
+  var eventIds = events.sort(function(a, b) {
+    return a.timestamp - b.timestamp;
+  }).map(function(event) {
+    return event._key;
+  });
+  var sortedX = x.sort(function(a, b) {
+    var iA = eventIds.indexOf(a);
+    var iB = eventIds.indexOf(b);
+    if (iA > iB) return 1;
+    if (iA < iB) return -1;
+    return 0;
+  });
+  var newX = [];
+  var newY = [
+    [],
+    []
+  ];
+  var result = [newX, newY];
+  x.forEach(function(eventId, i, arr) {
+    var sortedI = sortedX.indexOf(eventId);
+    newX[sortedI] = eventId;
+    newY[0][sortedI] = y[0][i];
+    newY[1][sortedI] = y[1][i];
+  });
+  return result;
+}
+
+function _getAttendanceOverTimeData(data) {
+  var x, y;
+  return signInLogic.getAllAttendance().then(function(a) {
+    x = _getX(a);
+    y = _getY(a, x);
+    return eventLogic.getAll();
+  }).then(function(events) {
+    var z = _sortByTime(events, x, y);
+    y = z[1];
+    x = _eventIdsToTitles(events, z[0]);
+    _getBar(data, [x, y], "attendance_bar");
+  });
+}
+
 // METHODS
 router.get("/attendance", helper.isLoggedIn, helper.isLeadership,
   function(req, res) {
@@ -184,6 +295,7 @@ router.get("/attendance", helper.isLoggedIn, helper.isLeadership,
         _getSignInCode(data),
         _getExpectedAbsences(data),
         _getMemberData(data),
+        _getAttendanceOverTimeData(data),
         helper.getMembers(data)
       ]);
       return Promise.all(plist);
