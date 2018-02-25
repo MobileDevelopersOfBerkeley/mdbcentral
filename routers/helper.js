@@ -12,11 +12,6 @@ function _getLiTag(currPage) {
   }
 }
 
-function _getCurrDateStr() {
-  var d = new Date();
-  return d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
-}
-
 function _getMemberNames(members, ms) {
   var mList = members.filter(function(m) {
     return ms.indexOf(m._key) >= 0;
@@ -46,7 +41,7 @@ function genData(currPage, uid) {
     getMemberNames: _getMemberNames,
     getMemberName: _getMemberName,
     timeToString: util.timeToString,
-    getCurrDateStr: _getCurrDateStr,
+    getCurrDateStr: util.getCurrTimeStr,
     firstname: "Visitor",
     notifications: [],
     currPage: currPage,

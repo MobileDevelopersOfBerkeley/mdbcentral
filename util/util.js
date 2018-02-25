@@ -21,6 +21,10 @@ function _round2DeciPlaces(num) {
 }
 
 // METHODS
+function getCurrTimeStr() {
+  return moment().tz("America/Los_Angeles").format("MM/DD/YY");
+}
+
 function sameDay(d1, d2) {
   return d1.getDate() == d2.getDate() &&
     d1.getMonth() == d2.getMonth() &&
@@ -204,6 +208,7 @@ function getProjectedPoints(data, shiftConstant) {
 }
 
 // EXPORTS
+module.exports.getCurrTimeStr = getCurrTimeStr;
 module.exports.sameDay = sameDay;
 module.exports.sequentialChainPromises = sequentialChainPromises;
 module.exports.timeoutPromise = timeoutPromise;

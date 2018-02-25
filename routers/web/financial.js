@@ -7,9 +7,8 @@ const finReportLogic = require("../../logic/FinReports.js");
 // HELPERS
 function _getCategories(data) {
   data.categories = [
-    "Contract", "Membership Dues", "Retreat",
-    "Food", "Events", "Reimbursements",
-    "Social", "Other"
+    "Reimbursements", "Contract", "Membership Dues",
+    "Retreat", "Food", "Events", "Social", "Other"
   ];
 }
 
