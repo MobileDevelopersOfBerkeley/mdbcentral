@@ -5,7 +5,7 @@ const dbUtil = require("../../util/firebase.js").db;
 const signInLogic = require("../../logic/SignIns.js");
 
 // METHODS
-router.get("/attendance/:name?/:title?", function(req, res) {
+router.post("/attendance/:name?/:title?", function(req, res) {
   req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("member", routerUtil.errors.dbErrorMessage)
     .keyExistsInDB(dbUtil.refs.memberRef);
