@@ -15,7 +15,16 @@ function _sendTaskReminder(task) {
   var str = "*" + task.recipient + "* you have to finish task *" +
     task.id + "* in *" + task.daysApart +
     " days*: " + task.info;
-  return bot2.sendToChannel(SLACK_CHANNEL1, str)
+  return bot2.sendToChannel(SLACK_CHANNEL1, str);
+}
+
+function _sendTaskReminderSummary(tasks) {
+  var future = tasks.filter(function(task) {
+    return task.daysApart >= 0;
+  }).length;
+  var late = tasks.length - future.length;
+  var str = late + " *late* tasks and " + future + " *current* tasks.";
+  return bot2.sendToChannel(SLACK_CHANNEL1, str);
 }
 
 function _sendAbsenceAlert(memberId, event) {
@@ -37,7 +46,9 @@ function listen(successCb, errorCb) {
 }
 
 function sendReminders() {
-  return jira.getTasks().then(function(tasks) {
+  var tasks;
+  return jira.getTasks().then(function(x) {
+    tasks = x;
     return util.sequentialChainPromises(tasks.sort(function(a, b) {
       if (a.daysApart > b.daysApart) return 1;
       if (a.daysApart < b.daysApart) return -1;
@@ -55,6 +66,8 @@ function sendReminders() {
         return _sendTaskReminder(task);
       }
     }));
+  }).then(function() {
+    return _sendTaskReminderSummary(tasks);
   });
 }
 
