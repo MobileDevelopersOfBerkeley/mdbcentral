@@ -22,7 +22,7 @@ function _sendTaskReminderSummary(tasks) {
   var future = tasks.filter(function(task) {
     return task.daysApart >= 0;
   }).length;
-  var late = tasks.length - future.length;
+  var late = tasks.length - future;
   var str = late + " *late* tasks and " + future + " *current* tasks.";
   return bot2.sendToChannel(SLACK_CHANNEL1, str);
 }
