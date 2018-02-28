@@ -2,6 +2,7 @@
 const stats = require("stats-lite");
 const regression = require("regression");
 const moment = require("moment");
+const momentTZ = require("moment-timezone");
 const stringSimilarity = require("string-similarity");
 
 // PROTOTYPES
@@ -22,7 +23,7 @@ function _round2DeciPlaces(num) {
 
 // METHODS
 function getCurrTimeStr() {
-  return moment().tz("America/Los_Angeles").format("MM/DD/YY");
+  return momentTZ().tz("America/Los_Angeles").format("MM/DD/YY");
 }
 
 function sameDay(d1, d2) {
