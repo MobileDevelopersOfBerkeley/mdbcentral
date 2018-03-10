@@ -180,6 +180,7 @@
                                       <td><%- event.title %></td>
                                       <td><%- timeToString(event.timestamp, false, true) %></td>
                                       <td><%- timeToString(event.endTimestamp, false, true) %></td>
+                                      <td><%- event.attendance === true ? "Yes" : "No" %></td>
                                       <td>
                                         <form action="/events/<%- event._key %>" method="post">
                                           <button style="margin-left: 10px" type="submit">
@@ -187,7 +188,6 @@
                                           </button>
                                         </form>
                                       </td>
-                                      <td><%- event.attendance === true ? "Yes" : "No" %></td>
                                     </tr>
                                   <% } %>
                               </tbody>

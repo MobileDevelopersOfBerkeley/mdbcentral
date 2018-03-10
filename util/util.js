@@ -14,7 +14,7 @@ String.prototype.similar = function(str) {
   var me = this.toLowerCase();
   var other = str.toLowerCase();
   if (me.startsWith(other) || me.endsWith(other)) return true;
-  return stringSimilarity.compareTwoStrings(me, other) >= .7;
+  return false;
 }
 
 function _round2DeciPlaces(num) {
