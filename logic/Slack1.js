@@ -16,7 +16,7 @@ const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
 const STRING_SIMILARITY_RATIO_THRESH = .7;
 const DAYS_AHEAD = 1;
-const REMIND_NON_ATTENDANCE_EVENTS = false;
+const REMIND_NON_ATTENDANCE_EVENTS = true;
 
 // GLOBALS
 var tsHits = [];
