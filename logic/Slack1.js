@@ -55,7 +55,7 @@ function _assertTextValid() {
 }
 
 function _doLeaderBoard() {
-  bigLittleContestLogic.get().then(function(leaderboard) {
+  bigLittleContestLogic.get({sorted: true}).then(function(leaderboard) {
     var result = "";
     var place = 1;
     leaderboard.forEach(function(item) {
