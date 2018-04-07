@@ -16,7 +16,7 @@ const IVP_ID = process.env.SLACK_IVP_ID;
 const newLineStr = "\r\n";
 const STRING_SIMILARITY_RATIO_THRESH = .7;
 const DAYS_AHEAD = 1;
-const REMIND_NON_ATTENDANCE_EVENTS = false;
+const REMIND_NON_ATTENDANCE_EVENTS = true;
 
 // GLOBALS
 var tsHits = [];
@@ -55,7 +55,7 @@ function _assertTextValid() {
 }
 
 function _doLeaderBoard() {
-  bigLittleContestLogic.get().then(function(leaderboard) {
+  bigLittleContestLogic.get({sorted: true}).then(function(leaderboard) {
     var result = "";
     var place = 1;
     leaderboard.forEach(function(item) {
