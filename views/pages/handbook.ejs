@@ -1,0 +1,32 @@
+<div class="content page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">MDB Handbook</h4>
+                        <p class="category">PDF views of the MDB Handbook</p>
+                    </div>
+                    <div class="content">
+                        <% for (var i = 0; i < docs.length; i++) { %>
+                            <% var type; %>
+                            <% if (i % 3 == 0) { %>
+                              <% type = "info" %>
+                            <% } else if (i % 3 == 1) { %>
+                              <% type = "warning" %>
+                            <% } else { %>
+                              <% type = "danger" %>
+                            <% } %>
+                            <a
+                              class="tab_button btn btn-fill btn-<%- type %>"
+                              href="/handbook/<%- i + 1 %>">
+                              <%- getDocName(docs[i]) %>
+                            </a>
+                        <% } %>
+                        <a class="pdf" href="<%- docPath %>"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
