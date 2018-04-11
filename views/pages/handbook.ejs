@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="header">
                         <h4 class="title">MDB Handbook</h4>
-                        <p class="category">PDF views of the MDB Handbook documents</p>
+                        <p class="category">PDF views of the MDB Handbook</p>
                     </div>
                     <div class="content">
                         <% for (var i = 0; i < docs.length; i++) { %>
@@ -19,7 +19,7 @@
                             <% } %>
                             <a
                               class="tab_button btn btn-fill btn-<%- type %>"
-                              href="/policies/<%- i + 1 %>">
+                              href="/handbook/<%- i + 1 %>">
                               <%- getDocName(docs[i]) %>
                             </a>
                         <% } %>
