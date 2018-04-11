@@ -5,27 +5,27 @@ const config = require("../../config.json");
 const fs = require('fs');
 
 // CONSTANTS
-const docs = fs.readdirSync("./public/docs").map(function(doc) {
-  return "/docs/" + doc;
+const handbookDocs = fs.readdirSync("./public/docs/handbook").map(function(doc) {
+  return "/handbook/" + doc;
 });
 
 // HELPERS
-function _getDocById(id) {
-  return docs[id - 1];
+function _getHandbookDocById(id) {
+  return handbookDocs[id - 1];
 }
 
 // METHODS
-router.get("/policies", function(req, res) {
-  res.redirect("/policies/1");
+router.get("/handbook", function(req, res) {
+  res.redirect("/handbook/1");
 });
 
-router.get("/policies/:id", helper.isLoggedIn, function(req, res) {
+router.get("/handbook/:id", helper.isLoggedIn, function(req, res) {
   var member = req.cookies.member;
-  helper.genData("policies", member).then(function(data) {
-    data.docPath = _getDocById(req.params.id);
-    data.docs = docs;
+  helper.genData("handbook", member).then(function(data) {
+    data.docPath = _getHandbookDocById(req.params.id);
+    data.docs = handbookDocs;
     data.getDocName = function(doc) {
-      return doc.split("/docs/")[1].split(".pdf")[0];
+      return doc.split("/handbook/")[1].split(".pdf")[0];
     }
     res.render("index", data);
   });
