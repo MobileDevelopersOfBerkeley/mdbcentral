@@ -6,7 +6,7 @@ const fs = require('fs');
 
 // CONSTANTS
 const handbookDocs = fs.readdirSync("./public/docs/handbook").map(function(doc) {
-  return "/handbook/" + doc;
+  return "/docs/handbook/" + doc;
 });
 
 // HELPERS

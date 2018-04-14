@@ -7,6 +7,7 @@ const homeRouter = require("./home.js");
 const leadershipRouter = require("./leadership.js");
 const loginRouter = require("./login.js");
 const policiesRouter = require("./policies.js");
+const handbookRouter = require("./handbook.js");
 const profileRouter = require("./profile.js");
 const attendanceRouter = require("./attendance.js");
 const bigLittleRouter = require("./biglittle.js");
@@ -23,6 +24,7 @@ router.use(homeRouter);
 router.use(leadershipRouter);
 router.use(loginRouter);
 router.use(policiesRouter);
+router.use(handbookRouter);
 router.use(profileRouter);
 
 // EXPORTS
