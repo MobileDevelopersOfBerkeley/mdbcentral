@@ -16,7 +16,7 @@
     <% } %>
     <% if (currPage == "calendar") { %>
       loadGCal(<%- JSON.stringify(events) %>);
-    <% } else if (currPage == "policies") { %>
+    <% } else if (currPage == "policies" || currPage == "handbook") { %>
       showPDF('.pdf');
     <% } else if (currPage == "leadership") { %>
       toggleCard('expectedAbsences');
