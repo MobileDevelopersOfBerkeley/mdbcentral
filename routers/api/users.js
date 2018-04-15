@@ -25,6 +25,7 @@ function _doCreate(req, res) {
   req.checkBody("confpassword", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("profileImage", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("profileImage", routerUtil.errors.formatErrorMessage).isValidFile();
+  req.checkBody("birthday", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("year", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("roleId", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("roleId", routerUtil.errors.formatErrorMessage).isValidNumber();
@@ -48,6 +49,7 @@ function _doUpdate(req, res) {
   if (req.body.profileImage) {
     req.checkBody("profileImage", routerUtil.errors.formatErrorMessage).isValidFile();
   }
+  req.checkBody("birthday", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("name", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("githubUsername", routerUtil.errors.missingErrorMessage).notEmpty();
   req.checkBody("githubUsername", routerUtil.errors.usernameNotExistMessage)

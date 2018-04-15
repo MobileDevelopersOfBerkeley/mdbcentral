@@ -72,6 +72,7 @@ function _postUsers(cb, isUpdate) {
     'roleId': "number",
     'year': "string",
     'major': 'string',
+    'birthday': 'string',
     'githubUsername': 'string'
   };
 
