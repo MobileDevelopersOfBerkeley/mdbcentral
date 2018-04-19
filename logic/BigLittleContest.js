@@ -22,8 +22,6 @@ function set(params) {
 
 function create(params) {
   return dbUtil.createByAutoKey(ref, {
-    _key: ref,
-    _parentNode: "BigLittleContest",
     name: params.name,
     points: 0,
   });
