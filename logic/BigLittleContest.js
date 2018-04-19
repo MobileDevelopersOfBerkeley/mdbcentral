@@ -26,10 +26,6 @@ function create(params) {
     _parentNode: "BigLittleContest",
     name: params.name,
     points: 0,
-  }).then(function() {
-    return set({
-      leaderboad: get()
-    });
   });
 }
 
