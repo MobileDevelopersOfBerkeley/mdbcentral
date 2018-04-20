@@ -14,7 +14,6 @@
   "author": "Krishnan Rajiyah",
   "license": "ISC",
   "dependencies": {
-    "@firebase/database": "^0.2.1",
     "apiai": "^4.0.3",
     "body-parser": "^1.18.2",
     "cleverbot-node": "^0.3.11",
@@ -34,7 +33,6 @@
     "node-schedule-tz": "^1.2.1-4",
     "nodemailer": "^4.6.4",
     "nodemailer-smtp-transport": "^2.7.4",
-    "npm": "^5.8.0",
     "regression": "^2.0.1",
     "request": "^2.85.0",
     "slackbots": "^1.1.0",
