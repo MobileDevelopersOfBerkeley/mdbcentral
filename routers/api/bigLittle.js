@@ -5,6 +5,16 @@ const dbUtil = require("../../util/firebase.js").db;
 const bigLittleLogic = require("../../logic/BigLittleContest.js");
 
 // METHODS
+router.post("/bigLittle", function(req, res) {
+  req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
+  req.checkCookies("member", routerUtil.errors.dbErrorMessage)
+    .keyExistsInDB(dbUtil.refs.memberRef);
+  req.checkCookies("member", routerUtil.errors.notLeadershipMessage).isLeadership();
+  req.checkBody("name", routerUtil.errors.missingErrorMessage).notEmpty();
+  return routerUtil.completeRequest(req, res, bigLittleLogic.create,
+    "/bigLittle");
+});
+
 router.post("/bigLittle/names", function(req, res) {
   req.checkCookies("member", routerUtil.errors.notLoggedInMessage).notEmpty();
   req.checkCookies("member", routerUtil.errors.dbErrorMessage)

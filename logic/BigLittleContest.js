@@ -20,6 +20,13 @@ function set(params) {
   return dbUtil.setRaw(ref, params.leaderboard);
 }
 
+function create(params) {
+  return dbUtil.createByAutoKey(ref, {
+    name: params.name,
+    points: 0,
+  });
+}
+
 function updateNames(params) {
   return get().then(function(pairs) {
     params.names.forEach(function(name, i, arr) {
@@ -47,5 +54,6 @@ function updatePoints(params) {
 // EXPORTS
 module.exports.get = get;
 module.exports.set = set;
+module.exports.create = create;
 module.exports.updateNames = updateNames;
 module.exports.updatePoints = updatePoints;
